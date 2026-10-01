@@ -1,0 +1,2 @@
+order_item_id,order_id,sku_id,quantity,unit_price,size,colour,discount
+ITEM-SAMPLE-001,ORD-SAMPLE-001,SKU-SAMPLE-001,1,899.00,M,Navy Blue,0.00

@@ -1,0 +1,15 @@
+test_id,return_reason,return_text,expected_category,expected_subcategory,human_review
+TC001,Other,Size M is too tight for me,FIT,TOO_SMALL,false
+TC002,Other,Kurti is loose even though I ordered my usual size,FIT,TOO_LARGE,false
+TC003,Other,Chart says M but this fits like S,FIT,SIZE_MISMATCH,false
+TC004,Other,Length is much shorter than shown,FIT,LENGTH_ISSUE,false
+TC005,Other,Colour is different from the picture,COLOUR,COLOUR_MISMATCH,false
+TC006,Other,Material feels cheap,QUALITY,FABRIC_QUALITY,true
+TC007,Other,Stitching came undone,QUALITY,STITCHING,false
+TC008,Other,Received completely different product,PRODUCT_MISMATCH,,false
+TC009,Other,Product damaged when received,DAMAGED,PRODUCT_DAMAGED,false
+TC010,Other,Not what I expected,OTHER,OTHER,true
+TC011,Other,Bahut tight hai size bada chahiye,FIT,TOO_SMALL,false
+TC012,Other,M size liya tha but chota hai,FIT,TOO_SMALL,false
+TC013,Other,Kapda bahut uncomfortable hai,MATERIAL,FABRIC_UNCOMFORTABLE,false
+TC014,Other,Photo mein blue tha actual mein green,COLOUR,COLOUR_MISMATCH,false

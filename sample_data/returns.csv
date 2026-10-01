@@ -1,0 +1,2 @@
+return_id,order_id,order_item_id,sku_id,customer_id,return_created_at,return_reason,return_reason_text,return_status,refund_amount,return_quantity
+RET-SAMPLE-001,ORD-SAMPLE-001,ITEM-SAMPLE-001,SKU-SAMPLE-001,CUST-SAMPLE-001,2025-02-07T08:30:00+00:00,Other,The selected size felt too tight,Refunded,899.00,1

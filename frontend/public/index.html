@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>Dhaga & Co. Return Intelligence</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">DHAGA & CO. · CATEGORY OPERATIONS</p>
+        <h1>Return intelligence</h1>
+        <p class="intro">See what customers mean when they choose “Other” and review uncertain classifications.</p>
+      </div>
+      <div class="connection">
+        <label for="api-url">API address</label>
+        <div class="connect-row"><input id="api-url" value="http://localhost:8000" autocomplete="url"><button id="connect">Connect</button></div>
+        <p id="connection-state" class="muted">Not connected</p>
+      </div>
+    </header>
+
+    <div id="notice" class="notice" role="status" hidden></div>
+    <section class="metrics" aria-label="Return summary">
+      <article class="metric"><span>Total returns</span><strong id="total-returns">—</strong></article>
+      <article class="metric"><span>Marked “Other”</span><strong id="other-share">—</strong><small id="other-count"></small></article>
+      <article class="metric"><span>Analysed</span><strong id="analysed">—</strong></article>
+      <article class="metric"><span>Needs human review</span><strong id="pending-count">—</strong></article>
+    </section>
+
+    <section class="panel classify-panel">
+      <div><p class="eyebrow">CLASSIFY A RETURN</p><h2>Check a return comment</h2><p class="muted">The model sees only the selected return reason and comment. Unclear results go to human review.</p></div>
+      <form id="classify-form" class="inline-form"><label for="return-id">Return ID</label><div class="connect-row"><input id="return-id" placeholder="RET-SAMPLE-001" required><button type="submit">Classify</button></div></form>
+      <div id="classification-result" class="result" hidden></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><button id="refresh" class="button-secondary">Refresh</button></div>
+      <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>SKU return insights</h2></div></div>
+      <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top issue</th></tr></thead><tbody id="sku-rows"><tr><td colspan="6" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">CATEGORY SIGNALS</p><h2>Category return insights</h2></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Category</th><th>Subcategory</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top fit issue</th></tr></thead><tbody id="category-rows"><tr><td colspan="7" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+    </section>
+    <footer>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

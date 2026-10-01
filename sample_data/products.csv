@@ -1,0 +1,2 @@
+sku_id,product_name,category,subcategory,price,colour,fabric,size,vendor_id,size_chart_id,product_created_at,product_active,image_url
+SKU-SAMPLE-001,Cotton Printed Kurti,Womenswear,Kurti,899.00,Navy Blue,Cotton,M,VEND-SAMPLE-001,,2025-01-12T09:00:00+00:00,true,

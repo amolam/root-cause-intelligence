@@ -1,0 +1,2 @@
+order_id,customer_id,order_created_at,payment_mode,order_status,order_value,delivery_pincode,delivery_city,delivery_state,fulfilment_center,carrier
+ORD-SAMPLE-001,CUST-SAMPLE-001,2025-02-01T12:00:00+00:00,COD,Delivered,899.00,302001,Jaipur,Rajasthan,,
