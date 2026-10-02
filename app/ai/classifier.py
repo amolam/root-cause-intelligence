@@ -21,6 +21,7 @@ TAXONOMY: dict[str, set[str]] = {
     "OTHER": {"OTHER", "LOW_CONFIDENCE"},
 }
 Category = Literal["FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY", "OTHER"]
+DEFAULT_CONFIDENCE_THRESHOLD = 0.75
 
 
 class ClassificationResult(BaseModel):
@@ -76,7 +77,7 @@ def route_prediction(
     *,
     reason: str,
     text: str,
-    confidence_threshold: float = 0.75,
+    confidence_threshold: float = DEFAULT_CONFIDENCE_THRESHOLD,
 ) -> RoutedPrediction:
     """Apply the same two-model routing/chaining policy for API and evaluation."""
     result = light.classify(reason=reason, text=text)
@@ -96,7 +97,10 @@ def route_prediction(
 class ReturnClassificationService:
     """Route ordinary text to a light model; escalate ambiguity to a heavier model."""
 
-    def __init__(self, light: Classifier, heavy: Classifier, confidence_threshold: float = 0.75):
+    def __init__(
+        self, light: Classifier, heavy: Classifier,
+        confidence_threshold: float = DEFAULT_CONFIDENCE_THRESHOLD,
+    ):
         if not 0 <= confidence_threshold <= 1:
             raise ValueError("confidence_threshold must be between 0 and 1")
         self.light = light

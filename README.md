@@ -44,6 +44,8 @@ Set `DATABASE_URL` in `.env` to the connection URL shown by Aiven and set `OPENR
 
 For Vercel, the API project's `audit-updates` Preview environment has a separate staging `DATABASE_URL` and an `OPENROUTER_API_KEY`; Production values are separate. Vercel's CLI does not export Secret variables. Do not assume `.env` is the Preview database, and never paste credentials into chat or source control. For a local staging operation, use an ignored `.env.preview.local` and verify only its non-secret host/database metadata before running a command.
 
+The static frontend build requires `API_BASE_URL`, a non-secret API origin. Set it separately in the Vercel web project's Preview and Production environments; it is embedded in the generated dashboard config at build time. The API's optional `CLASSIFICATION_RESET_TOKEN` must be at least 32 characters and should be configured only in environments where classification reset is intended. Never put that token in the frontend project.
+
 Apply the schema:
 
 ```powershell
@@ -122,6 +124,8 @@ python -m app.insights.cli --start 2025-01-01 --end 2026-01-01 --grain month
 
 This writes/upserts the documented `sku_return_insights` and `category_return_insights` rows. `top_problem_skus` is stored as a JSON list of up to five objects containing `sku_id`, `return_rate`, and `total_returns`; this representation is another assumption because the schema only specifies the JSON type.
 
+Dashboard API classification refreshes the affected monthly insight cohort after saving the AI analysis, so FIT/QUALITY issue rates update with the classification. Classification through `python -m app.ai.cli` does not refresh insights; rerun the aggregation command after a CLI batch.
+
 ## Run the API and frontend
 
 After migration and sample seed, start the API in one terminal:
@@ -136,9 +140,11 @@ In another terminal, serve the static UI:
 python -m http.server 5173 --directory frontend/public
 ```
 
-Open `http://localhost:5173`, keep the API address at `http://localhost:8000`, and select **Connect**. The dashboard shows sample counts, insights, a classification form, and the human-review queue. Try a missing return ID to see the visible failure path. FastAPI's interactive endpoint documentation is at `http://localhost:8000/docs`.
+The local `frontend/public/runtime-config.js` points to `http://localhost:8000`. Open `http://localhost:5173`; the dashboard connects automatically and shows sample counts, insights, a classification form, and the human-review queue. Try a missing return ID to see the visible failure path. FastAPI's interactive endpoint documentation is at `http://localhost:8000/docs`.
 
 The API returns an existing classification for repeated requests to avoid accidental additional model calls. To deliberately re-run classification, use `python -m app.ai.cli --return-id <ID>`.
+
+`POST /api/admin/reset-classifications` is disabled unless the API environment has a `CLASSIFICATION_RESET_TOKEN` of at least 32 characters. Call it with that value in the `X-Classification-Reset-Token` header. It deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. Keep this token only in the API project's secret environment variables, never in the browser or frontend project.
 
 ## Build and deployment status
 
