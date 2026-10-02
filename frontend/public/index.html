@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#f4f0e8">
   <title>Dhaga & Co. Return Intelligence</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/insights.css">
 </head>
 <body>
   <main class="shell">
@@ -26,7 +27,7 @@
     <section class="metrics" aria-label="Return summary">
       <article class="metric"><span>Total returns</span><strong id="total-returns">—</strong></article>
       <article class="metric"><span>Marked “Other”</span><strong id="other-share">—</strong><small id="other-count"></small></article>
-      <article class="metric"><span>Analysed</span><strong id="analysed">—</strong></article>
+      <article class="metric"><span>Analysed</span><strong id="analysed">—</strong><small id="classification-note"></small></article>
       <article class="metric"><span>Needs human review</span><strong id="pending-count">—</strong></article>
     </section>
 
@@ -37,17 +38,19 @@
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><button id="refresh" class="button-secondary">Refresh</button></div>
+      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
       <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>SKU return insights</h2></div></div>
-      <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top issue</th></tr></thead><tbody id="sku-rows"><tr><td colspan="6" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
-    </section>
-    <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">CATEGORY SIGNALS</p><h2>Category return insights</h2></div></div>
-      <div class="table-wrap"><table><thead><tr><th>Category</th><th>Subcategory</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top fit issue</th></tr></thead><tbody id="category-rows"><tr><td colspan="7" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+      <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Category to SKU</h2><p class="muted">Product categories group the matching SKUs. FIT, QUALITY, COLOUR, and OTHER are predicted return-issue labels.</p></div>
+        <form id="insight-range-form" class="range-controls">
+          <label for="insight-start">From<input id="insight-start" type="date"></label>
+          <label for="insight-end">To<input id="insight-end" type="date"></label>
+          <button type="submit" class="button-secondary">Apply range</button>
+        </form>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Product category</th><th>Subcategory</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>FIT issue rate</th><th>QUALITY issue rate</th><th>Related SKUs</th></tr></thead><tbody id="category-rows"><tr><td colspan="8" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
     </section>
     <footer>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</footer>
   </main>

@@ -1,6 +1,6 @@
 # Root-Cause Intelligence
 
-An FDE MVP for Dhaga & Co.'s return root-cause problem. It ingests schema-shaped CSVs, routes return comments through two LangChain models on OpenRouter, sends uncertain classifications to human review, and calculates SKU/category insights. It uses Aiven PostgreSQL, a FastAPI API, a mobile-friendly frontend, GitHub Actions, and Vercel-ready deployment layouts.
+An FDE MVP for Dhaga & Co.'s return root-cause problem. It ingests schema-shaped CSVs, classifies return comments through two LangChain models on OpenRouter, sends uncertain classifications to human review, and calculates SKU/category insights. It uses Aiven PostgreSQL, a FastAPI API, a mobile-friendly frontend, GitHub Actions, and two Vercel projects.
 
 ## Included
 
@@ -8,13 +8,26 @@ An FDE MVP for Dhaga & Co.'s return root-cause problem. It ingests schema-shaped
 - Alembic migrations for the initial schema, normalized vendor master and relationships, and operational data tables.
 - Environment-based PostgreSQL configuration with the `psycopg` driver and Aiven TLS URL support.
 - CSV ingestion with header/field validation, typed values, basic whitespace cleanup, line-level errors, and one transaction per dataset.
-- Small, clearly synthetic sample CSVs for the vendor/customer → product/order → order item → return path.
+- Small sample CSV fixtures plus a larger deterministic synthetic MVP dataset (12 vendors, 500 SKUs, 1,000 customers, 10,000 orders, 3,100 returns, and related operational tables).
 - Return-text classification with validated structured output, low-confidence escalation, and human-review routing.
 - FastAPI endpoints for dashboard metrics, insights, classification, and human review.
 - A responsive static frontend for the category user, with visible API/model failures.
 - Offline labelled-case evaluation and GitHub Actions CI.
 - Discovery, build, and deployment notes under `docs/`.
+- A detailed [architecture and technology stack guide](docs/ARCHITECTURE.md).
 - Tests that do not require a database server.
+
+## Use this project in VS Code with AI models
+
+Open the canonical workspace folder `G:\FDE-Projects\root-cause-intelligence` (File → Open Folder). Do not use the old `C:\` mirror or open only a subfolder as the workspace root. This repository's root `AGENTS.md` provides reusable project context to Codex and VS Code agent harnesses that support it.
+
+For a broad Copilot Chat task, include `#codebase`. For a focused change, add `#file:README.md`, `#file:AGENTS.md`, and the relevant source/docs files from the Chat context picker (for example, `#file:app/db/models.py` or `#file:docs/BUILD_NOTE.md`). If Copilot does not include repository instructions, enable `github.copilot.chat.codeGeneration.useInstructionFiles` in VS Code Settings. VS Code supports repository-wide instructions using `AGENTS.md` and/or `.github/copilot-instructions.md`; instruction support depends on the selected agent harness. See the [VS Code context guide](https://code.visualstudio.com/docs/chat/copilot-chat-context) and [custom instructions guide](https://code.visualstudio.com/docs/agent-customization/custom-instructions).
+
+Suggested first prompt:
+
+> Read `AGENTS.md`, `README.md`, and the relevant files under `docs/`. This is Dhaga & Co.'s Return Root-Cause Intelligence MVP. Work from this repository root on `audit-updates` for Preview changes. Keep `sources/` read-only, don't expose or commit credentials, and don't target Production with synthetic data. First summarize the existing implementation and current state, then make only the requested change.
+
+`AGENTS.md` is the compact operational context; this README and `docs/` provide the fuller product, schema, setup, and deployment details. Verify branch and deployment state before relying on dated status notes.
 
 ## Local setup
 
@@ -28,6 +41,8 @@ Copy-Item .env.example .env
 ```
 
 Set `DATABASE_URL` in `.env` to the connection URL shown by Aiven and set `OPENROUTER_API_KEY` from OpenRouter. Keep Aiven TLS requirements from the service connection instructions. Never commit `.env` or credentials.
+
+For Vercel, the API project's `audit-updates` Preview environment has a separate staging `DATABASE_URL` and an `OPENROUTER_API_KEY`; Production values are separate. Vercel's CLI does not export Secret variables. Do not assume `.env` is the Preview database, and never paste credentials into chat or source control. For a local staging operation, use an ignored `.env.preview.local` and verify only its non-secret host/database metadata before running a command.
 
 Apply the schema:
 
@@ -56,6 +71,18 @@ python -m app.ingestion.cli seed
 ```
 
 The seed command can be repeated: existing rows with the same schema key are updated. The examples use fictional IDs and values and must not be treated as client data. It seeds the customer/order/return path plus vendor purchase order, support ticket, and app search examples. Other mapped datasets can be loaded with `load` after their referenced parents exist. The sample vendor's name and city are explicit `Unknown` placeholders because the available fixture has no vendor master details.
+
+### Larger synthetic MVP dataset
+
+The deterministic generator is `scripts/generate_synthetic_data.py`. Its output is in `sample_data/dhaga_synthetic_mvp/`; see that folder's README for every CSV schema, sample blocks, volumes, exact ratios, and manual load commands. It includes `order_items.csv` because returns have a composite foreign key to their order item. The generated files and generator currently exist in this local workspace; confirm they are present before relying on them in a new clone.
+
+To load them to the database configured by `.env` (confirm that it is a disposable staging/test database first):
+
+```powershell
+python -m app.ingestion.cli seed --directory sample_data/dhaga_synthetic_mvp
+```
+
+The operation upserts matching identifiers and commits one dataset at a time in foreign-key order. Do not run it against Production. To use a local `.env.preview.local` without printing the secret, set `DATABASE_URL` inside the same Python process before importing the loader; the dataset README documents the complete command.
 
 ## Classify return reasons
 
@@ -117,7 +144,9 @@ The API returns an existing classification for repeated requests to avoid accide
 
 The project covers the Phase 2 implementation items: visible responsive frontend, API, two model tiers, structured output, human review, a realistic text-case fixture, visible failures, and a build note with code/model split, patterns, temperature, and estimated cost. See [docs/BUILD_NOTE.md](docs/BUILD_NOTE.md) and [docs/DISCOVERY_NOTE.md](docs/DISCOVERY_NOTE.md).
 
-Vercel setup is in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). The frontend and API are prepared as separate Vercel projects. They are not deployed yet: the workspace has no GitHub remote, and Vercel CLI/account connection is not configured.
+The app is deployed as separate Vercel projects. `audit-updates` is the Preview/testing branch; `main` is Production. The latest known API Preview fix is commit `4b24674` (`Limit database connections in Vercel functions`), which uses SQLAlchemy `NullPool` in Vercel so request connections close instead of remaining idle in warm serverless instances. This reduces idle connections but does not cap simultaneous requests. The Preview OpenRouter key and staging database URL are configured in Vercel for `audit-updates`; keep Production secrets separate.
+
+At the last verified dashboard check, the staging database had 3,100 returns, 1,364 marked `Other`, six classified returns, and populated SKU/category insight tables. Treat counts and deployment IDs as a dated snapshot, not a constant. Aiven previously returned “remaining connection slots are reserved for roles with the SUPERUSER attribute”; check Aiven connection metrics if it recurs. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for project URLs and branch workflow.
 
 ## Schema mapping and assumptions
 

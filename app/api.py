@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from functools import lru_cache
 from typing import Literal
 from uuid import UUID, uuid4
@@ -131,22 +132,97 @@ def sku_insights(limit: int = Query(default=20, ge=1, le=100), db: Session = Dep
 
 
 @app.get("/api/dashboard/category-insights")
-def category_insights(limit: int = Query(default=20, ge=1, le=100), db: Session = Depends(get_db)):
-    rows = db.scalars(select(CategoryReturnInsight).order_by(
-        CategoryReturnInsight.analysis_period.desc(), CategoryReturnInsight.return_rate.desc()
-    ).limit(limit)).all()
-    return [{
-        "category": row.category,
-        "subcategory": row.subcategory,
-        "analysis_period": row.analysis_period,
-        "total_orders": row.total_orders,
-        "total_returns": row.total_returns,
-        "return_rate": row.return_rate,
-        "fit_return_rate": row.fit_return_rate,
-        "quality_return_rate": row.quality_return_rate,
-        "top_fit_issue": row.top_fit_issue,
-        "top_problem_skus": row.top_problem_skus,
-    } for row in rows]
+def category_insights(
+    start: date | None = None,
+    end: date | None = None,
+    limit: int = Query(default=100, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    if start and end and end < start:
+        raise HTTPException(status_code=422, detail="end must be on or after start")
+    filters = []
+    if start:
+        filters.append(CategoryReturnInsight.analysis_period >= start)
+    if end:
+        filters.append(CategoryReturnInsight.analysis_period <= end)
+    category_rows = db.scalars(select(CategoryReturnInsight).where(*filters)).all()
+    sku_filters = []
+    if start:
+        sku_filters.append(SKUReturnInsight.analysis_period >= start)
+    if end:
+        sku_filters.append(SKUReturnInsight.analysis_period <= end)
+    sku_rows = db.execute(
+        select(Product.category, Product.subcategory, Product.product_name, SKUReturnInsight)
+        .join(SKUReturnInsight, SKUReturnInsight.sku_id == Product.sku_id)
+        .where(SKUReturnInsight.total_returns > 0, *sku_filters)
+    ).all()
+
+    categories = {}
+    for row in category_rows:
+        key = (row.category, row.subcategory)
+        group = categories.setdefault(key, {
+            "category": row.category,
+            "subcategory": row.subcategory,
+            "total_orders": 0,
+            "total_returns": 0,
+            "fit_orders": 0.0,
+            "quality_orders": 0.0,
+            "top_fit_issue": None,
+            "latest_period": None,
+            "skus": [],
+        })
+        total_orders = row.total_orders or 0
+        group["total_orders"] += total_orders
+        group["total_returns"] += row.total_returns or 0
+        group["fit_orders"] += float(row.fit_return_rate or 0) * total_orders
+        group["quality_orders"] += float(row.quality_return_rate or 0) * total_orders
+        if group["latest_period"] is None or row.analysis_period > group["latest_period"]:
+            group["latest_period"] = row.analysis_period
+            group["top_fit_issue"] = row.top_fit_issue
+
+    skus_by_category = {}
+    for category, subcategory, product_name, row in sku_rows:
+        key = (category, subcategory, row.sku_id)
+        group = skus_by_category.setdefault(key, {
+            "sku_id": row.sku_id,
+            "product_name": product_name,
+            "total_orders": 0,
+            "total_returns": 0,
+            "fit_returns": 0,
+            "quality_count": 0,
+            "colour_count": 0,
+            "other_count": 0,
+            "top_issue": None,
+            "latest_period": None,
+        })
+        group["total_orders"] += row.total_orders or 0
+        group["total_returns"] += row.total_returns or 0
+        group["fit_returns"] += row.fit_returns or 0
+        group["quality_count"] += row.quality_count or 0
+        group["colour_count"] += row.colour_count or 0
+        group["other_count"] += row.other_count or 0
+        if group["latest_period"] is None or row.analysis_period > group["latest_period"]:
+            group["latest_period"] = row.analysis_period
+            group["top_issue"] = row.top_issue
+    for (category, subcategory, _), sku in skus_by_category.items():
+        total_orders = sku["total_orders"]
+        sku["return_rate"] = round(sku["total_returns"] / total_orders, 4) if total_orders else 0
+        sku["small_sample"] = total_orders < 30
+        categories[(category, subcategory)]["skus"].append(sku)
+
+    results = []
+    for group in categories.values():
+        orders = group.pop("total_orders")
+        group["total_orders"] = orders
+        group["return_rate"] = round(group["total_returns"] / orders, 4) if orders else 0
+        group["fit_return_rate"] = round(group.pop("fit_orders") / orders, 4) if orders else 0
+        group["quality_return_rate"] = round(group.pop("quality_orders") / orders, 4) if orders else 0
+        group["small_sample"] = orders < 30
+        group.pop("latest_period")
+        group["skus"].sort(key=lambda sku: (sku["return_rate"], sku["total_returns"]), reverse=True)
+        results.append(group)
+    results.sort(key=lambda row: (row["return_rate"], row["total_returns"]), reverse=True)
+    return results[:limit]
 
 
 @app.get("/api/reviews/pending")
@@ -210,6 +286,42 @@ def classify_return(return_id: str, db: Session = Depends(get_db)):
         "model_name": prediction.model_name,
         "human_review_status": prediction.human_review_status,
         "already_classified": False,
+    }
+
+
+@app.post("/api/returns/classify-batch")
+def classify_returns_batch(limit: int = Query(default=5, ge=1, le=5), db: Session = Depends(get_db)):
+    unanalysed = ~Return.return_id.in_(select(ReturnAIAnalysis.return_id))
+    records = db.scalars(
+        select(Return).where(unanalysed).order_by(Return.return_created_at).limit(limit)
+    ).all()
+    counts = {"classified": 0, "pending_review": 0, "not_required": 0, "failed": 0}
+    failures = []
+    if records:
+        try:
+            service = get_classifier_service()
+        except Exception as exc:
+            raise HTTPException(status_code=503, detail="Classification service is unavailable; no results were processed") from exc
+        for record in records:
+            try:
+                outcome = service.classify(db, record)
+            except Exception as exc:
+                db.rollback()
+                counts["failed"] += 1
+                failures.append({"return_id": record.return_id, "error": type(exc).__name__})
+                continue
+            counts["classified"] += 1
+            if outcome.human_review_status == "PENDING":
+                counts["pending_review"] += 1
+            else:
+                counts["not_required"] += 1
+    remaining = db.scalar(select(func.count()).select_from(Return).where(unanalysed)) or 0
+    return {
+        "requested": limit,
+        "attempted": len(records),
+        **counts,
+        "remaining_unclassified": remaining,
+        "failures": failures,
     }
 
 

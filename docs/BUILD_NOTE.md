@@ -2,7 +2,7 @@
 
 ## What the MVP does
 
-The user connects the browser dashboard to a FastAPI URL, sees “Other” share and pending reviews, classifies a return, reviews uncertain outputs, and inspects SKU insights. The repository contains a Vercel-ready static frontend and FastAPI entry point. No Dhaga production systems are connected. `sample_data/return_text_test_cases.csv` carries the 14 project-schema text cases, including Hinglish; these are test examples, not production records. The brief's proposed 15,000-return MVP volume is not supplied as a dataset.
+The user connects the browser dashboard to a FastAPI URL, sees “Other” share and pending reviews, classifies a return, reviews uncertain outputs, and inspects category-to-SKU insights. The review queue distinguishes unclassified returns from classified results awaiting human review. The repository contains a Vercel-ready static frontend and FastAPI entry point. No Dhaga production systems are connected. `sample_data/return_text_test_cases.csv` carries the 14 project-schema text cases, including Hinglish; these are test examples, not production records. The brief's proposed 15,000-return MVP volume is not supplied as a dataset.
 
 ## Code and model decisions
 
@@ -12,8 +12,9 @@ The user connects the browser dashboard to a FastAPI URL, sees “Other” share
 | Return classification | LangChain structured output via OpenRouter | Free-text/Hinglish mapping into the proposed taxonomy needs language judgment; JSON schema output is validated again with Pydantic. Temperature is 0.0 for repeatable classification. |
 | Routing and prompt chain | `openai/gpt-4.1-mini` first; `openai/gpt-4.1` on low confidence or `OTHER` | Reduces routine latency/cost. The second prompt receives the original text and the first structured prediction, then reassesses it. It is not given the human label. |
 | Review decision | Python threshold + category rule | Below 0.75 confidence or `OTHER` is queued for a human. The number is an initial design threshold, not calibrated confidence. |
-| Rates and aggregates | SQLAlchemy/Python | Counts and ratios are arithmetic and grouping, not model work. |
-| Dashboard and review UI | HTML/CSS/JavaScript | Lightweight mobile-friendly screen, visible API/model failures, and explicit human label submission. |
+| Bulk classification | Explicit dashboard request, maximum five unanalysed returns per call | No model calls on dashboard load; each result is saved separately and failures do not discard other results in the batch. |
+| Rates and aggregates | SQLAlchemy/Python | Counts and ratios are arithmetic and grouping, not model work. The dashboard sums stored periods over the selected inclusive date range; classification does not refresh insight tables. |
+| Dashboard and review UI | HTML/CSS/JavaScript | Category/subcategory rows expand to related SKU counts, rates, issue mix, and small-sample flags; review coverage, visible API/model failures, and human label submission remain explicit. |
 
 These are two deliberate patterns: **routing** (light to heavy by ambiguity) and **prompt chaining** (the second-stage prompt receives the first structured output). No parallelization or evaluator-optimizer is used. The app has no customer-facing generated answer, extraction call, or separate evaluator; classification alone runs at temperature 0.0. Human review, rather than a third model call, resolves uncertain labels.
 
