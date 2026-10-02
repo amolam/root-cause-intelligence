@@ -110,6 +110,15 @@ async function loadReviews(unanalysedReturns = 0) {
 }
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
 $("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
+$("refresh-insights").addEventListener("click", async (event) => {
+  const button = event.currentTarget; button.disabled = true; button.textContent = "Recalculating…";
+  try {
+    const result = await request("/api/dashboard/refresh-insights", { method: "POST" });
+    await refreshDashboard();
+    notice(`Insights recalculated: ${result.sku_rows} SKU rows and ${result.category_rows} category rows. Classifications were unchanged.`, true);
+  } catch (error) { notice(error.message); }
+  finally { button.disabled = false; button.textContent = "Recalculate insights"; }
+});
 $("reset-classifications").addEventListener("click", () => {
   $("reset-dialog").showModal();
 });
@@ -155,13 +164,7 @@ $("classify-form").addEventListener("submit", async (event) => {
   finally { button.disabled = false; button.textContent = "Classify"; }
 });
 if (base()) {
-  (async () => {
-    try {
-      $("connection-state").textContent = "Refreshing insights…";
-      await request("/api/dashboard/refresh-insights", { method: "POST" });
-      await refreshDashboard();
-    } catch (error) { $("connection-state").textContent = "Connection failed"; notice(error.message); }
-  })();
+  refreshDashboard().catch((error) => { $("connection-state").textContent = "Connection failed"; notice(error.message); });
 } else {
   $("connection-state").textContent = "API_BASE_URL is not configured";
 }

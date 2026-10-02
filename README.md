@@ -144,7 +144,7 @@ The local `frontend/public/runtime-config.js` points to `http://localhost:8000`.
 
 The API returns an existing classification for repeated requests to avoid accidental additional model calls. To deliberately re-run classification, use `python -m app.ai.cli --return-id <ID>`.
 
-The review queue's **Reset classifications** action calls `POST /api/admin/reset-classifications`. This demo endpoint deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. The endpoint is intentionally unauthenticated for this demo. Reloading the dashboard also recalculates insights from current classifications; the separate **Refresh** action only reloads the displayed data.
+The review queue's **Reset classifications** action calls `POST /api/admin/reset-classifications`. This demo endpoint deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. The endpoint is intentionally unauthenticated for this demo. The **Recalculate insights** button in Category to SKU recomputes the aggregates from current classifications without changing them. Page load, **Refresh**, and date-range changes only reload the displayed data.
 
 ## Build and deployment status
 
