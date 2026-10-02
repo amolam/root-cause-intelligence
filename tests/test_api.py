@@ -142,33 +142,27 @@ def test_batch_classification_limit_cannot_exceed_five():
     api_module.app.dependency_overrides.clear()
 
 
-def test_reset_classifications_is_disabled_without_server_token(monkeypatch):
-    client = client_with_session(FakeSession())
-    monkeypatch.setattr(api_module, "get_settings", lambda: SimpleNamespace(classification_reset_token=None))
+def test_reset_classifications_clears_records_and_refreshes_insights(monkeypatch):
+    client = client_with_session(ResetSession())
+    monkeypatch.setattr(api_module, "_refresh_all_insights", lambda db: (12, 8))
 
     response = client.post("/api/admin/reset-classifications")
-
-    assert response.status_code == 503
-    api_module.app.dependency_overrides.clear()
-
-
-def test_reset_classifications_requires_token_and_refreshes_insights(monkeypatch):
-    token = "x" * 40
-    client = client_with_session(ResetSession())
-    refreshed = []
-    monkeypatch.setattr(api_module, "get_settings", lambda: SimpleNamespace(classification_reset_token=token))
-    monkeypatch.setattr(api_module, "calculate_and_save_insights", lambda db, start, end, grain: refreshed.append((start, end, grain)))
-
-    denied = client.post("/api/admin/reset-classifications", headers={"X-Classification-Reset-Token": "wrong"})
-    assert denied.status_code == 403
-
-    response = client.post("/api/admin/reset-classifications", headers={"X-Classification-Reset-Token": token})
 
     assert response.status_code == 200
     assert response.json()["analyses_deleted"] == 1
     assert response.json()["human_reviews_deleted"] == 1
     assert response.json()["insights_refreshed"] is True
-    assert refreshed == [(date(2025, 1, 1), date(2026, 10, 1), "month")]
+    api_module.app.dependency_overrides.clear()
+
+
+def test_dashboard_refresh_endpoint_recalculates_all_insights(monkeypatch):
+    client = client_with_session(FakeSession())
+    monkeypatch.setattr(api_module, "_refresh_all_insights", lambda db: (12, 8))
+
+    response = client.post("/api/dashboard/refresh-insights")
+
+    assert response.status_code == 200
+    assert response.json() == {"sku_rows": 12, "category_rows": 8, "refreshed": True}
     api_module.app.dependency_overrides.clear()
 
 

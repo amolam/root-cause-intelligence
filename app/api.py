@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import secrets
 from datetime import date
 from functools import lru_cache
 from typing import Literal
 from uuid import UUID, uuid4
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator, model_validator
 from sqlalchemy import delete, func, select
@@ -74,6 +73,17 @@ def _refresh_monthly_insights_for_return(db: Session, record: Return) -> None:
     calculate_and_save_insights(db, start, end, "month")
 
 
+def _refresh_all_insights(db: Session) -> tuple[int, int]:
+    min_order, max_order = db.execute(
+        select(func.min(Order.order_created_at), func.max(Order.order_created_at))
+    ).one()
+    if min_order is None or max_order is None:
+        return 0, 0
+    start = min_order.date().replace(day=1)
+    end = _next_month_start(max_order.date().replace(day=1))
+    return calculate_and_save_insights(db, start, end, "month")
+
+
 def _review_reasons(analysis: ReturnAIAnalysis) -> list[str]:
     reasons = []
     confidence = float(analysis.confidence_score) if analysis.confidence_score is not None else 0
@@ -117,19 +127,7 @@ def health():
 
 
 @app.post("/api/admin/reset-classifications")
-def reset_classifications(
-    reset_token: str | None = Header(default=None, alias="X-Classification-Reset-Token"),
-    db: Session = Depends(get_db),
-):
-    expected_token = get_settings().classification_reset_token
-    if expected_token is None:
-        raise HTTPException(status_code=503, detail="Classification reset is disabled")
-    if reset_token is None or not secrets.compare_digest(reset_token, expected_token):
-        raise HTTPException(status_code=403, detail="Invalid reset token")
-
-    min_order, max_order = db.execute(
-        select(func.min(Order.order_created_at), func.max(Order.order_created_at))
-    ).one()
+def reset_classifications(db: Session = Depends(get_db)):
     try:
         human_reviews_deleted = db.execute(delete(HumanReview)).rowcount or 0
         analyses_deleted = db.execute(delete(ReturnAIAnalysis)).rowcount or 0
@@ -141,10 +139,7 @@ def reset_classifications(
         raise HTTPException(status_code=503, detail="Classification data could not be reset") from exc
 
     try:
-        if min_order is not None and max_order is not None:
-            start = min_order.date().replace(day=1)
-            end = _next_month_start(max_order.date().replace(day=1))
-            calculate_and_save_insights(db, start, end, "month")
+        _refresh_all_insights(db)
     except Exception as exc:
         db.rollback()
         raise HTTPException(status_code=503, detail="Classifications were reset, but insights could not be recalculated") from exc
@@ -155,6 +150,16 @@ def reset_classifications(
         "category_insights_deleted": category_insights_deleted,
         "insights_refreshed": True,
     }
+
+
+@app.post("/api/dashboard/refresh-insights")
+def refresh_dashboard_insights(db: Session = Depends(get_db)):
+    try:
+        sku_rows, category_rows = _refresh_all_insights(db)
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Dashboard insights could not be refreshed") from exc
+    return {"sku_rows": sku_rows, "category_rows": category_rows, "refreshed": True}
 
 
 @app.get("/api/dashboard/summary")

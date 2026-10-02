@@ -34,9 +34,18 @@
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
+      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="reset-classifications" class="button-secondary" type="button">Reset classifications</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
       <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
     </section>
+
+    <dialog id="reset-dialog" class="reset-dialog">
+      <form id="reset-form">
+        <p class="eyebrow">ADMIN ACTION</p>
+        <h2>Reset classifications?</h2>
+        <p class="muted">This deletes AI analyses and submitted human reviews, then recalculates insights. Returns and orders are kept.</p>
+        <div class="toolbar-actions"><button id="cancel-reset" class="button-secondary" type="button">Cancel</button><button id="confirm-reset" type="submit">Reset classifications</button></div>
+      </form>
+    </dialog>
 
     <section class="panel">
       <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Category to SKU</h2><p class="muted">Product categories group the matching SKUs. FIT, QUALITY, COLOUR, and OTHER are predicted return-issue labels.</p></div>

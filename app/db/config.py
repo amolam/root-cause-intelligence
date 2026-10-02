@@ -7,9 +7,6 @@ from sqlalchemy.engine import make_url
 
 class Settings(BaseSettings):
     database_url: str = Field(validation_alias="DATABASE_URL")
-    classification_reset_token: str | None = Field(
-        default=None, min_length=32, validation_alias="CLASSIFICATION_RESET_TOKEN"
-    )
     openrouter_api_key: str | None = Field(default=None, validation_alias="OPENROUTER_API_KEY")
     openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", validation_alias="OPENROUTER_BASE_URL")
     openrouter_light_model: str = Field(default="openai/gpt-4.1-mini", validation_alias="OPENROUTER_LIGHT_MODEL")

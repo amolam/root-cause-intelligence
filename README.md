@@ -44,7 +44,7 @@ Set `DATABASE_URL` in `.env` to the connection URL shown by Aiven and set `OPENR
 
 For Vercel, the API project's `audit-updates` Preview environment has a separate staging `DATABASE_URL` and an `OPENROUTER_API_KEY`; Production values are separate. Vercel's CLI does not export Secret variables. Do not assume `.env` is the Preview database, and never paste credentials into chat or source control. For a local staging operation, use an ignored `.env.preview.local` and verify only its non-secret host/database metadata before running a command.
 
-The static frontend build requires `API_BASE_URL`, a non-secret API origin. Set it separately in the Vercel web project's Preview and Production environments; it is embedded in the generated dashboard config at build time. The API's optional `CLASSIFICATION_RESET_TOKEN` must be at least 32 characters and should be configured only in environments where classification reset is intended. Never put that token in the frontend project.
+The static frontend build requires `API_BASE_URL`, a non-secret API origin. Set it separately in the Vercel web project's Preview and Production environments; it is embedded in the generated dashboard config at build time.
 
 Apply the schema:
 
@@ -144,7 +144,7 @@ The local `frontend/public/runtime-config.js` points to `http://localhost:8000`.
 
 The API returns an existing classification for repeated requests to avoid accidental additional model calls. To deliberately re-run classification, use `python -m app.ai.cli --return-id <ID>`.
 
-`POST /api/admin/reset-classifications` is disabled unless the API environment has a `CLASSIFICATION_RESET_TOKEN` of at least 32 characters. Call it with that value in the `X-Classification-Reset-Token` header. It deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. Keep this token only in the API project's secret environment variables, never in the browser or frontend project.
+The review queue's **Reset classifications** action calls `POST /api/admin/reset-classifications`. This demo endpoint deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. The endpoint is intentionally unauthenticated for this demo. Reloading the dashboard also recalculates insights from current classifications; the separate **Refresh** action only reloads the displayed data.
 
 ## Build and deployment status
 
