@@ -2,7 +2,7 @@ import csv
 
 import pytest
 
-from app.ingestion.csv_loader import CSVValidationError, parse_csv
+from app.ingestion.csv_loader import DATASETS, CSVValidationError, parse_csv
 
 
 def write_csv(tmp_path, name, headers, row):
@@ -39,3 +39,21 @@ def test_required_field_and_unknown_column_fail_visibly(tmp_path):
     extra = write_csv(tmp_path, "extra.csv", ["sku_id", "surprise"], ["S1", "x"])
     with pytest.raises(CSVValidationError, match="Unknown columns"):
         parse_csv(extra, "products")
+
+
+def test_operational_and_vendor_datasets_are_loadable():
+    assert {"vendors", "vendor_purchase_orders", "support_tickets", "app_search_events"} <= set(DATASETS)
+
+
+def test_parse_vendor_trims_values_and_keeps_optional_lead_time_null(tmp_path):
+    path = write_csv(tmp_path, "vendors.csv", ["vendor_id", "vendor_name", "city", "lead_time_days"],
+                     [" VEN1 ", " Jaipur Crafts ", " Jaipur ", ""])
+    row = parse_csv(path, "vendors")[0]
+    assert row == {"vendor_id": "VEN1", "vendor_name": "Jaipur Crafts", "city": "Jaipur", "lead_time_days": None, "created_at": None}
+
+
+def test_parse_csv_normalizes_whitespace_in_headers(tmp_path):
+    path = write_csv(tmp_path, "customers.csv", [" customer_id ", " customer_city "], [" C1 ", " Jaipur "])
+    row = parse_csv(path, "customers")[0]
+    assert row["customer_id"] == "C1"
+    assert row["customer_city"] == "Jaipur"

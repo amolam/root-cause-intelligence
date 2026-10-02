@@ -19,6 +19,7 @@ from app.db.base import Base
 
 DATASETS: dict[str, type] = {
     "customers": models.Customer,
+    "vendors": models.Vendor,
     "products": models.Product,
     "product_size_chart": models.ProductSizeChart,
     "orders": models.Order,
@@ -31,6 +32,9 @@ DATASETS: dict[str, type] = {
     "human_review": models.HumanReview,
     "sku_return_insights": models.SKUReturnInsight,
     "category_return_insights": models.CategoryReturnInsight,
+    "vendor_purchase_orders": models.VendorPurchaseOrder,
+    "support_tickets": models.SupportTicket,
+    "app_search_events": models.AppSearchEvent,
 }
 
 
@@ -97,6 +101,7 @@ def parse_csv(path: str | Path, dataset: str) -> list[dict[str, Any]]:
         if not reader.fieldnames:
             raise CSVValidationError("CSV is empty or has no header row")
         headers = [header.strip() for header in reader.fieldnames]
+        reader.fieldnames = headers
         if len(headers) != len(set(headers)):
             raise CSVValidationError("CSV contains duplicate column names")
         extra = sorted(set(headers) - set(columns))

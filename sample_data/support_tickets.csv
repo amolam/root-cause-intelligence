@@ -1,0 +1,2 @@
+ticket_id,customer_id,order_id,created_at,channel,query_text,category_tag,resolution_status
+TICKET-SAMPLE-001,CUST-SAMPLE-001,ORD-SAMPLE-001,2025-02-05T11:30:00+00:00,email,Can I exchange this kurti for a larger size?,size_exchange,Resolved

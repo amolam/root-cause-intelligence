@@ -10,7 +10,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from sqlalchemy import (
-    BigInteger, Boolean, Date, DateTime, ForeignKey, ForeignKeyConstraint,
+    BigInteger, Boolean, CheckConstraint, Date, DateTime, ForeignKey, ForeignKeyConstraint, func,
     Integer, Numeric, String, Text, UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID as PGUUID
@@ -28,6 +28,17 @@ class Customer(Base):
     customer_tier: Mapped[str | None] = mapped_column(String)
 
 
+
+
+class Vendor(Base):
+    __tablename__ = "vendors"
+    vendor_id: Mapped[str] = mapped_column(String, primary_key=True)
+    vendor_name: Mapped[str] = mapped_column(String, nullable=False)
+    city: Mapped[str] = mapped_column(String, nullable=False)
+    lead_time_days: Mapped[int | None] = mapped_column(Integer)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class Product(Base):
     __tablename__ = "products"
     sku_id: Mapped[str] = mapped_column(String, primary_key=True)
@@ -38,7 +49,7 @@ class Product(Base):
     colour: Mapped[str] = mapped_column(String, nullable=False)
     fabric: Mapped[str] = mapped_column(String, nullable=False)
     size: Mapped[str] = mapped_column(String, nullable=False)
-    vendor_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    vendor_id: Mapped[str] = mapped_column(ForeignKey("vendors.vendor_id"), nullable=False, index=True)
     size_chart_id: Mapped[str | None] = mapped_column(String)
     product_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     product_active: Mapped[bool] = mapped_column(Boolean, nullable=False)
@@ -49,7 +60,7 @@ class ProductSizeChart(Base):
     __tablename__ = "product_size_chart"
     __table_args__ = (UniqueConstraint("size_chart_id", "vendor_id", "size_label", name="uq_size_chart_vendor_size"),)
     size_chart_id: Mapped[str] = mapped_column(String, primary_key=True)
-    vendor_id: Mapped[str] = mapped_column(String, primary_key=True)
+    vendor_id: Mapped[str] = mapped_column(ForeignKey("vendors.vendor_id"), primary_key=True)
     size_label: Mapped[str] = mapped_column(String, primary_key=True)
     chest_min: Mapped[Decimal | None] = mapped_column(Numeric)
     chest_max: Mapped[Decimal | None] = mapped_column(Numeric)
@@ -199,3 +210,46 @@ class CategoryReturnInsight(Base):
     top_fit_issue: Mapped[str | None] = mapped_column(String)
     top_problem_skus: Mapped[dict | list | None] = mapped_column(JSONB)
     calculated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class VendorPurchaseOrder(Base):
+    """One row per vendor PO / SKU, as proposed in the updated schema."""
+    __tablename__ = "vendor_purchase_orders"
+    __table_args__ = (
+        ForeignKeyConstraint(["sku_id"], ["products.sku_id"], name="fk_vendor_po_sku"),
+        CheckConstraint("quantity_ordered > 0", name="ck_vendor_po_quantity_positive"),
+    )
+    po_id: Mapped[str] = mapped_column(String, primary_key=True)
+    vendor_id: Mapped[str] = mapped_column(ForeignKey("vendors.vendor_id"), nullable=False, index=True)
+    sku_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    quantity_ordered: Mapped[int] = mapped_column(Integer, nullable=False)
+    order_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expected_delivery_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    actual_delivery_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    po_status: Mapped[str] = mapped_column(String, nullable=False)
+
+
+class SupportTicket(Base):
+    __tablename__ = "support_tickets"
+    ticket_id: Mapped[str] = mapped_column(String, primary_key=True)
+    customer_id: Mapped[str] = mapped_column(ForeignKey("customers.customer_id"), nullable=False, index=True)
+    order_id: Mapped[str | None] = mapped_column(ForeignKey("orders.order_id"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    channel: Mapped[str] = mapped_column(String, nullable=False)
+    query_text: Mapped[str] = mapped_column(Text, nullable=False)
+    category_tag: Mapped[str | None] = mapped_column(String)
+    resolution_status: Mapped[str] = mapped_column(String, nullable=False)
+
+
+class AppSearchEvent(Base):
+    __tablename__ = "app_search_events"
+    __table_args__ = (
+        CheckConstraint("results_count IS NULL OR results_count >= 0", name="ck_app_search_results_nonnegative"),
+    )
+    event_id: Mapped[str] = mapped_column(String, primary_key=True)
+    customer_id: Mapped[str] = mapped_column(ForeignKey("customers.customer_id"), nullable=False, index=True)
+    search_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    raw_search_query: Mapped[str] = mapped_column(Text, nullable=False)
+    detected_language: Mapped[str | None] = mapped_column(String)
+    occasion_intent: Mapped[str | None] = mapped_column(String)
+    results_count: Mapped[int | None] = mapped_column(Integer)

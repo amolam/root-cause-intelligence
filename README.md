@@ -4,11 +4,11 @@ An FDE MVP for Dhaga & Co.'s return root-cause problem. It ingests schema-shaped
 
 ## Included
 
-- SQLAlchemy 2 ORM models for customers, products, vendor size charts, orders, order items, status history, returns, reviews, catalogue attributes, AI analysis, human review, and SKU/category insight tables.
-- Alembic initial migration.
+- SQLAlchemy 2 ORM models for customers, vendors, products, vendor size charts, orders, order items, status history, returns, reviews, catalogue attributes, AI analysis, human review, vendor purchase orders, support tickets, app search events, and SKU/category insight tables.
+- Alembic migrations for the initial schema, normalized vendor master and relationships, and operational data tables.
 - Environment-based PostgreSQL configuration with the `psycopg` driver and Aiven TLS URL support.
 - CSV ingestion with header/field validation, typed values, basic whitespace cleanup, line-level errors, and one transaction per dataset.
-- Small, clearly synthetic sample CSVs for the customer → product/order → order item → return path.
+- Small, clearly synthetic sample CSVs for the vendor/customer → product/order → order item → return path.
 - Return-text classification with validated structured output, low-confidence escalation, and human-review routing.
 - FastAPI endpoints for dashboard metrics, insights, classification, and human review.
 - A responsive static frontend for the category user, with visible API/model failures.
@@ -35,12 +35,6 @@ Apply the schema:
 alembic upgrade head
 ```
 
-Inspect migration SQL without connecting:
-
-```powershell
-alembic upgrade head --sql
-```
-
 Run the database metadata tests:
 
 ```powershell
@@ -55,13 +49,13 @@ Load a single dataset after its referenced parent datasets exist. The loader acc
 python -m app.ingestion.cli load products path\to\products.csv
 ```
 
-To load the bundled synthetic example data in foreign-key order:
+To load the bundled synthetic example data in foreign-key order (including a placeholder vendor row):
 
 ```powershell
 python -m app.ingestion.cli seed
 ```
 
-The seed command can be repeated: existing rows with the same schema key are updated. The examples use fictional IDs and values and must not be treated as client data. For other datasets, use `load` one dataset at a time, loading referenced customers/products/orders/returns first.
+The seed command can be repeated: existing rows with the same schema key are updated. The examples use fictional IDs and values and must not be treated as client data. It seeds the customer/order/return path plus vendor purchase order, support ticket, and app search examples. Other mapped datasets can be loaded with `load` after their referenced parents exist. The sample vendor's name and city are explicit `Unknown` placeholders because the available fixture has no vendor master details.
 
 ## Classify return reasons
 
