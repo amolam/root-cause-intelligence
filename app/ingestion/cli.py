@@ -7,7 +7,17 @@ from app.db.session import SessionLocal
 from app.ingestion.csv_loader import DATASETS, load_csv
 
 
-SEED_ORDER = ["customers", "products", "orders", "order_items", "returns"]
+SEED_ORDER = [
+    "customers",
+    "vendors",
+    "products",
+    "orders",
+    "order_items",
+    "returns",
+    "vendor_purchase_orders",
+    "support_tickets",
+    "app_search_events",
+]
 
 
 def main() -> None:

@@ -70,6 +70,18 @@ def test_low_confidence_escalates_and_marks_human_review_pending():
     assert session.rows[0].human_review_status == "PENDING"
 
 
+def test_confident_escalated_result_does_not_require_review():
+    light = FakeClassifier("light", result(confidence=0.4))
+    heavy = FakeClassifier("heavy", result(confidence=0.94))
+    session = FakeSession()
+    record = SimpleNamespace(return_id="R3", sku_id="S3", return_reason="Other", return_reason_text="fits well")
+
+    outcome = ReturnClassificationService(light, heavy).classify(session, record)
+
+    assert outcome.human_review_status == "NOT_REQUIRED"
+    assert session.rows[0].human_review_status == "NOT_REQUIRED"
+
+
 def test_invalid_category_subcategory_pair_is_rejected():
     with pytest.raises(ValueError, match="not valid"):
         result(category="FIT", subcategory="STITCHING")

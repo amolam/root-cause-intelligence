@@ -3,10 +3,11 @@ from app.db import models  # noqa: F401
 
 
 EXPECTED_TABLES = {
-    "customers", "products", "product_size_chart", "orders", "order_items",
+    "customers", "vendors", "products", "product_size_chart", "orders", "order_items",
     "order_status_history", "returns", "reviews", "catalogue_attributes",
     "return_ai_analysis", "human_review", "sku_return_insights",
-    "category_return_insights",
+    "category_return_insights", "vendor_purchase_orders", "support_tickets",
+    "app_search_events",
 }
 
 

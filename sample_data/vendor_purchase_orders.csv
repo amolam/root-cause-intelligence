@@ -1,0 +1,2 @@
+po_id,vendor_id,sku_id,quantity_ordered,order_date,expected_delivery_date,actual_delivery_date,po_status
+PO-SAMPLE-001,VEND-SAMPLE-001,SKU-SAMPLE-001,25,2025-01-15T10:00:00+00:00,2025-01-25T10:00:00+00:00,2025-01-24T10:00:00+00:00,Fulfilled

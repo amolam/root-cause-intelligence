@@ -1,0 +1,1001 @@
+ticket_id,customer_id,order_id,created_at,channel,query_text,category_tag,resolution_status
+TICKET-0001,CUST-0301,ORD-04972,2025-07-30T16:04:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0002,CUST-0536,ORD-08278,2025-01-09T08:01:00+00:00,phone,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0003,CUST-0567,ORD-03922,2025-03-26T20:35:00+00:00,email,Can you share the latest delivery update?,wismo,Open
+TICKET-0004,CUST-0359,ORD-05061,2026-05-19T12:47:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0005,CUST-0719,ORD-06133,2025-02-19T16:14:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0006,CUST-0790,ORD-01113,2026-08-23T02:54:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0007,CUST-0672,ORD-07786,2025-08-06T14:53:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0008,CUST-0005,ORD-04375,2025-12-18T11:28:00+00:00,phone,My parcel is delayed. Please check.,wismo,Open
+TICKET-0009,CUST-0168,ORD-09553,2025-04-05T21:39:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0010,CUST-0146,,2025-01-06T00:44:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0011,CUST-0351,ORD-07759,2025-01-05T00:58:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0012,CUST-0110,ORD-05942,2026-03-27T04:59:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0013,CUST-0557,ORD-00069,2026-05-30T22:39:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0014,CUST-0587,ORD-07470,2026-08-24T19:38:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0015,CUST-0743,ORD-08653,2025-01-11T23:20:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0016,CUST-0528,ORD-08168,2025-10-27T11:57:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0017,CUST-0813,ORD-05886,2025-09-09T12:27:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0018,CUST-0701,ORD-01305,2025-02-20T23:30:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0019,CUST-0823,ORD-04749,2025-03-23T10:11:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0020,CUST-0161,,2025-05-24T21:18:00+00:00,email,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0021,CUST-0855,ORD-07010,2025-03-06T20:34:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0022,CUST-0531,ORD-01993,2025-04-26T00:47:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0023,CUST-0840,ORD-03229,2025-11-22T18:11:00+00:00,phone,The tracking link is not working.,wismo,Pending Customer
+TICKET-0024,CUST-0132,ORD-07509,2025-10-04T03:32:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0025,CUST-0347,ORD-02600,2025-10-24T01:46:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Open
+TICKET-0026,CUST-0239,ORD-09171,2025-06-19T14:05:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0027,CUST-0540,ORD-03391,2025-10-29T01:31:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0028,CUST-0054,ORD-08100,2026-02-13T02:00:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0029,CUST-0572,ORD-05130,2025-04-11T02:40:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0030,CUST-0538,,2025-04-27T07:36:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0031,CUST-0517,ORD-08625,2026-04-17T21:41:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0032,CUST-0922,ORD-07896,2025-03-31T16:50:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0033,CUST-0528,ORD-06444,2025-07-01T18:14:00+00:00,phone,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0034,CUST-0622,ORD-01456,2025-07-05T19:50:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0035,CUST-0839,ORD-09263,2025-12-05T16:31:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0036,CUST-0458,ORD-08007,2025-05-28T23:12:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0037,CUST-0504,ORD-09895,2026-05-19T04:09:00+00:00,phone,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0038,CUST-0310,ORD-06441,2026-01-04T16:54:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0039,CUST-0433,ORD-01860,2026-01-28T05:13:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0040,CUST-0925,,2025-11-06T20:27:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0041,CUST-0256,ORD-02898,2026-02-08T23:01:00+00:00,email,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0042,CUST-0413,ORD-09289,2026-03-06T01:34:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0043,CUST-0195,ORD-04886,2026-06-21T05:22:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0044,CUST-0117,ORD-04304,2026-07-12T20:55:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0045,CUST-0014,ORD-08038,2025-05-27T11:52:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0046,CUST-0850,ORD-05376,2025-04-13T07:44:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0047,CUST-0722,ORD-01846,2025-12-01T09:25:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0048,CUST-0774,ORD-04070,2025-07-16T23:26:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0049,CUST-0488,ORD-07125,2025-10-23T13:07:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0050,CUST-0389,,2025-12-08T11:59:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0051,CUST-0309,ORD-01915,2026-08-29T21:18:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0052,CUST-0133,ORD-08046,2025-05-06T22:36:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0053,CUST-0930,ORD-02142,2026-08-15T07:44:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0054,CUST-0450,ORD-01969,2026-03-10T12:55:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0055,CUST-0449,ORD-08129,2025-04-26T10:40:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0056,CUST-0118,ORD-03540,2026-05-02T15:59:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0057,CUST-0500,ORD-06112,2026-08-08T02:04:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0058,CUST-0940,ORD-09438,2025-02-11T03:11:00+00:00,email,The tracking link is not working.,wismo,Pending Customer
+TICKET-0059,CUST-0034,ORD-03857,2026-06-20T20:31:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0060,CUST-0578,,2025-12-25T01:12:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0061,CUST-0438,ORD-00777,2026-07-19T03:08:00+00:00,chat,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0062,CUST-0538,ORD-08291,2025-08-10T05:34:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0063,CUST-0361,ORD-07277,2025-04-11T17:56:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0064,CUST-0780,ORD-08957,2026-01-12T09:54:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0065,CUST-0588,ORD-06704,2026-06-25T10:12:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0066,CUST-0756,ORD-02788,2025-04-10T11:01:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0067,CUST-0168,ORD-06392,2026-08-11T01:15:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0068,CUST-0473,ORD-07076,2026-05-21T16:08:00+00:00,chat,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0069,CUST-0658,ORD-01919,2025-12-20T03:45:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0070,CUST-0523,,2025-11-16T21:06:00+00:00,chat,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0071,CUST-0149,ORD-09827,2025-11-07T08:29:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0072,CUST-0068,ORD-08299,2025-06-01T23:30:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0073,CUST-0349,ORD-09172,2026-07-23T18:57:00+00:00,phone,The tracking link is not working.,wismo,Open
+TICKET-0074,CUST-0600,ORD-07593,2026-05-01T03:18:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0075,CUST-0069,ORD-03347,2025-11-17T03:53:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0076,CUST-0820,ORD-08270,2026-02-26T04:50:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0077,CUST-0818,ORD-04028,2025-08-16T04:33:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0078,CUST-0014,ORD-08038,2025-07-30T21:18:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0079,CUST-0321,ORD-05149,2026-06-02T15:27:00+00:00,email,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0080,CUST-0342,,2025-11-26T08:36:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0081,CUST-0687,ORD-06517,2025-01-05T03:46:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0082,CUST-0214,ORD-02948,2026-09-03T20:28:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0083,CUST-0060,ORD-02866,2026-01-21T10:43:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0084,CUST-0952,ORD-02498,2026-01-08T03:49:00+00:00,email,Can you share the latest delivery update?,wismo,Open
+TICKET-0085,CUST-0154,ORD-01588,2026-09-04T00:57:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0086,CUST-0935,ORD-01041,2025-06-23T01:56:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0087,CUST-0257,ORD-07142,2026-01-23T05:53:00+00:00,chat,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0088,CUST-0342,ORD-09913,2026-05-22T23:26:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0089,CUST-0077,ORD-07106,2025-04-04T18:46:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0090,CUST-0752,,2025-12-29T08:43:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0091,CUST-0872,ORD-01726,2026-01-23T14:46:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0092,CUST-0874,ORD-04422,2026-01-18T17:17:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0093,CUST-0887,ORD-06679,2026-05-29T01:30:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0094,CUST-0675,ORD-05659,2026-04-22T14:52:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0095,CUST-0669,ORD-06109,2026-03-07T07:52:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0096,CUST-0205,ORD-07379,2026-07-22T23:55:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0097,CUST-0841,ORD-01191,2025-01-24T13:42:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0098,CUST-0407,ORD-00019,2025-07-31T16:15:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0099,CUST-0387,ORD-07706,2026-07-25T11:46:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0100,CUST-0070,,2025-10-22T17:26:00+00:00,email,The tracking link is not working.,wismo,Resolved
+TICKET-0101,CUST-0014,ORD-03184,2025-01-07T02:59:00+00:00,whatsapp,The tracking link is not working.,wismo,Resolved
+TICKET-0102,CUST-0159,ORD-04063,2025-02-21T06:42:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0103,CUST-0315,ORD-07515,2025-08-06T10:01:00+00:00,phone,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0104,CUST-0925,ORD-07526,2025-08-26T05:39:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0105,CUST-0466,ORD-08266,2025-09-11T13:44:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0106,CUST-0842,ORD-06123,2025-08-11T09:23:00+00:00,email,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0107,CUST-0563,ORD-05623,2025-05-12T05:13:00+00:00,phone,My parcel is delayed. Please check.,wismo,Open
+TICKET-0108,CUST-0133,ORD-08800,2026-07-12T10:09:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0109,CUST-0730,ORD-02905,2025-05-07T19:00:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0110,CUST-0868,,2026-03-30T02:10:00+00:00,email,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0111,CUST-0389,ORD-03277,2025-01-29T18:17:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0112,CUST-0674,ORD-00528,2025-11-16T07:52:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0113,CUST-0075,ORD-05246,2026-03-16T10:35:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Open
+TICKET-0114,CUST-0660,ORD-07814,2025-09-29T16:53:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0115,CUST-0793,ORD-06575,2025-01-25T10:12:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0116,CUST-0193,ORD-00891,2025-06-26T03:09:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0117,CUST-0826,ORD-05945,2026-07-27T06:01:00+00:00,email,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0118,CUST-0053,ORD-02211,2026-05-06T09:32:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0119,CUST-0385,ORD-07988,2025-10-14T02:56:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0120,CUST-0776,,2025-07-19T05:55:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0121,CUST-0966,ORD-03010,2026-04-06T15:22:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0122,CUST-0895,ORD-07844,2025-04-03T12:09:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0123,CUST-0434,ORD-09394,2025-09-03T13:11:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0124,CUST-0019,ORD-05082,2025-08-25T08:32:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0125,CUST-0477,ORD-07173,2025-11-09T09:32:00+00:00,phone,Expected delivery date kya hai?,wismo,Open
+TICKET-0126,CUST-0420,ORD-08980,2026-02-15T16:23:00+00:00,email,The tracking link is not working.,wismo,Resolved
+TICKET-0127,CUST-0532,ORD-07445,2026-01-08T14:03:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0128,CUST-0360,ORD-06466,2026-08-24T11:17:00+00:00,email,Can you share the latest delivery update?,wismo,Open
+TICKET-0129,CUST-0659,ORD-03281,2026-07-24T16:28:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0130,CUST-0589,,2026-07-18T01:46:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0131,CUST-0588,ORD-05786,2026-03-29T18:53:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0132,CUST-0536,ORD-05813,2026-08-19T02:45:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0133,CUST-0682,ORD-03972,2025-08-15T14:50:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0134,CUST-0563,ORD-02828,2025-03-29T16:35:00+00:00,phone,The tracking link is not working.,wismo,Pending Customer
+TICKET-0135,CUST-0022,ORD-00467,2025-03-08T22:14:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0136,CUST-0045,ORD-03121,2025-04-19T16:55:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0137,CUST-0241,ORD-06237,2026-02-05T07:25:00+00:00,email,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0138,CUST-0662,ORD-05602,2026-08-19T05:12:00+00:00,chat,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0139,CUST-0356,ORD-02361,2025-11-21T09:54:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0140,CUST-0868,,2026-01-12T22:18:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0141,CUST-0114,ORD-03047,2025-11-21T20:08:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0142,CUST-0687,ORD-07523,2026-05-02T22:20:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0143,CUST-0763,ORD-05181,2026-05-27T06:43:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0144,CUST-0685,ORD-03747,2026-04-21T23:12:00+00:00,email,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0145,CUST-0810,ORD-03583,2026-08-31T02:44:00+00:00,email,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0146,CUST-0583,ORD-02800,2026-09-08T22:47:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0147,CUST-0267,ORD-00923,2025-12-16T02:42:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0148,CUST-0116,ORD-01971,2025-03-07T10:21:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0149,CUST-0696,ORD-00871,2026-08-27T14:52:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0150,CUST-0955,,2025-02-13T00:51:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0151,CUST-0437,ORD-02452,2026-08-29T00:30:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0152,CUST-0041,ORD-07594,2026-06-24T07:45:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0153,CUST-0082,ORD-05921,2025-04-13T02:05:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0154,CUST-0772,ORD-00755,2026-04-10T17:46:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0155,CUST-0274,ORD-07859,2026-05-30T21:19:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0156,CUST-0005,ORD-04375,2026-05-02T16:21:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Open
+TICKET-0157,CUST-0048,ORD-06689,2025-12-01T20:29:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0158,CUST-0437,ORD-09777,2026-04-22T15:42:00+00:00,phone,My parcel is delayed. Please check.,wismo,Open
+TICKET-0159,CUST-0574,ORD-05985,2025-02-12T00:06:00+00:00,email,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0160,CUST-0020,,2025-05-09T08:44:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0161,CUST-0646,ORD-00647,2025-10-08T01:11:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0162,CUST-0070,ORD-08689,2025-02-13T03:57:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0163,CUST-0895,ORD-08730,2026-02-24T19:09:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0164,CUST-0586,ORD-01496,2025-09-08T00:27:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0165,CUST-0010,ORD-03421,2025-07-31T05:44:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0166,CUST-0777,ORD-07467,2025-03-26T19:03:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0167,CUST-0170,ORD-02877,2025-12-04T12:25:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0168,CUST-0415,ORD-03071,2025-09-14T04:13:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0169,CUST-0774,ORD-04214,2026-01-29T15:15:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0170,CUST-0755,,2025-03-18T06:59:00+00:00,phone,The tracking link is not working.,wismo,Resolved
+TICKET-0171,CUST-0596,ORD-05649,2025-05-31T09:15:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0172,CUST-0257,ORD-07482,2025-11-19T23:25:00+00:00,chat,The tracking link is not working.,wismo,Pending Customer
+TICKET-0173,CUST-0194,ORD-03090,2026-03-08T22:16:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0174,CUST-0836,ORD-02204,2025-02-20T09:08:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0175,CUST-0642,ORD-07698,2025-06-26T06:00:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0176,CUST-0420,ORD-07766,2026-06-29T17:06:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0177,CUST-0588,ORD-06704,2026-04-01T19:57:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0178,CUST-0132,ORD-06854,2025-08-31T13:17:00+00:00,email,Can you share the latest delivery update?,wismo,Open
+TICKET-0179,CUST-0381,ORD-08462,2025-11-28T20:01:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0180,CUST-0823,,2026-09-05T03:14:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0181,CUST-0341,ORD-05357,2025-06-27T08:58:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0182,CUST-0296,ORD-06758,2025-05-30T10:16:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0183,CUST-0721,ORD-02402,2026-03-02T06:07:00+00:00,email,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0184,CUST-0118,ORD-03273,2026-04-20T23:41:00+00:00,email,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0185,CUST-0207,ORD-09390,2026-05-17T06:03:00+00:00,email,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0186,CUST-0669,ORD-04691,2025-02-28T01:29:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0187,CUST-0739,ORD-09514,2025-05-09T03:47:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0188,CUST-0641,ORD-01482,2026-09-11T03:04:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0189,CUST-0425,ORD-02787,2025-02-18T06:50:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0190,CUST-0614,,2025-02-22T12:00:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0191,CUST-0826,ORD-04288,2025-07-07T18:40:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0192,CUST-0072,ORD-08083,2025-02-27T00:29:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0193,CUST-0522,ORD-03554,2026-09-01T08:04:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0194,CUST-0279,ORD-02679,2025-12-13T19:09:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0195,CUST-0210,ORD-04554,2025-08-11T06:57:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0196,CUST-0652,ORD-02553,2025-10-31T07:58:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0197,CUST-0087,ORD-01577,2026-06-01T10:23:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0198,CUST-0958,ORD-07468,2025-01-31T08:20:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0199,CUST-0224,ORD-02716,2025-11-11T21:05:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0200,CUST-0276,,2025-09-23T14:48:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0201,CUST-0068,ORD-02144,2026-06-27T23:38:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0202,CUST-0820,ORD-07957,2025-04-16T09:06:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0203,CUST-0292,ORD-09325,2026-05-11T21:59:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0204,CUST-0904,ORD-03660,2025-05-12T22:42:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0205,CUST-0680,ORD-09430,2025-01-30T05:30:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0206,CUST-0797,ORD-03054,2025-08-21T08:42:00+00:00,chat,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0207,CUST-0774,ORD-05039,2025-12-14T21:59:00+00:00,phone,The tracking link is not working.,wismo,Open
+TICKET-0208,CUST-0834,ORD-04051,2026-01-15T17:52:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0209,CUST-0635,ORD-07416,2026-08-28T09:11:00+00:00,phone,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0210,CUST-0750,,2025-02-09T21:29:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0211,CUST-0323,ORD-08413,2026-01-10T03:39:00+00:00,email,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0212,CUST-0256,ORD-02161,2025-02-20T09:31:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0213,CUST-0583,ORD-03738,2025-12-18T15:04:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0214,CUST-0670,ORD-03774,2026-04-22T20:28:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0215,CUST-0052,ORD-03279,2025-01-03T18:37:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0216,CUST-0647,ORD-09633,2025-01-13T01:48:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0217,CUST-0693,ORD-08564,2025-07-20T13:45:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0218,CUST-0263,ORD-08284,2025-11-09T17:45:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0219,CUST-0799,ORD-04587,2025-01-15T08:53:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0220,CUST-0753,,2025-04-26T01:00:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0221,CUST-0854,ORD-03382,2026-05-18T08:47:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0222,CUST-0905,ORD-04842,2025-06-09T20:06:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0223,CUST-0189,ORD-06954,2025-09-05T20:24:00+00:00,chat,Can you share the latest delivery update?,wismo,Open
+TICKET-0224,CUST-0479,ORD-02504,2026-08-01T10:16:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0225,CUST-0078,ORD-09523,2026-08-12T13:25:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0226,CUST-0867,ORD-04753,2025-03-04T10:14:00+00:00,phone,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0227,CUST-0007,ORD-01125,2025-03-23T11:03:00+00:00,phone,The tracking link is not working.,wismo,Pending Customer
+TICKET-0228,CUST-0015,ORD-05428,2026-08-31T02:15:00+00:00,email,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0229,CUST-0326,ORD-03830,2025-07-13T14:39:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0230,CUST-0521,,2026-09-05T14:49:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0231,CUST-0632,ORD-09224,2025-06-04T23:20:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0232,CUST-0895,ORD-09603,2026-08-29T12:45:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0233,CUST-0462,ORD-00129,2025-05-28T04:42:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0234,CUST-0900,ORD-07791,2025-12-13T18:47:00+00:00,phone,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0235,CUST-0619,ORD-03379,2026-03-18T00:30:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0236,CUST-0261,ORD-07855,2026-01-08T02:52:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0237,CUST-0092,ORD-02061,2025-06-27T03:21:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0238,CUST-0142,ORD-00445,2025-01-02T12:18:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0239,CUST-0314,ORD-04294,2026-04-29T14:19:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0240,CUST-0858,,2025-09-22T06:17:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0241,CUST-0649,ORD-00291,2025-12-22T01:45:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0242,CUST-0773,ORD-08273,2025-06-12T12:36:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0243,CUST-0012,ORD-04679,2025-06-16T11:22:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0244,CUST-0388,ORD-03158,2026-06-19T01:42:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0245,CUST-0507,ORD-06768,2025-10-22T13:40:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0246,CUST-0706,ORD-08772,2025-09-03T19:04:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0247,CUST-0432,ORD-02394,2026-07-17T15:08:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0248,CUST-0011,ORD-01570,2026-08-03T18:31:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0249,CUST-0779,ORD-00493,2025-12-26T13:59:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0250,CUST-0695,,2026-03-28T04:04:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0251,CUST-0547,ORD-01662,2026-02-03T16:44:00+00:00,email,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0252,CUST-0085,ORD-06050,2025-08-23T02:58:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0253,CUST-0816,ORD-08562,2025-08-09T12:06:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0254,CUST-0504,ORD-08222,2026-04-23T11:31:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0255,CUST-0451,ORD-03609,2025-12-24T21:48:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0256,CUST-0562,ORD-03745,2026-09-05T07:07:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0257,CUST-0570,ORD-00570,2025-03-30T09:37:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0258,CUST-0309,ORD-04404,2026-08-16T19:23:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0259,CUST-0967,ORD-00049,2025-09-17T08:48:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0260,CUST-0848,,2025-06-20T15:58:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0261,CUST-0873,ORD-03452,2026-05-19T15:22:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0262,CUST-0263,ORD-04365,2025-09-05T05:43:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0263,CUST-0090,ORD-02843,2026-06-28T23:00:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0264,CUST-0542,ORD-03570,2026-05-18T02:52:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0265,CUST-0931,ORD-06433,2025-09-18T15:37:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0266,CUST-0169,ORD-00441,2026-05-26T14:09:00+00:00,whatsapp,The tracking link is not working.,wismo,Open
+TICKET-0267,CUST-0496,ORD-05125,2025-05-30T20:48:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0268,CUST-0681,ORD-08537,2026-02-20T22:41:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0269,CUST-0840,ORD-02950,2026-05-06T06:04:00+00:00,chat,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0270,CUST-0281,,2025-04-13T19:13:00+00:00,chat,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0271,CUST-0038,ORD-03669,2026-07-27T09:14:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0272,CUST-0392,ORD-09595,2026-06-23T17:15:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0273,CUST-0174,ORD-08174,2026-06-24T10:12:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0274,CUST-0489,ORD-09458,2025-09-06T03:31:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0275,CUST-0471,ORD-07272,2025-04-20T00:40:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0276,CUST-0268,ORD-04615,2025-02-06T08:49:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0277,CUST-0540,ORD-06819,2026-09-09T11:08:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0278,CUST-0734,ORD-05993,2025-04-20T17:43:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0279,CUST-0539,ORD-09017,2025-08-22T04:44:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0280,CUST-0962,,2026-08-21T01:37:00+00:00,email,The tracking link is not working.,wismo,Pending Customer
+TICKET-0281,CUST-0709,ORD-00043,2025-09-10T14:09:00+00:00,chat,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0282,CUST-0828,ORD-05524,2025-07-31T03:40:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0283,CUST-0164,ORD-04310,2025-12-30T11:17:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0284,CUST-0887,ORD-01647,2026-08-04T07:30:00+00:00,phone,Expected delivery date kya hai?,wismo,Open
+TICKET-0285,CUST-0392,ORD-07784,2026-06-19T16:29:00+00:00,chat,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0286,CUST-0258,ORD-09030,2025-09-29T19:12:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0287,CUST-0090,ORD-03069,2025-12-27T20:46:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0288,CUST-0424,ORD-07770,2025-01-21T12:32:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Open
+TICKET-0289,CUST-0834,ORD-05292,2026-08-23T05:03:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0290,CUST-0193,,2026-04-19T07:36:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0291,CUST-0899,ORD-07149,2025-03-21T11:38:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0292,CUST-0188,ORD-07596,2025-08-27T09:44:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0293,CUST-0198,ORD-02291,2026-04-11T17:34:00+00:00,email,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0294,CUST-0068,ORD-01558,2025-08-24T19:45:00+00:00,whatsapp,The tracking link is not working.,wismo,Resolved
+TICKET-0295,CUST-0128,ORD-08959,2025-08-21T20:37:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0296,CUST-0546,ORD-02378,2025-11-20T14:25:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0297,CUST-0538,ORD-09299,2025-08-20T07:46:00+00:00,phone,The tracking link is not working.,wismo,Open
+TICKET-0298,CUST-0488,ORD-01237,2026-03-29T19:09:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0299,CUST-0896,ORD-02571,2025-11-10T18:59:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0300,CUST-0864,,2026-05-27T00:45:00+00:00,email,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0301,CUST-0583,ORD-00080,2026-05-19T20:16:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0302,CUST-0523,ORD-01271,2025-12-14T23:18:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0303,CUST-0966,ORD-04562,2026-03-02T00:34:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0304,CUST-0745,ORD-02430,2025-01-01T21:23:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0305,CUST-0007,ORD-02640,2025-02-19T06:53:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0306,CUST-0053,ORD-01231,2025-10-26T18:39:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0307,CUST-0733,ORD-09858,2025-02-15T07:34:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0308,CUST-0848,ORD-07423,2026-08-23T17:47:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0309,CUST-0364,ORD-09334,2026-01-20T12:08:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0310,CUST-0533,,2025-01-20T05:20:00+00:00,email,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0311,CUST-0606,ORD-06119,2026-06-21T20:47:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0312,CUST-0383,ORD-07693,2025-01-17T12:12:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0313,CUST-0593,ORD-09714,2025-12-13T13:58:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0314,CUST-0705,ORD-04223,2025-12-02T23:57:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0315,CUST-0878,ORD-01214,2025-05-06T23:30:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0316,CUST-0369,ORD-03719,2026-03-20T14:43:00+00:00,phone,My parcel is delayed. Please check.,wismo,Open
+TICKET-0317,CUST-0801,ORD-04851,2026-06-12T08:21:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0318,CUST-0564,ORD-05938,2026-04-27T11:00:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0319,CUST-0084,ORD-02648,2025-12-26T10:54:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0320,CUST-0277,,2025-12-22T18:47:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0321,CUST-0806,ORD-09972,2026-02-26T11:12:00+00:00,email,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0322,CUST-0931,ORD-04892,2026-09-05T18:33:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0323,CUST-0193,ORD-00918,2026-07-13T01:49:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0324,CUST-0947,ORD-07575,2025-05-10T01:20:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0325,CUST-0480,ORD-04582,2025-05-23T17:05:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0326,CUST-0687,ORD-00747,2025-12-26T21:18:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0327,CUST-0411,ORD-08464,2025-06-18T13:49:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0328,CUST-0576,ORD-06647,2026-04-17T08:15:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0329,CUST-0019,ORD-09527,2025-05-21T21:30:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0330,CUST-0676,,2025-06-23T05:18:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0331,CUST-0099,ORD-04810,2026-06-12T14:20:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0332,CUST-0625,ORD-07743,2026-03-06T22:15:00+00:00,chat,The tracking link is not working.,wismo,Pending Customer
+TICKET-0333,CUST-0085,ORD-02066,2025-10-14T22:17:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0334,CUST-0920,ORD-09356,2025-10-08T18:36:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0335,CUST-0362,ORD-04727,2025-02-03T04:36:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0336,CUST-0984,ORD-03599,2026-06-30T05:00:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0337,CUST-0420,ORD-08840,2025-06-23T15:55:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0338,CUST-0959,ORD-01107,2025-10-11T17:14:00+00:00,phone,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0339,CUST-0821,ORD-09618,2025-08-21T01:30:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0340,CUST-0930,,2026-05-04T20:29:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0341,CUST-0217,ORD-02005,2025-11-25T19:09:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0342,CUST-0172,ORD-00722,2025-07-31T13:26:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0343,CUST-0291,ORD-05235,2026-04-14T22:09:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0344,CUST-0499,ORD-01477,2026-07-16T01:09:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0345,CUST-0796,ORD-03899,2025-11-04T12:37:00+00:00,chat,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0346,CUST-0297,ORD-06089,2025-01-03T00:29:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0347,CUST-0857,ORD-04088,2026-09-02T01:53:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0348,CUST-0941,ORD-07889,2025-11-06T15:52:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0349,CUST-0283,ORD-09570,2026-03-07T02:53:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0350,CUST-0127,,2026-08-19T08:21:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0351,CUST-0725,ORD-02721,2026-01-02T09:09:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0352,CUST-0032,ORD-09423,2025-12-28T08:18:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0353,CUST-0668,ORD-03220,2025-07-23T20:34:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0354,CUST-0095,ORD-01616,2026-06-26T01:19:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0355,CUST-0019,ORD-08210,2026-06-11T23:12:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0356,CUST-0823,ORD-07715,2025-06-19T10:59:00+00:00,phone,The tracking link is not working.,wismo,Open
+TICKET-0357,CUST-0386,ORD-00276,2025-01-10T14:10:00+00:00,email,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0358,CUST-0706,ORD-09791,2025-10-28T20:16:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0359,CUST-0885,ORD-07184,2025-04-17T02:47:00+00:00,email,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0360,CUST-0435,,2025-09-09T00:34:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0361,CUST-0516,ORD-03813,2025-10-08T18:56:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0362,CUST-0773,ORD-09346,2026-06-17T12:33:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0363,CUST-0236,ORD-04850,2025-11-12T00:54:00+00:00,phone,My parcel is delayed. Please check.,wismo,Open
+TICKET-0364,CUST-0404,ORD-03126,2025-08-11T13:46:00+00:00,phone,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0365,CUST-0120,ORD-09068,2025-01-23T06:42:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0366,CUST-0815,ORD-00297,2026-01-02T10:15:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0367,CUST-0909,ORD-07929,2026-01-26T19:56:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0368,CUST-0713,ORD-01850,2025-04-14T23:57:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0369,CUST-0458,ORD-00442,2026-03-09T21:23:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0370,CUST-0042,,2025-06-24T00:52:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0371,CUST-0947,ORD-07575,2025-10-20T03:04:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0372,CUST-0250,ORD-02862,2026-02-08T13:24:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0373,CUST-0548,ORD-06598,2025-08-24T01:31:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0374,CUST-0185,ORD-09189,2026-06-15T07:12:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0375,CUST-0093,ORD-03308,2025-12-22T22:04:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0376,CUST-0818,ORD-03508,2026-06-03T14:09:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0377,CUST-0781,ORD-08636,2025-10-21T10:57:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0378,CUST-0947,ORD-07747,2025-08-22T21:12:00+00:00,chat,The tracking link is not working.,wismo,Pending Customer
+TICKET-0379,CUST-0216,ORD-06584,2026-04-18T14:39:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0380,CUST-0132,,2026-05-29T04:44:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0381,CUST-0472,ORD-05486,2025-06-22T01:08:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0382,CUST-0911,ORD-07990,2025-10-04T02:35:00+00:00,chat,The tracking link is not working.,wismo,Pending Customer
+TICKET-0383,CUST-0615,ORD-05316,2025-10-02T11:33:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0384,CUST-0671,ORD-00589,2025-10-15T07:53:00+00:00,phone,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0385,CUST-0589,ORD-04897,2025-02-27T14:22:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0386,CUST-0590,ORD-04721,2026-02-04T07:38:00+00:00,chat,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0387,CUST-0242,ORD-01469,2025-01-08T04:39:00+00:00,phone,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0388,CUST-0713,ORD-07083,2025-12-05T16:15:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0389,CUST-0876,ORD-02959,2025-09-20T11:13:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0390,CUST-0905,,2025-08-14T09:51:00+00:00,phone,Can you share the latest delivery update?,wismo,Open
+TICKET-0391,CUST-0113,ORD-04589,2025-02-04T17:41:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0392,CUST-0983,ORD-01168,2025-02-16T08:11:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0393,CUST-0033,ORD-08479,2025-05-30T23:56:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0394,CUST-0829,ORD-03237,2025-01-27T16:51:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0395,CUST-0532,ORD-02892,2025-06-22T19:40:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0396,CUST-0754,ORD-04176,2025-03-28T19:23:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0397,CUST-0897,ORD-02539,2026-02-03T18:09:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0398,CUST-0207,ORD-03525,2025-01-17T13:56:00+00:00,phone,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0399,CUST-0191,ORD-02374,2026-07-19T22:15:00+00:00,chat,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0400,CUST-0400,,2025-06-11T01:02:00+00:00,chat,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0401,CUST-0841,ORD-00425,2025-01-28T08:26:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0402,CUST-0763,ORD-03217,2025-03-12T06:27:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0403,CUST-0555,ORD-08149,2026-08-30T08:22:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0404,CUST-0395,ORD-02825,2026-03-30T03:13:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0405,CUST-0550,ORD-06118,2025-09-07T06:19:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0406,CUST-0346,ORD-08109,2026-05-21T12:46:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0407,CUST-0552,ORD-00590,2025-05-01T17:33:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0408,CUST-0288,ORD-01466,2025-11-25T13:57:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0409,CUST-0243,ORD-05083,2025-11-05T04:51:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0410,CUST-0281,,2026-09-07T11:46:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0411,CUST-0398,ORD-09766,2026-07-03T19:43:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0412,CUST-0748,ORD-04888,2025-11-21T10:58:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0413,CUST-0510,ORD-07020,2026-03-02T14:59:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0414,CUST-0135,ORD-03442,2025-12-18T21:07:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0415,CUST-0724,ORD-08982,2026-02-19T03:03:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0416,CUST-0036,ORD-01127,2025-12-09T16:17:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0417,CUST-0483,ORD-00245,2026-02-20T05:56:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0418,CUST-0166,ORD-05077,2026-04-21T17:29:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0419,CUST-0555,ORD-08149,2025-09-18T06:00:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0420,CUST-0792,,2026-05-06T07:02:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0421,CUST-0224,ORD-06923,2026-08-26T09:11:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0422,CUST-0660,ORD-06101,2025-12-02T11:52:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0423,CUST-0176,ORD-02605,2026-03-18T00:18:00+00:00,email,The tracking link is not working.,wismo,Pending Customer
+TICKET-0424,CUST-0247,ORD-08298,2026-07-23T22:38:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0425,CUST-0512,ORD-00801,2025-04-27T05:49:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0426,CUST-0674,ORD-03180,2025-08-26T12:13:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0427,CUST-0815,ORD-01911,2025-01-09T22:22:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0428,CUST-0759,ORD-01264,2026-05-19T16:59:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0429,CUST-0356,ORD-02361,2025-02-19T07:18:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0430,CUST-0120,,2025-08-14T23:42:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0431,CUST-0449,ORD-04246,2026-07-06T07:01:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0432,CUST-0393,ORD-01373,2025-02-02T09:43:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0433,CUST-0292,ORD-02120,2025-09-22T19:33:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0434,CUST-0569,ORD-02792,2025-05-04T07:13:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0435,CUST-0029,ORD-06869,2025-10-24T08:06:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0436,CUST-0689,ORD-08736,2026-01-03T16:56:00+00:00,email,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0437,CUST-0620,ORD-04409,2026-03-09T16:02:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0438,CUST-0282,ORD-02954,2026-01-26T05:13:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0439,CUST-0182,ORD-03393,2025-03-18T22:05:00+00:00,email,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0440,CUST-0125,,2026-03-06T11:22:00+00:00,phone,Expected delivery date kya hai?,wismo,Open
+TICKET-0441,CUST-0884,ORD-02928,2025-03-28T10:55:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0442,CUST-0467,ORD-00288,2026-01-12T10:19:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0443,CUST-0244,ORD-00287,2025-03-13T01:34:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0444,CUST-0636,ORD-02552,2026-08-15T08:04:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0445,CUST-0954,ORD-02710,2025-09-19T03:31:00+00:00,phone,Expected delivery date kya hai?,wismo,Open
+TICKET-0446,CUST-0973,ORD-01666,2025-01-24T04:17:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0447,CUST-0342,ORD-00077,2026-05-15T06:48:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0448,CUST-0244,ORD-01175,2026-06-22T22:43:00+00:00,whatsapp,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0449,CUST-0079,ORD-02045,2025-11-17T21:04:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0450,CUST-0172,,2025-10-29T19:52:00+00:00,email,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0451,CUST-0847,ORD-02074,2026-03-30T13:33:00+00:00,phone,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0452,CUST-0825,ORD-03321,2025-01-20T13:12:00+00:00,chat,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0453,CUST-0803,ORD-05702,2025-03-05T00:39:00+00:00,phone,The tracking link is not working.,wismo,Resolved
+TICKET-0454,CUST-0033,ORD-03374,2026-08-13T04:56:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0455,CUST-0107,ORD-08966,2025-05-06T20:11:00+00:00,phone,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0456,CUST-0920,ORD-08998,2025-05-26T07:16:00+00:00,whatsapp,The tracking link is not working.,wismo,Open
+TICKET-0457,CUST-0192,ORD-08817,2025-04-26T12:46:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0458,CUST-0796,ORD-00816,2026-09-14T03:11:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0459,CUST-0284,ORD-00498,2025-04-04T23:40:00+00:00,whatsapp,The tracking link is not working.,wismo,Resolved
+TICKET-0460,CUST-0221,,2026-06-12T16:55:00+00:00,phone,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0461,CUST-0232,ORD-09977,2026-02-26T18:25:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Pending Customer
+TICKET-0462,CUST-0869,ORD-05698,2026-02-07T20:24:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0463,CUST-0816,ORD-03779,2025-02-24T04:56:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0464,CUST-0650,ORD-06056,2026-01-14T06:34:00+00:00,email,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0465,CUST-0446,ORD-01773,2025-09-15T23:34:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0466,CUST-0469,ORD-06544,2026-06-17T23:46:00+00:00,phone,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0467,CUST-0490,ORD-09656,2026-03-29T06:00:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0468,CUST-0843,ORD-03293,2025-06-19T08:24:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0469,CUST-0825,ORD-00824,2025-01-13T20:11:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0470,CUST-0589,,2026-08-10T15:04:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0471,CUST-0521,ORD-07105,2025-10-02T00:29:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0472,CUST-0747,ORD-04572,2025-01-06T07:49:00+00:00,phone,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0473,CUST-0685,ORD-07571,2026-05-30T13:23:00+00:00,email,The tracking link is not working.,wismo,Resolved
+TICKET-0474,CUST-0231,ORD-05778,2025-04-21T04:45:00+00:00,email,The tracking link is not working.,wismo,Pending Customer
+TICKET-0475,CUST-0899,ORD-07149,2025-01-17T08:24:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0476,CUST-0453,ORD-06022,2026-07-22T00:50:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0477,CUST-0905,ORD-05929,2025-01-17T12:01:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0478,CUST-0781,ORD-04524,2026-04-12T20:02:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0479,CUST-0351,ORD-08927,2025-07-19T23:30:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0480,CUST-0137,,2025-09-05T23:42:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0481,CUST-0812,ORD-04202,2026-08-31T12:15:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0482,CUST-0846,ORD-07270,2025-01-16T21:10:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0483,CUST-0604,ORD-09930,2026-04-24T20:24:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0484,CUST-0578,ORD-08606,2025-06-30T17:58:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0485,CUST-0493,ORD-03565,2025-03-10T21:44:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0486,CUST-0459,ORD-01862,2025-02-25T10:52:00+00:00,chat,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0487,CUST-0092,ORD-05705,2026-07-12T03:40:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0488,CUST-0544,ORD-08771,2025-01-23T11:58:00+00:00,email,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0489,CUST-0514,ORD-07979,2025-09-20T07:19:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0490,CUST-0952,,2026-05-13T22:13:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0491,CUST-0490,ORD-08470,2026-04-20T05:15:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0492,CUST-0186,ORD-08107,2026-07-23T03:47:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0493,CUST-0501,ORD-00537,2025-08-01T23:46:00+00:00,phone,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0494,CUST-0778,ORD-00305,2025-08-18T11:29:00+00:00,whatsapp,The tracking link is not working.,wismo,Pending Customer
+TICKET-0495,CUST-0192,ORD-00851,2025-10-24T02:54:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0496,CUST-0863,ORD-03050,2025-11-07T14:10:00+00:00,email,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0497,CUST-0589,ORD-08527,2026-08-09T00:56:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0498,CUST-0675,ORD-02044,2025-04-09T19:40:00+00:00,chat,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0499,CUST-0253,ORD-03413,2025-08-15T13:41:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0500,CUST-0627,,2026-04-07T06:36:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0501,CUST-0430,ORD-02588,2025-07-18T09:18:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0502,CUST-0112,ORD-08070,2026-06-17T21:18:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Open
+TICKET-0503,CUST-0148,ORD-08263,2025-06-14T22:40:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0504,CUST-0075,ORD-05755,2026-09-08T04:26:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0505,CUST-0649,ORD-03572,2025-05-22T10:50:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0506,CUST-0566,ORD-00010,2025-01-12T19:19:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0507,CUST-0140,ORD-02546,2026-06-03T10:11:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0508,CUST-0693,ORD-01014,2025-12-03T02:05:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0509,CUST-0138,ORD-07100,2025-11-21T05:35:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Resolved
+TICKET-0510,CUST-0249,,2025-12-21T03:37:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0511,CUST-0302,ORD-09937,2026-03-21T06:15:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0512,CUST-0866,ORD-05905,2025-12-23T11:46:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0513,CUST-0911,ORD-06443,2026-01-20T04:24:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0514,CUST-0431,ORD-05330,2025-04-19T17:47:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0515,CUST-0898,ORD-07668,2026-05-22T13:34:00+00:00,email,The tracking link is not working.,wismo,Resolved
+TICKET-0516,CUST-0190,ORD-07648,2026-06-30T05:12:00+00:00,whatsapp,Order dispatch hua ya nahi?,wismo,Open
+TICKET-0517,CUST-0634,ORD-06820,2025-06-21T17:02:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0518,CUST-0229,ORD-07478,2025-06-08T10:42:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0519,CUST-0713,ORD-02847,2025-01-20T12:11:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0520,CUST-0850,,2026-05-12T06:25:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0521,CUST-0733,ORD-09858,2026-05-09T18:18:00+00:00,chat,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0522,CUST-0957,ORD-03270,2026-01-25T02:25:00+00:00,whatsapp,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0523,CUST-0149,ORD-06975,2026-07-21T09:59:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Open
+TICKET-0524,CUST-0868,ORD-06904,2025-11-20T03:06:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0525,CUST-0070,ORD-09384,2025-03-07T02:19:00+00:00,phone,Delivery agent ne call nahi kiya.,wismo,Pending Customer
+TICKET-0526,CUST-0192,ORD-03791,2025-04-29T12:04:00+00:00,email,Delivery agent ne call nahi kiya.,wismo,Open
+TICKET-0527,CUST-0064,ORD-08884,2026-02-05T14:57:00+00:00,whatsapp,"Order abhi tak nahi aaya, please status batayein.",wismo,Open
+TICKET-0528,CUST-0718,ORD-01699,2025-10-23T13:37:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0529,CUST-0798,ORD-02982,2026-05-26T19:04:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0530,CUST-0869,,2025-07-09T16:47:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0531,CUST-0647,ORD-07448,2025-05-09T02:21:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0532,CUST-0775,ORD-02042,2026-02-15T12:18:00+00:00,email,The tracking link is not working.,wismo,Resolved
+TICKET-0533,CUST-0598,ORD-08965,2026-03-21T23:16:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0534,CUST-0555,ORD-02476,2026-04-14T18:57:00+00:00,whatsapp,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0535,CUST-0047,ORD-00551,2025-03-13T10:15:00+00:00,email,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0536,CUST-0603,ORD-08828,2025-03-03T08:39:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Pending Customer
+TICKET-0537,CUST-0408,ORD-04046,2025-01-21T02:30:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0538,CUST-0619,ORD-00998,2025-06-04T19:05:00+00:00,email,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0539,CUST-0658,ORD-07009,2026-03-01T09:32:00+00:00,chat,Expected delivery date kya hai?,wismo,Open
+TICKET-0540,CUST-0264,,2025-07-26T13:23:00+00:00,email,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0541,CUST-0282,ORD-09318,2025-08-04T16:04:00+00:00,chat,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0542,CUST-0354,ORD-02819,2025-09-08T09:34:00+00:00,email,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0543,CUST-0066,ORD-07303,2025-12-30T05:43:00+00:00,email,My parcel is delayed. Please check.,wismo,Open
+TICKET-0544,CUST-0298,ORD-02272,2025-05-09T13:50:00+00:00,phone,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0545,CUST-0120,ORD-08589,2026-01-07T21:05:00+00:00,email,The tracking link is not working.,wismo,Open
+TICKET-0546,CUST-0407,ORD-00019,2026-09-03T23:42:00+00:00,chat,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0547,CUST-0925,ORD-02537,2025-04-01T12:09:00+00:00,email,Tracking has not updated since yesterday.,wismo,Open
+TICKET-0548,CUST-0237,ORD-09314,2025-01-24T06:17:00+00:00,phone,Expected delivery date kya hai?,wismo,Pending Customer
+TICKET-0549,CUST-0908,ORD-05114,2025-07-16T03:13:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0550,CUST-0212,,2025-08-26T07:07:00+00:00,chat,My parcel is delayed. Please check.,wismo,Open
+TICKET-0551,CUST-0853,ORD-07803,2026-06-24T04:52:00+00:00,email,Order dispatch hua ya nahi?,wismo,Pending Customer
+TICKET-0552,CUST-0921,ORD-01389,2025-11-28T06:32:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0553,CUST-0946,ORD-03499,2025-03-20T05:33:00+00:00,chat,The tracking link is not working.,wismo,Open
+TICKET-0554,CUST-0245,ORD-09630,2025-06-22T00:52:00+00:00,phone,The tracking link is not working.,wismo,Open
+TICKET-0555,CUST-0557,ORD-09965,2026-07-27T12:32:00+00:00,phone,Tracking has not updated since yesterday.,wismo,Resolved
+TICKET-0556,CUST-0485,ORD-06826,2026-09-08T16:29:00+00:00,email,Expected delivery date kya hai?,wismo,Open
+TICKET-0557,CUST-0343,ORD-04240,2025-08-24T05:39:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0558,CUST-0198,ORD-08683,2026-03-27T18:49:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Pending Customer
+TICKET-0559,CUST-0094,ORD-02440,2025-11-21T21:01:00+00:00,chat,The tracking link is not working.,wismo,Resolved
+TICKET-0560,CUST-0166,,2025-04-07T11:39:00+00:00,whatsapp,My parcel is delayed. Please check.,wismo,Resolved
+TICKET-0561,CUST-0645,ORD-01764,2025-11-21T00:03:00+00:00,phone,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0562,CUST-0808,ORD-01460,2025-07-12T10:51:00+00:00,email,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0563,CUST-0312,ORD-00242,2025-12-16T17:57:00+00:00,chat,"Order abhi tak nahi aaya, please status batayein.",wismo,Resolved
+TICKET-0564,CUST-0866,ORD-00093,2025-01-12T04:22:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0565,CUST-0744,ORD-08154,2025-09-10T13:10:00+00:00,phone,The tracking link is not working.,wismo,Pending Customer
+TICKET-0566,CUST-0845,ORD-05952,2025-02-10T13:04:00+00:00,whatsapp,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0567,CUST-0201,ORD-05710,2025-08-16T14:24:00+00:00,phone,The tracking link is not working.,wismo,Pending Customer
+TICKET-0568,CUST-0324,ORD-08043,2025-03-16T01:47:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Resolved
+TICKET-0569,CUST-0711,ORD-08122,2026-02-02T17:11:00+00:00,email,Expected delivery date kya hai?,wismo,Resolved
+TICKET-0570,CUST-0556,,2025-05-01T02:03:00+00:00,phone,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0571,CUST-0614,ORD-00375,2025-06-02T15:49:00+00:00,email,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0572,CUST-0787,ORD-04003,2025-05-15T17:07:00+00:00,whatsapp,Mera order kab tak deliver hoga?,wismo,Pending Customer
+TICKET-0573,CUST-0370,ORD-01339,2025-07-21T11:25:00+00:00,chat,Where is my order? It has not arrived yet.,wismo,Open
+TICKET-0574,CUST-0278,ORD-01916,2025-07-05T15:40:00+00:00,chat,Mera order kab tak deliver hoga?,wismo,Resolved
+TICKET-0575,CUST-0629,ORD-06048,2026-07-28T21:48:00+00:00,phone,"Order abhi tak nahi aaya, please status batayein.",wismo,Pending Customer
+TICKET-0576,CUST-0034,ORD-08909,2025-08-23T15:57:00+00:00,email,The tracking link is not working.,wismo,Pending Customer
+TICKET-0577,CUST-0233,ORD-01630,2026-03-22T02:50:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Resolved
+TICKET-0578,CUST-0443,ORD-02203,2025-03-22T06:47:00+00:00,whatsapp,Can you share the latest delivery update?,wismo,Open
+TICKET-0579,CUST-0580,ORD-04274,2025-03-06T07:42:00+00:00,email,Order dispatch hua ya nahi?,wismo,Resolved
+TICKET-0580,CUST-0426,,2026-05-08T21:41:00+00:00,phone,Can you share the latest delivery update?,wismo,Pending Customer
+TICKET-0581,CUST-0915,ORD-03793,2025-07-31T23:24:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0582,CUST-0064,ORD-08819,2025-06-26T10:00:00+00:00,phone,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0583,CUST-0310,ORD-06441,2025-05-01T13:40:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0584,CUST-0301,ORD-06656,2026-03-27T04:29:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0585,CUST-0268,ORD-05197,2025-04-27T02:19:00+00:00,email,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0586,CUST-0234,ORD-08766,2026-05-25T06:43:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0587,CUST-0565,ORD-06897,2025-11-12T09:47:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0588,CUST-0763,ORD-00793,2025-03-09T00:31:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0589,CUST-0878,ORD-01214,2026-08-17T22:20:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0590,CUST-0077,,2026-06-28T11:14:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0591,CUST-0438,ORD-00826,2026-05-19T02:49:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0592,CUST-0664,ORD-07519,2025-12-22T03:28:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0593,CUST-0531,ORD-09411,2026-05-03T09:31:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0594,CUST-0204,ORD-07311,2025-01-19T06:13:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0595,CUST-0162,ORD-03756,2026-02-04T18:49:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Open
+TICKET-0596,CUST-0443,ORD-01917,2026-01-03T03:29:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0597,CUST-0456,ORD-03856,2026-04-25T21:32:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0598,CUST-0725,ORD-03967,2026-01-21T05:37:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0599,CUST-0128,ORD-08959,2025-08-18T22:36:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0600,CUST-0723,,2025-12-05T17:09:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0601,CUST-0446,ORD-04943,2025-06-06T22:14:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0602,CUST-0265,ORD-06648,2025-02-06T17:07:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0603,CUST-0461,ORD-01073,2026-07-18T02:50:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0604,CUST-0759,ORD-08469,2025-07-11T18:39:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0605,CUST-0648,ORD-06596,2025-09-22T04:14:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0606,CUST-0294,ORD-00206,2025-06-26T13:48:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0607,CUST-0946,ORD-04930,2026-03-09T06:35:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0608,CUST-0723,ORD-03488,2025-02-03T10:21:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0609,CUST-0485,ORD-06826,2026-09-01T23:33:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0610,CUST-0843,,2025-03-16T00:22:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0611,CUST-0964,ORD-05018,2026-02-15T08:34:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0612,CUST-0281,ORD-01584,2026-07-05T05:27:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0613,CUST-0463,ORD-03109,2025-09-26T01:45:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0614,CUST-0136,ORD-09667,2026-05-11T14:13:00+00:00,chat,Fabric quality is different from the description.,size_quality,Open
+TICKET-0615,CUST-0057,ORD-00275,2026-04-30T19:08:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0616,CUST-0402,ORD-06016,2025-08-27T14:41:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0617,CUST-0394,ORD-00399,2025-09-24T04:05:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0618,CUST-0944,ORD-05242,2025-06-17T14:10:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0619,CUST-0251,ORD-00889,2026-03-17T03:21:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0620,CUST-0189,,2025-07-25T12:40:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0621,CUST-0851,ORD-08242,2025-10-21T13:25:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0622,CUST-0347,ORD-09254,2025-04-22T09:55:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0623,CUST-0582,ORD-08989,2025-02-22T07:26:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0624,CUST-0453,ORD-06724,2026-05-23T01:42:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0625,CUST-0475,ORD-05910,2025-07-25T07:54:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0626,CUST-0933,ORD-00341,2025-12-08T15:21:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0627,CUST-0947,ORD-07575,2025-10-05T17:42:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0628,CUST-0069,ORD-04325,2025-03-12T04:36:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Open
+TICKET-0629,CUST-0675,ORD-01051,2025-12-05T04:33:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0630,CUST-0931,,2025-02-06T02:57:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0631,CUST-0352,ORD-03854,2026-05-15T02:39:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0632,CUST-0722,ORD-04457,2025-07-11T11:31:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0633,CUST-0934,ORD-01621,2026-01-13T18:23:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0634,CUST-0250,ORD-01185,2026-08-18T09:19:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0635,CUST-0036,ORD-01201,2026-05-11T20:17:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0636,CUST-0010,ORD-03421,2025-04-18T17:40:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0637,CUST-0356,ORD-01467,2025-04-27T06:49:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0638,CUST-0430,ORD-02522,2026-08-29T03:21:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0639,CUST-0164,ORD-01611,2025-07-28T06:10:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0640,CUST-0143,,2025-06-08T15:21:00+00:00,phone,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0641,CUST-0568,ORD-06522,2025-12-30T21:35:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0642,CUST-0637,ORD-05525,2026-07-16T14:01:00+00:00,email,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0643,CUST-0421,ORD-02296,2026-08-28T22:21:00+00:00,chat,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0644,CUST-0842,ORD-07495,2026-06-16T17:48:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0645,CUST-0515,ORD-01334,2025-02-23T05:36:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0646,CUST-0559,ORD-02656,2025-09-18T20:56:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0647,CUST-0066,ORD-04049,2026-02-21T22:31:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0648,CUST-0020,ORD-06193,2026-01-20T12:52:00+00:00,phone,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0649,CUST-0613,ORD-06469,2025-03-14T03:24:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0650,CUST-0082,,2025-12-01T21:33:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0651,CUST-0092,ORD-09941,2026-03-27T14:30:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0652,CUST-0675,ORD-06144,2026-04-13T15:33:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0653,CUST-0811,ORD-04120,2025-10-13T03:45:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0654,CUST-0913,ORD-03244,2025-02-07T02:22:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0655,CUST-0480,ORD-01546,2026-08-23T15:11:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0656,CUST-0447,ORD-09926,2025-04-25T19:23:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0657,CUST-0073,ORD-04980,2026-07-13T00:03:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0658,CUST-0202,ORD-00554,2025-11-02T20:10:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0659,CUST-0315,ORD-04467,2025-04-11T14:02:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0660,CUST-0027,,2025-11-12T10:27:00+00:00,chat,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0661,CUST-0015,ORD-04661,2025-04-18T20:04:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0662,CUST-0640,ORD-05946,2026-07-14T00:36:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0663,CUST-0713,ORD-09708,2026-04-21T20:35:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0664,CUST-0736,ORD-02395,2025-07-11T10:13:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0665,CUST-0781,ORD-09617,2025-03-24T12:15:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0666,CUST-0756,ORD-01245,2025-03-04T18:06:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0667,CUST-0440,ORD-01152,2026-07-24T05:16:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0668,CUST-0703,ORD-09729,2025-11-21T10:20:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0669,CUST-0105,ORD-05337,2025-02-09T22:27:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0670,CUST-0703,,2025-12-08T10:16:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0671,CUST-0967,ORD-04338,2025-11-02T09:20:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0672,CUST-0828,ORD-07645,2025-05-24T09:55:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0673,CUST-0275,ORD-02125,2025-09-06T04:17:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0674,CUST-0717,ORD-02311,2026-03-17T22:15:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0675,CUST-0734,ORD-06312,2026-01-08T21:41:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0676,CUST-0360,ORD-06466,2025-05-01T20:23:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0677,CUST-0986,ORD-08108,2026-03-22T09:31:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0678,CUST-0310,ORD-06441,2025-09-07T06:29:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0679,CUST-0847,ORD-08215,2025-11-04T16:57:00+00:00,phone,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0680,CUST-0462,,2025-07-08T03:31:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0681,CUST-0895,ORD-09786,2025-08-26T13:56:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0682,CUST-0851,ORD-07700,2026-02-18T18:50:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0683,CUST-0186,ORD-06421,2025-11-16T20:20:00+00:00,email,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0684,CUST-0853,ORD-03481,2026-06-10T12:43:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0685,CUST-0514,ORD-09931,2025-01-28T20:08:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0686,CUST-0937,ORD-05933,2025-04-29T13:48:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0687,CUST-0768,ORD-03874,2026-04-19T22:46:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0688,CUST-0697,ORD-02462,2025-02-08T22:48:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0689,CUST-0007,ORD-01254,2026-03-02T08:09:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0690,CUST-0419,,2025-09-21T21:02:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0691,CUST-0143,ORD-05629,2026-09-12T11:34:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0692,CUST-0984,ORD-03599,2025-01-04T01:08:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0693,CUST-0669,ORD-06700,2025-06-02T19:36:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0694,CUST-0804,ORD-00845,2026-06-19T01:15:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0695,CUST-0044,ORD-06341,2026-05-19T18:34:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0696,CUST-0634,ORD-03695,2026-02-10T01:47:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0697,CUST-0691,ORD-07996,2026-04-11T11:24:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0698,CUST-0422,ORD-03082,2026-08-25T14:10:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0699,CUST-0629,ORD-05522,2026-01-24T13:49:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0700,CUST-0065,,2026-04-07T13:01:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0701,CUST-0315,ORD-09027,2025-05-03T19:00:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0702,CUST-0602,ORD-03265,2026-01-27T08:30:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0703,CUST-0605,ORD-04737,2025-11-22T20:23:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0704,CUST-0825,ORD-03337,2026-03-08T10:36:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0705,CUST-0486,ORD-08977,2026-08-09T05:12:00+00:00,phone,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0706,CUST-0388,ORD-05397,2026-06-13T13:54:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0707,CUST-0730,ORD-00035,2026-01-27T21:12:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0708,CUST-0666,ORD-07413,2025-08-12T01:05:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0709,CUST-0329,ORD-06043,2025-05-03T09:33:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0710,CUST-0504,,2025-08-20T04:35:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0711,CUST-0032,ORD-09423,2025-11-19T11:38:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0712,CUST-0319,ORD-02329,2025-10-11T04:56:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0713,CUST-0727,ORD-08060,2025-03-11T11:33:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0714,CUST-0992,ORD-07378,2026-01-24T17:34:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0715,CUST-0386,ORD-05777,2025-09-05T12:51:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0716,CUST-0966,ORD-08015,2026-05-10T19:57:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0717,CUST-0711,ORD-01534,2025-04-26T19:33:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0718,CUST-0888,ORD-07603,2025-03-08T04:14:00+00:00,phone,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0719,CUST-0025,ORD-09490,2025-10-23T23:09:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0720,CUST-0737,,2025-02-22T07:41:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0721,CUST-0628,ORD-04969,2025-01-31T21:48:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0722,CUST-0411,ORD-06878,2026-08-11T02:36:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0723,CUST-0568,ORD-03755,2025-05-13T16:45:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0724,CUST-0245,ORD-02965,2025-12-11T18:51:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0725,CUST-0305,ORD-00118,2025-03-07T23:06:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0726,CUST-0124,ORD-01088,2025-02-07T20:26:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0727,CUST-0273,ORD-09705,2026-05-17T06:22:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0728,CUST-0780,ORD-07769,2025-05-04T01:24:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0729,CUST-0436,ORD-02009,2025-05-04T21:23:00+00:00,phone,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0730,CUST-0806,,2025-01-06T22:15:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0731,CUST-0740,ORD-08050,2025-02-27T11:41:00+00:00,chat,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0732,CUST-0170,ORD-01889,2026-03-01T17:25:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0733,CUST-0578,ORD-03780,2026-01-30T12:18:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0734,CUST-0048,ORD-00854,2026-07-18T15:38:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0735,CUST-0061,ORD-01008,2025-06-07T19:21:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0736,CUST-0469,ORD-03689,2025-06-12T23:08:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0737,CUST-0566,ORD-05211,2025-01-02T23:39:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0738,CUST-0834,ORD-01253,2025-10-27T05:06:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0739,CUST-0850,ORD-08054,2025-01-09T08:00:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0740,CUST-0226,,2025-10-27T19:49:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0741,CUST-0021,ORD-05348,2025-11-16T23:14:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0742,CUST-0910,ORD-03156,2025-06-08T21:14:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0743,CUST-0922,ORD-04820,2025-07-20T14:03:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0744,CUST-0259,ORD-01578,2025-02-09T20:40:00+00:00,email,Colour looks different from the product photos.,size_quality,Open
+TICKET-0745,CUST-0068,ORD-06511,2025-09-17T23:42:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0746,CUST-0145,ORD-03453,2025-11-10T11:28:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0747,CUST-0684,ORD-06386,2025-08-22T22:08:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0748,CUST-0421,ORD-07466,2025-02-15T03:14:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0749,CUST-0782,ORD-09685,2025-06-09T07:42:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0750,CUST-0893,,2026-05-11T00:05:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0751,CUST-0157,ORD-04795,2026-06-20T21:41:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0752,CUST-0757,ORD-06192,2026-01-22T12:45:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0753,CUST-0408,ORD-08769,2025-10-10T04:26:00+00:00,email,Colour looks different from the product photos.,size_quality,Open
+TICKET-0754,CUST-0468,ORD-03252,2025-01-18T00:07:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0755,CUST-0043,ORD-02376,2025-07-03T17:44:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0756,CUST-0052,ORD-08719,2025-06-20T12:35:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0757,CUST-0568,ORD-03518,2026-01-11T12:04:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0758,CUST-0288,ORD-03221,2025-02-18T03:01:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0759,CUST-0709,ORD-02557,2025-06-29T12:37:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0760,CUST-0415,,2026-01-05T10:03:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0761,CUST-0504,ORD-08133,2026-03-13T08:57:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0762,CUST-0719,ORD-08062,2026-02-14T02:48:00+00:00,email,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0763,CUST-0501,ORD-00984,2025-05-27T18:41:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0764,CUST-0884,ORD-08319,2025-06-30T22:24:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0765,CUST-0692,ORD-05237,2025-04-30T19:59:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0766,CUST-0150,ORD-07190,2025-04-17T22:54:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0767,CUST-0887,ORD-01647,2025-02-09T08:06:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0768,CUST-0192,ORD-08817,2026-06-13T05:54:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0769,CUST-0855,ORD-07883,2025-09-14T04:48:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0770,CUST-0451,,2025-03-17T09:06:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0771,CUST-0933,ORD-05624,2026-05-12T13:35:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0772,CUST-0523,ORD-02545,2026-04-12T04:06:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Open
+TICKET-0773,CUST-0060,ORD-08427,2026-09-11T16:42:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0774,CUST-0592,ORD-08153,2025-03-22T15:52:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0775,CUST-0921,ORD-07888,2025-04-08T03:32:00+00:00,email,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0776,CUST-0206,ORD-02288,2025-09-17T09:20:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0777,CUST-0738,ORD-05819,2025-04-22T21:06:00+00:00,email,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0778,CUST-0058,ORD-08293,2025-08-01T18:13:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0779,CUST-0696,ORD-09175,2025-06-27T07:24:00+00:00,email,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0780,CUST-0806,,2026-03-29T20:43:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0781,CUST-0409,ORD-04512,2025-06-21T09:05:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0782,CUST-0596,ORD-08454,2026-08-15T04:46:00+00:00,phone,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0783,CUST-0732,ORD-04217,2025-11-19T15:00:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0784,CUST-0564,ORD-05944,2026-03-17T05:51:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0785,CUST-0346,ORD-09732,2025-08-05T00:48:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0786,CUST-0742,ORD-06104,2025-07-15T05:23:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0787,CUST-0935,ORD-05107,2025-09-11T21:12:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0788,CUST-0122,ORD-09399,2026-04-13T01:12:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0789,CUST-0433,ORD-01860,2025-06-21T15:41:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0790,CUST-0823,,2025-08-04T16:11:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0791,CUST-0646,ORD-02082,2025-04-15T04:27:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0792,CUST-0386,ORD-09065,2025-06-25T00:10:00+00:00,email,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0793,CUST-0842,ORD-04419,2026-08-31T02:10:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0794,CUST-0249,ORD-04228,2025-05-29T00:56:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0795,CUST-0278,ORD-07799,2025-06-01T12:01:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0796,CUST-0298,ORD-02968,2025-01-16T21:35:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0797,CUST-0151,ORD-01134,2026-05-11T19:33:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0798,CUST-0400,ORD-09445,2026-02-23T22:21:00+00:00,email,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0799,CUST-0643,ORD-05044,2025-04-05T14:37:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0800,CUST-0189,,2026-02-20T15:28:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0801,CUST-0283,ORD-00605,2025-03-12T07:56:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0802,CUST-0403,ORD-01601,2026-06-16T19:35:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0803,CUST-0635,ORD-02305,2026-05-19T06:06:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0804,CUST-0262,ORD-03362,2025-05-19T16:48:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0805,CUST-0600,ORD-00529,2025-07-26T21:35:00+00:00,phone,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0806,CUST-0069,ORD-01545,2025-12-12T06:26:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0807,CUST-0539,ORD-06162,2025-10-24T06:27:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0808,CUST-0589,ORD-07246,2025-03-01T20:16:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0809,CUST-0320,ORD-04382,2026-08-20T16:13:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0810,CUST-0561,,2025-02-16T05:00:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0811,CUST-0527,ORD-09908,2026-03-31T07:19:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0812,CUST-0750,ORD-02110,2025-11-18T03:59:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0813,CUST-0384,ORD-05668,2026-03-28T15:10:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0814,CUST-0190,ORD-02456,2026-07-10T05:21:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0815,CUST-0926,ORD-02595,2026-07-17T14:31:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0816,CUST-0816,ORD-02016,2026-05-26T19:34:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0817,CUST-0995,ORD-04177,2026-09-07T13:44:00+00:00,email,Colour looks different from the product photos.,size_quality,Open
+TICKET-0818,CUST-0060,ORD-07653,2025-10-03T23:21:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0819,CUST-0951,ORD-07003,2025-12-10T14:46:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0820,CUST-0446,,2025-08-14T17:47:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0821,CUST-0617,ORD-08398,2025-02-01T16:38:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0822,CUST-0822,ORD-05487,2025-11-13T17:43:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0823,CUST-0133,ORD-06599,2025-02-21T14:45:00+00:00,email,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0824,CUST-0709,ORD-00372,2025-11-05T14:08:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0825,CUST-0831,ORD-05373,2026-08-28T16:12:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0826,CUST-0735,ORD-04692,2025-01-08T22:34:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0827,CUST-0073,ORD-02115,2025-07-03T20:24:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0828,CUST-0867,ORD-00086,2025-03-16T17:21:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0829,CUST-0707,ORD-04483,2025-09-12T23:21:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0830,CUST-0948,,2025-03-01T09:48:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0831,CUST-0416,ORD-09586,2026-04-02T00:46:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0832,CUST-0701,ORD-06330,2025-10-31T18:11:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0833,CUST-0530,ORD-06585,2025-04-15T10:54:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0834,CUST-0091,ORD-02936,2026-09-03T22:30:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0835,CUST-0502,ORD-07093,2026-05-26T00:10:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0836,CUST-0114,ORD-06006,2025-08-01T03:46:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0837,CUST-0818,ORD-04731,2026-08-31T13:24:00+00:00,email,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0838,CUST-0687,ORD-09466,2025-11-28T07:25:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0839,CUST-0697,ORD-00064,2026-06-01T20:56:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0840,CUST-0715,,2026-01-12T13:21:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0841,CUST-0327,ORD-07558,2025-12-27T10:58:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0842,CUST-0613,ORD-00175,2025-07-15T13:32:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0843,CUST-0025,ORD-03753,2026-06-04T09:54:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0844,CUST-0226,ORD-02851,2025-05-25T16:34:00+00:00,chat,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0845,CUST-0760,ORD-01021,2025-07-15T15:53:00+00:00,phone,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0846,CUST-0211,ORD-00782,2026-03-14T06:27:00+00:00,email,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0847,CUST-0301,ORD-04389,2025-09-04T22:44:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0848,CUST-0630,ORD-03338,2026-01-19T19:09:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0849,CUST-0745,ORD-01418,2025-09-05T21:41:00+00:00,chat,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0850,CUST-0367,,2026-06-06T23:04:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0851,CUST-0402,ORD-07317,2025-05-03T13:00:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0852,CUST-0390,ORD-09748,2026-09-10T04:54:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0853,CUST-0365,ORD-04899,2026-03-22T03:19:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0854,CUST-0136,ORD-07103,2025-12-14T14:00:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0855,CUST-0058,ORD-09754,2026-06-20T11:41:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0856,CUST-0096,ORD-07286,2025-08-18T07:34:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0857,CUST-0738,ORD-05750,2026-05-31T15:09:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Open
+TICKET-0858,CUST-0397,ORD-00318,2025-05-07T16:51:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0859,CUST-0631,ORD-07664,2026-08-14T17:28:00+00:00,chat,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0860,CUST-0649,,2025-07-13T03:02:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0861,CUST-0107,ORD-08631,2025-11-28T01:47:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0862,CUST-0509,ORD-00565,2025-06-25T03:48:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0863,CUST-0180,ORD-05273,2026-09-02T12:46:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0864,CUST-0505,ORD-05027,2025-12-01T17:41:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0865,CUST-0326,ORD-02209,2026-08-03T06:02:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0866,CUST-0175,ORD-02321,2025-07-15T18:31:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0867,CUST-0863,ORD-02328,2026-04-14T12:08:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0868,CUST-0264,ORD-09623,2025-12-14T01:39:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0869,CUST-0320,ORD-00348,2025-06-12T11:03:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0870,CUST-0521,,2026-07-15T18:45:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0871,CUST-0153,ORD-00210,2025-11-22T21:34:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0872,CUST-0197,ORD-01406,2025-07-15T13:57:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0873,CUST-0204,ORD-09276,2025-11-15T17:53:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0874,CUST-0854,ORD-05580,2025-11-17T10:22:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0875,CUST-0792,ORD-01934,2025-10-09T05:51:00+00:00,phone,Fabric quality is different from the description.,size_quality,Open
+TICKET-0876,CUST-0430,ORD-02522,2025-10-08T16:59:00+00:00,email,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0877,CUST-0997,ORD-05526,2025-02-20T08:36:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0878,CUST-0065,ORD-08682,2025-06-24T12:10:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0879,CUST-0805,ORD-08579,2025-07-10T02:57:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0880,CUST-0896,,2025-11-28T14:46:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0881,CUST-0640,ORD-09901,2026-07-10T08:44:00+00:00,chat,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0882,CUST-0989,ORD-09457,2025-01-10T04:21:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0883,CUST-0090,ORD-03373,2025-05-22T09:14:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0884,CUST-0837,ORD-05551,2025-01-07T15:07:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0885,CUST-0937,ORD-02686,2026-02-25T15:04:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0886,CUST-0685,ORD-05308,2025-02-06T08:48:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0887,CUST-0320,ORD-08858,2025-09-12T01:25:00+00:00,chat,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0888,CUST-0579,ORD-00825,2025-09-03T19:41:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0889,CUST-0563,ORD-04978,2025-06-26T09:53:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0890,CUST-0003,,2026-07-15T05:49:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0891,CUST-0645,ORD-00131,2026-01-17T12:27:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0892,CUST-0577,ORD-02057,2026-06-07T04:03:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0893,CUST-0860,ORD-02330,2026-02-25T19:18:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0894,CUST-0562,ORD-03745,2026-09-11T21:07:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0895,CUST-0448,ORD-01273,2026-06-26T10:50:00+00:00,chat,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0896,CUST-0741,ORD-07554,2025-12-02T14:49:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0897,CUST-0764,ORD-05636,2025-12-03T14:17:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0898,CUST-0192,ORD-02359,2025-08-28T05:49:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0899,CUST-0541,ORD-05529,2025-07-20T13:21:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0900,CUST-0541,,2025-03-07T01:22:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0901,CUST-0460,ORD-01479,2026-01-28T03:39:00+00:00,chat,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0902,CUST-0349,ORD-03042,2025-01-29T18:33:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0903,CUST-0163,ORD-00130,2026-03-23T13:44:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0904,CUST-0419,ORD-02585,2026-04-01T09:06:00+00:00,phone,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0905,CUST-0642,ORD-02580,2025-07-29T11:37:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0906,CUST-0523,ORD-02545,2026-05-18T13:22:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0907,CUST-0274,ORD-08596,2025-04-02T08:22:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0908,CUST-0453,ORD-06724,2025-12-22T18:25:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0909,CUST-0767,ORD-01381,2025-01-11T03:01:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0910,CUST-0211,,2025-04-27T00:42:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0911,CUST-0941,ORD-03842,2026-02-26T13:33:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0912,CUST-0429,ORD-07754,2025-09-26T20:18:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0913,CUST-0349,ORD-09172,2025-08-11T02:59:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0914,CUST-0231,ORD-09050,2025-04-25T18:55:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0915,CUST-0667,ORD-07381,2025-05-01T21:17:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0916,CUST-0952,ORD-01777,2025-11-20T12:21:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0917,CUST-1000,ORD-04425,2026-04-14T05:32:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0918,CUST-0846,ORD-07304,2025-01-09T08:41:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0919,CUST-0012,ORD-06627,2026-05-22T18:59:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0920,CUST-0451,,2025-02-20T10:30:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0921,CUST-0829,ORD-04320,2026-06-28T02:03:00+00:00,phone,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0922,CUST-0665,ORD-01740,2025-12-12T16:26:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0923,CUST-0801,ORD-00736,2026-08-31T14:14:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0924,CUST-0056,ORD-09118,2025-07-30T05:36:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0925,CUST-0327,ORD-06305,2025-08-31T02:13:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0926,CUST-0441,ORD-04827,2025-12-31T17:26:00+00:00,whatsapp,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0927,CUST-0402,ORD-09241,2026-05-04T17:43:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0928,CUST-0578,ORD-09376,2025-10-11T00:26:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0929,CUST-0982,ORD-04538,2025-12-11T02:48:00+00:00,email,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0930,CUST-0462,,2026-06-07T00:19:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0931,CUST-0649,ORD-06117,2025-08-27T00:20:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0932,CUST-0074,ORD-09398,2025-10-02T08:13:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0933,CUST-0133,ORD-01032,2025-05-17T20:03:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0934,CUST-0033,ORD-08479,2026-06-11T14:53:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0935,CUST-0375,ORD-03588,2026-03-16T01:06:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0936,CUST-0945,ORD-08020,2026-04-16T15:39:00+00:00,chat,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0937,CUST-0602,ORD-07742,2025-07-13T20:03:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0938,CUST-0997,ORD-05526,2025-08-08T00:49:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0939,CUST-0434,ORD-00286,2026-03-20T08:28:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0940,CUST-0396,,2026-08-13T13:33:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0941,CUST-0242,ORD-07177,2026-01-03T20:40:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0942,CUST-0857,ORD-07250,2025-04-06T12:27:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0943,CUST-0848,ORD-08181,2026-06-17T06:50:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0944,CUST-0087,ORD-01781,2025-09-25T20:34:00+00:00,email,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0945,CUST-0632,ORD-01965,2025-03-30T04:30:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0946,CUST-0733,ORD-02407,2025-09-24T20:26:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0947,CUST-0527,ORD-00241,2026-03-13T13:44:00+00:00,email,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0948,CUST-0239,ORD-09171,2025-12-07T20:09:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0949,CUST-0154,ORD-01588,2026-04-25T19:34:00+00:00,email,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0950,CUST-0076,,2025-03-31T17:26:00+00:00,chat,Fabric quality is different from the description.,size_quality,Open
+TICKET-0951,CUST-0215,ORD-02050,2025-10-29T22:19:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0952,CUST-0307,ORD-00392,2026-06-16T02:52:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0953,CUST-0175,ORD-05533,2026-03-29T10:59:00+00:00,phone,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0954,CUST-0088,ORD-01539,2025-05-24T20:21:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0955,CUST-0496,ORD-02691,2025-02-01T22:11:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0956,CUST-0316,ORD-05963,2025-10-21T13:10:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0957,CUST-0508,ORD-08787,2025-03-13T00:22:00+00:00,phone,Colour looks different from the product photos.,size_quality,Open
+TICKET-0958,CUST-0807,ORD-01330,2025-07-19T22:01:00+00:00,email,Fabric quality is different from the description.,size_quality,Pending Customer
+TICKET-0959,CUST-0575,ORD-02269,2026-04-07T20:33:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0960,CUST-0125,,2025-04-18T10:36:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0961,CUST-0516,ORD-08963,2026-01-22T03:48:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0962,CUST-0436,ORD-01908,2026-04-15T08:26:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-0963,CUST-0179,ORD-00906,2026-02-22T14:18:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0964,CUST-0159,ORD-00718,2026-04-15T09:49:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0965,CUST-0079,ORD-01122,2026-01-15T02:33:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0966,CUST-0521,ORD-09461,2025-03-12T15:47:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0967,CUST-0194,ORD-01881,2025-06-29T03:17:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0968,CUST-0421,ORD-03264,2025-12-03T16:43:00+00:00,phone,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0969,CUST-0905,ORD-07707,2025-08-01T07:49:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0970,CUST-0716,,2025-04-18T01:21:00+00:00,email,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0971,CUST-0218,ORD-03489,2025-09-03T00:09:00+00:00,chat,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0972,CUST-0899,ORD-06129,2026-04-14T13:55:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Open
+TICKET-0973,CUST-0563,ORD-04978,2026-06-30T03:38:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Open
+TICKET-0974,CUST-0164,ORD-00253,2025-09-02T19:18:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0975,CUST-0825,ORD-03321,2025-08-26T08:44:00+00:00,chat,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0976,CUST-0122,ORD-05177,2026-04-24T13:34:00+00:00,chat,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0977,CUST-0196,ORD-06890,2026-01-13T01:54:00+00:00,chat,Stitching came undone after the first wash.,size_quality,Pending Customer
+TICKET-0978,CUST-0457,ORD-07418,2026-02-02T18:54:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0979,CUST-0496,ORD-02673,2025-07-31T19:43:00+00:00,phone,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0980,CUST-0389,,2025-08-28T07:57:00+00:00,email,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0981,CUST-0865,ORD-08597,2026-06-16T06:38:00+00:00,whatsapp,Is this cotton or a cotton blend?,size_quality,Resolved
+TICKET-0982,CUST-0942,ORD-06163,2026-04-19T17:51:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Resolved
+TICKET-0983,CUST-0399,ORD-01581,2026-06-06T18:20:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Pending Customer
+TICKET-0984,CUST-0973,ORD-00512,2026-06-28T15:25:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Open
+TICKET-0985,CUST-0794,ORD-03594,2025-10-02T10:47:00+00:00,whatsapp,Size M is loose; please help me find the right size.,size_quality,Pending Customer
+TICKET-0986,CUST-0459,ORD-09284,2026-07-01T23:23:00+00:00,whatsapp,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Pending Customer
+TICKET-0987,CUST-0384,ORD-00267,2025-01-19T21:11:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0988,CUST-0236,ORD-07829,2025-09-27T17:23:00+00:00,whatsapp,Stitching came undone after the first wash.,size_quality,Resolved
+TICKET-0989,CUST-0029,ORD-08780,2025-05-10T19:07:00+00:00,chat,Colour looks different from the product photos.,size_quality,Open
+TICKET-0990,CUST-0714,,2025-04-16T17:36:00+00:00,chat,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer
+TICKET-0991,CUST-0709,ORD-00043,2025-06-06T07:16:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Resolved
+TICKET-0992,CUST-0705,ORD-06052,2026-05-01T06:38:00+00:00,email,Colour looks different from the product photos.,size_quality,Resolved
+TICKET-0993,CUST-0292,ORD-06717,2026-05-15T14:41:00+00:00,email,Size M is loose; please help me find the right size.,size_quality,Open
+TICKET-0994,CUST-0240,ORD-06951,2025-10-11T01:34:00+00:00,phone,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Resolved
+TICKET-0995,CUST-0446,ORD-09269,2025-02-21T06:20:00+00:00,whatsapp,Colour looks different from the product photos.,size_quality,Open
+TICKET-0996,CUST-0178,ORD-07940,2025-01-12T20:12:00+00:00,phone,Size chart mein chest measurement confirm kar sakte ho?,size_quality,Open
+TICKET-0997,CUST-0568,ORD-00678,2025-02-19T21:21:00+00:00,whatsapp,Fabric quality is different from the description.,size_quality,Resolved
+TICKET-0998,CUST-0927,ORD-09938,2025-03-29T19:41:00+00:00,phone,Is this cotton or a cotton blend?,size_quality,Pending Customer
+TICKET-0999,CUST-0981,ORD-01257,2025-04-22T05:38:00+00:00,email,Fabric quality is different from the description.,size_quality,Open
+TICKET-1000,CUST-0193,,2026-05-18T00:07:00+00:00,email,The kurti runs smaller than the size chart. Can I exchange it?,size_quality,Pending Customer

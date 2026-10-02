@@ -21,40 +21,59 @@ async function request(path, options = {}) {
 function pct(ratio) { return `${(Number(ratio || 0) * 100).toFixed(1)}%`; }
 async function refreshDashboard() {
   clearNotice();
-  const [summary, insights, categoryInsights] = await Promise.all([
-    request("/api/dashboard/summary"), request("/api/dashboard/sku-insights?limit=20"),
-    request("/api/dashboard/category-insights?limit=20"),
+  const params = new URLSearchParams();
+  if ($("insight-start").value) params.set("start", $("insight-start").value);
+  if ($("insight-end").value) params.set("end", $("insight-end").value);
+  const [summary, categoryInsights] = await Promise.all([
+    request("/api/dashboard/summary"), request(`/api/dashboard/category-insights?${params}`),
   ]);
   $("total-returns").textContent = summary.total_returns;
   $("other-share").textContent = pct(summary.other_return_share);
   $("other-count").textContent = `${summary.other_returns} returns`;
   $("analysed").textContent = `${summary.analysed_returns} / ${summary.total_returns}`;
+  $("classification-note").textContent = `${summary.unanalysed_returns} not classified`;
   $("pending-count").textContent = summary.pending_human_reviews;
-  $("sku-rows").replaceChildren();
-  if (!insights.length) { $("sku-rows").innerHTML = '<tr><td colspan="6" class="muted">No insight rows yet. Run the insight calculation after classification.</td></tr>'; }
-  for (const row of insights) {
-    const tr = document.createElement("tr");
-    [row.sku_id, row.analysis_period, row.total_orders, row.total_returns, pct(row.return_rate), row.top_issue || "—"].forEach((value) => {
-      const td = document.createElement("td"); td.textContent = value ?? "—"; tr.append(td);
-    });
-    $("sku-rows").append(tr);
-  }
-  $("category-rows").replaceChildren();
-  if (!categoryInsights.length) { $("category-rows").innerHTML = '<tr><td colspan="7" class="muted">No category insight rows yet.</td></tr>'; }
-  for (const row of categoryInsights) {
-    const tr = document.createElement("tr");
-    [row.category, row.subcategory, row.analysis_period, row.total_orders, row.total_returns, pct(row.return_rate), row.top_fit_issue || "—"].forEach((value) => {
-      const td = document.createElement("td"); td.textContent = value ?? "—"; tr.append(td);
-    });
-    $("category-rows").append(tr);
-  }
-  await loadReviews();
+  renderCategoryInsights(categoryInsights);
+  await loadReviews(summary.unanalysed_returns);
   $("connection-state").textContent = `Connected · ${base()}`;
 }
-async function loadReviews() {
+function renderCategoryInsights(rows) {
+  const body = $("category-rows"); body.replaceChildren();
+  if (!rows.length) { body.innerHTML = '<tr><td colspan="8" class="muted">No insight rows match this date range. Run the insight calculation for the selected period.</td></tr>'; return; }
+  rows.forEach((row, index) => {
+    const summary = document.createElement("tr");
+    [row.category, row.subcategory, row.total_orders, row.total_returns, pct(row.return_rate), pct(row.fit_return_rate), pct(row.quality_return_rate)].forEach((value) => {
+      const cell = document.createElement("td"); cell.textContent = value ?? "—"; summary.append(cell);
+    });
+    if (row.small_sample) { const note = document.createElement("small"); note.className = "sample-warning"; note.textContent = "Small sample"; summary.children[2].append(note); }
+    const related = document.createElement("td");
+    const toggle = document.createElement("button"); toggle.className = "button-secondary"; toggle.textContent = `${row.skus.length} SKUs`; toggle.setAttribute("aria-expanded", "false");
+    related.append(toggle); summary.append(related); body.append(summary);
+
+    const detail = document.createElement("tr"); detail.hidden = true;
+    const detailCell = document.createElement("td"); detailCell.colSpan = 8;
+    if (!row.skus.length) { detailCell.textContent = "No returns for these SKUs in the selected range."; }
+    else {
+      const table = document.createElement("table"); table.className = "sku-detail-table";
+      const head = document.createElement("thead"); const headRow = document.createElement("tr");
+      ["SKU", "Product", "Orders", "Returns", "Return rate", "FIT", "QUALITY", "COLOUR", "OTHER", "Sample"].forEach((label) => { const th = document.createElement("th"); th.textContent = label; headRow.append(th); });
+      head.append(headRow); table.append(head);
+      const skuBody = document.createElement("tbody");
+      row.skus.forEach((sku) => {
+        const line = document.createElement("tr");
+        [sku.sku_id, sku.product_name, sku.total_orders, sku.total_returns, pct(sku.return_rate), sku.fit_returns, sku.quality_count, sku.colour_count, sku.other_count, sku.small_sample ? "Low denominator" : "—"].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value ?? "—"; line.append(cell); });
+        skuBody.append(line);
+      });
+      table.append(skuBody); detailCell.append(table);
+    }
+    detail.append(detailCell); body.append(detail);
+    toggle.addEventListener("click", () => { detail.hidden = !detail.hidden; toggle.setAttribute("aria-expanded", String(!detail.hidden)); toggle.textContent = detail.hidden ? `${row.skus.length} SKUs` : "Hide SKUs"; });
+  });
+}
+async function loadReviews(unanalysedReturns = 0) {
   const rows = await request("/api/reviews/pending");
   const queue = $("review-queue"); queue.replaceChildren();
-  if (!rows.length) { const p = document.createElement("p"); p.className = "muted"; p.textContent = "No returns are waiting for review."; queue.append(p); return; }
+  if (!rows.length) { const p = document.createElement("p"); p.className = "muted"; p.textContent = unanalysedReturns ? `No returns are waiting for review. ${unanalysedReturns} returns have not been classified yet.` : "All returns are classified; none are waiting for review."; queue.append(p); return; }
   for (const row of rows) {
     const card = document.createElement("article"); card.className = "review-card";
     const top = document.createElement("div"); top.className = "review-meta";
@@ -86,6 +105,17 @@ async function loadReviews() {
 }
 $("connect").addEventListener("click", async () => { localStorage.setItem("dhaga_api_url", base()); try { await refreshDashboard(); } catch (error) { $("connection-state").textContent = "Connection failed"; notice(error.message); } });
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
+$("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
+$("classify-batch").addEventListener("click", async (event) => {
+  const button = event.currentTarget; button.disabled = true; button.textContent = "Classifying…";
+  try {
+    const result = await request("/api/returns/classify-batch?limit=5", { method: "POST" });
+    await refreshDashboard();
+    const failureNote = result.failures.length ? ` ${result.failures.length} failed: ${result.failures.map((failure) => failure.return_id).join(", ")}.` : "";
+    notice(`Batch finished: ${result.classified} classified, ${result.pending_review} sent to review, ${result.not_required} resolved, ${result.failed} failed. ${result.remaining_unclassified} remain unclassified.${failureNote}`, result.failed === 0);
+  } catch (error) { notice(error.message); }
+  finally { button.disabled = false; button.textContent = "Classify next 5"; }
+});
 $("classify-form").addEventListener("submit", async (event) => {
   event.preventDefault(); clearNotice();
   const button = event.submitter; button.disabled = true; button.textContent = "Classifying…";
