@@ -1,0 +1,1 @@
+window.DHAGA_CONFIG = Object.freeze({ apiBaseUrl: "http://localhost:8000" });

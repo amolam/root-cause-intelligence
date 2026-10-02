@@ -7,9 +7,7 @@ const categories = {
   PRODUCT_MISMATCH: ["WRONG_PRODUCT", "DIFFERENT_PRODUCT"],
   DAMAGED: ["PRODUCT_DAMAGED"], DELIVERY: ["DELIVERY_RELATED"], OTHER: ["OTHER", "LOW_CONFIDENCE"],
 };
-const savedApi = localStorage.getItem("dhaga_api_url");
-if (savedApi) $("api-url").value = savedApi;
-const base = () => $("api-url").value.trim().replace(/\/$/, "");
+const base = () => (window.DHAGA_CONFIG?.apiBaseUrl || "").replace(/\/$/, "");
 function notice(message, good = false) { const n = $("notice"); n.textContent = message; n.className = `notice${good ? " success" : ""}`; n.hidden = false; }
 function clearNotice() { $("notice").hidden = true; }
 async function request(path, options = {}) {
@@ -35,7 +33,7 @@ async function refreshDashboard() {
   $("pending-count").textContent = summary.pending_human_reviews;
   renderCategoryInsights(categoryInsights);
   await loadReviews(summary.unanalysed_returns);
-  $("connection-state").textContent = `Connected · ${base()}`;
+  $("connection-state").textContent = `Connected · ${new URL(base()).host}`;
 }
 function renderCategoryInsights(rows) {
   const body = $("category-rows"); body.replaceChildren();
@@ -80,6 +78,13 @@ async function loadReviews(unanalysedReturns = 0) {
     const title = document.createElement("strong"); title.textContent = `${row.return_id} · ${row.sku_id}`;
     const badge = document.createElement("span"); badge.className = "badge"; badge.textContent = `${row.predicted_category}/${row.predicted_subcategory} · ${Math.round(Number(row.confidence_score) * 100)}%`;
     top.append(title, badge); card.append(top);
+    const reasons = row.review_reasons || [];
+    const rationale = document.createElement("p"); rationale.className = "muted review-rationale";
+    rationale.textContent = [
+      reasons.includes("LOW_CONFIDENCE") ? "Below the 75% review threshold." : "",
+      reasons.includes("OTHER_CATEGORY") ? "OTHER always requires human review, even at high confidence; the score describes confidence in this label, not whether review is complete." : "",
+    ].filter(Boolean).join(" ");
+    if (rationale.textContent) card.append(rationale);
     const comment = document.createElement("p"); comment.className = "review-comment"; comment.textContent = `Reason: ${row.return_reason}${row.return_reason_text ? ` · “${row.return_reason_text}”` : ""}`; card.append(comment);
     const controls = document.createElement("form"); controls.className = "review-controls";
     const reviewer = document.createElement("label"); reviewer.textContent = "Reviewer";
@@ -103,18 +108,49 @@ async function loadReviews(unanalysedReturns = 0) {
     card.append(controls); queue.append(card);
   }
 }
-$("connect").addEventListener("click", async () => { localStorage.setItem("dhaga_api_url", base()); try { await refreshDashboard(); } catch (error) { $("connection-state").textContent = "Connection failed"; notice(error.message); } });
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
 $("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
+$("refresh-insights").addEventListener("click", async (event) => {
+  const button = event.currentTarget; button.disabled = true; button.textContent = "Recalculating…";
+  try {
+    const result = await request("/api/dashboard/refresh-insights", { method: "POST" });
+    await refreshDashboard();
+    notice(`Insights recalculated: ${result.sku_rows} SKU rows and ${result.category_rows} category rows. Classifications were unchanged.`, true);
+  } catch (error) { notice(error.message); }
+  finally { button.disabled = false; button.textContent = "Recalculate insights"; }
+});
+$("reset-classifications").addEventListener("click", () => {
+  $("reset-dialog").showModal();
+});
+$("cancel-reset").addEventListener("click", () => $("reset-dialog").close());
+$("reset-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("confirm-reset");
+  button.disabled = true; button.textContent = "Resetting…";
+  let shouldRefresh = false;
+  try {
+    const result = await request("/api/admin/reset-classifications", { method: "POST" });
+    notice(`Reset complete: ${result.analyses_deleted} analyses and ${result.human_reviews_deleted} reviews removed; insights refreshed.`, true);
+    shouldRefresh = true;
+  } catch (error) { notice(error.message); }
+  finally {
+    button.disabled = false; button.textContent = "Reset classifications";
+    $("reset-dialog").close();
+  }
+  if (shouldRefresh) refreshDashboard().catch((error) => notice(`Reset completed, but dashboard refresh failed: ${error.message}`));
+});
 $("classify-batch").addEventListener("click", async (event) => {
   const button = event.currentTarget; button.disabled = true; button.textContent = "Classifying…";
+  let shouldRefresh = false;
   try {
     const result = await request("/api/returns/classify-batch?limit=5", { method: "POST" });
-    await refreshDashboard();
     const failureNote = result.failures.length ? ` ${result.failures.length} failed: ${result.failures.map((failure) => failure.return_id).join(", ")}.` : "";
-    notice(`Batch finished: ${result.classified} classified, ${result.pending_review} sent to review, ${result.not_required} resolved, ${result.failed} failed. ${result.remaining_unclassified} remain unclassified.${failureNote}`, result.failed === 0);
+    const insightNote = result.insights_refreshed ? " Monthly insights updated." : ` Insight refresh failed for ${result.insight_refresh_failures.length} item(s); rerun the insight calculation.`;
+    notice(`Batch finished: ${result.classified} classified, ${result.pending_review} sent to review, ${result.not_required} resolved, ${result.failed} failed. ${result.remaining_unclassified} remain unclassified.${failureNote}${insightNote}`, result.failed === 0 && result.insights_refreshed);
+    shouldRefresh = true;
   } catch (error) { notice(error.message); }
   finally { button.disabled = false; button.textContent = "Classify next 5"; }
+  if (shouldRefresh) refreshDashboard().catch((error) => notice(`Classification finished, but dashboard refresh failed: ${error.message}`));
 });
 $("classify-form").addEventListener("submit", async (event) => {
   event.preventDefault(); clearNotice();
@@ -127,3 +163,8 @@ $("classify-form").addEventListener("submit", async (event) => {
   } catch (error) { notice(error.message); }
   finally { button.disabled = false; button.textContent = "Classify"; }
 });
+if (base()) {
+  refreshDashboard().catch((error) => { $("connection-state").textContent = "Connection failed"; notice(error.message); });
+} else {
+  $("connection-state").textContent = "API_BASE_URL is not configured";
+}

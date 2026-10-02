@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -34,6 +34,25 @@ class BatchSession(FakeSession):
         return self.remaining
 
 
+class ResetSession(FakeSession):
+    def __init__(self):
+        super().__init__()
+        self.executions = 0
+        self.commits = 0
+
+    def execute(self, statement):
+        self.executions += 1
+        if self.executions == 1:
+            return SimpleNamespace(one=lambda: (
+                datetime(2025, 1, 15, tzinfo=timezone.utc),
+                datetime(2026, 9, 13, tzinfo=timezone.utc),
+            ))
+        return SimpleNamespace(rowcount=1)
+
+    def commit(self):
+        self.commits += 1
+
+
 def client_with_session(session):
     api_module.app.dependency_overrides[api_module.get_db] = lambda: session
     return TestClient(api_module.app)
@@ -61,6 +80,30 @@ def test_classification_provider_error_is_visible(monkeypatch):
     api_module.app.dependency_overrides.clear()
 
 
+def test_single_classification_refreshes_monthly_insights(monkeypatch):
+    record = SimpleNamespace(return_id="R1", order_id="O1", return_reason="Other", return_reason_text="unclear")
+    client = client_with_session(FakeSession(record))
+    refreshed = []
+
+    class SuccessfulService:
+        def classify(self, session, item):
+            return SimpleNamespace(
+                analysis_id="A1",
+                result=SimpleNamespace(predicted_category="FIT", predicted_subcategory="TOO_SMALL",
+                                       confidence_score=0.8, evidence_text="too small"),
+                model_name="test",
+                human_review_status="PENDING",
+            )
+
+    monkeypatch.setattr(api_module, "get_classifier_service", lambda: SuccessfulService())
+    monkeypatch.setattr(api_module, "_refresh_monthly_insights_for_return", lambda session, item: refreshed.append(item.return_id))
+    response = client.post("/api/returns/R1/classify")
+
+    assert response.status_code == 200
+    assert refreshed == ["R1"]
+    api_module.app.dependency_overrides.clear()
+
+
 def test_batch_classification_reports_partial_results_and_remaining_count(monkeypatch):
     records = [SimpleNamespace(return_id=f"R{index}") for index in range(1, 4)]
     client = client_with_session(BatchSession(records, remaining=8))
@@ -72,6 +115,7 @@ def test_batch_classification_reports_partial_results_and_remaining_count(monkey
             return SimpleNamespace(human_review_status="PENDING" if item.return_id == "R1" else "NOT_REQUIRED")
 
     monkeypatch.setattr(api_module, "get_classifier_service", lambda: BatchService())
+    monkeypatch.setattr(api_module, "_refresh_monthly_insights_for_return", lambda session, item: None)
     response = client.post("/api/returns/classify-batch?limit=3")
 
     assert response.status_code == 200
@@ -84,6 +128,8 @@ def test_batch_classification_reports_partial_results_and_remaining_count(monkey
         "failed": 1,
         "remaining_unclassified": 8,
         "failures": [{"return_id": "R3", "error": "RuntimeError"}],
+        "insights_refreshed": True,
+        "insight_refresh_failures": [],
     }
     api_module.app.dependency_overrides.clear()
 
@@ -94,6 +140,45 @@ def test_batch_classification_limit_cannot_exceed_five():
 
     assert response.status_code == 422
     api_module.app.dependency_overrides.clear()
+
+
+def test_reset_classifications_clears_records_and_refreshes_insights(monkeypatch):
+    client = client_with_session(ResetSession())
+    monkeypatch.setattr(api_module, "_refresh_all_insights", lambda db: (12, 8))
+
+    response = client.post("/api/admin/reset-classifications")
+
+    assert response.status_code == 200
+    assert response.json()["analyses_deleted"] == 1
+    assert response.json()["human_reviews_deleted"] == 1
+    assert response.json()["insights_refreshed"] is True
+    api_module.app.dependency_overrides.clear()
+
+
+def test_dashboard_refresh_endpoint_recalculates_all_insights(monkeypatch):
+    client = client_with_session(FakeSession())
+    monkeypatch.setattr(api_module, "_refresh_all_insights", lambda db: (12, 8))
+
+    response = client.post("/api/dashboard/refresh-insights")
+
+    assert response.status_code == 200
+    assert response.json() == {"sku_rows": 12, "category_rows": 8, "refreshed": True}
+    api_module.app.dependency_overrides.clear()
+
+
+def test_pending_other_review_explains_high_confidence_reason():
+    analysis = SimpleNamespace(
+        analysis_id=uuid4(), return_id="R1", sku_id="S1", predicted_category="OTHER",
+        predicted_subcategory="OTHER", confidence_score=0.95,
+        evidence_text="outside supported labels",
+    )
+    record = SimpleNamespace(return_reason="Other", return_reason_text="unclear")
+    session = SimpleNamespace(execute=lambda statement: SimpleNamespace(all=lambda: [(analysis, record)]))
+
+    response = api_module.pending_reviews(db=session)
+
+    assert response[0]["review_reasons"] == ["OTHER_CATEGORY"]
+    assert response[0]["confidence_score"] == 0.95
 
 
 def test_category_insights_roll_up_periods_and_link_skus():

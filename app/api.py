@@ -8,10 +8,11 @@ from uuid import UUID, uuid4
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator, model_validator
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.ai.classifier import (
+    DEFAULT_CONFIDENCE_THRESHOLD,
     TAXONOMY,
     ClassificationError,
     ReturnClassificationService,
@@ -28,6 +29,7 @@ from app.db.models import (
     SKUReturnInsight,
 )
 from app.db.session import SessionLocal
+from app.insights.aggregator import calculate_and_save_insights
 
 Category = Literal["FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY", "OTHER"]
 
@@ -56,6 +58,40 @@ class ReviewInput(BaseModel):
 def get_db():
     with SessionLocal() as session:
         yield session
+
+
+def _next_month_start(value: date) -> date:
+    return date(value.year + 1, 1, 1) if value.month == 12 else date(value.year, value.month + 1, 1)
+
+
+def _refresh_monthly_insights_for_return(db: Session, record: Return) -> None:
+    order_created_at = db.scalar(select(Order.order_created_at).where(Order.order_id == record.order_id))
+    if order_created_at is None:
+        raise ValueError(f"Order {record.order_id!r} was not found")
+    start = order_created_at.date().replace(day=1)
+    end = _next_month_start(start)
+    calculate_and_save_insights(db, start, end, "month")
+
+
+def _refresh_all_insights(db: Session) -> tuple[int, int]:
+    min_order, max_order = db.execute(
+        select(func.min(Order.order_created_at), func.max(Order.order_created_at))
+    ).one()
+    if min_order is None or max_order is None:
+        return 0, 0
+    start = min_order.date().replace(day=1)
+    end = _next_month_start(max_order.date().replace(day=1))
+    return calculate_and_save_insights(db, start, end, "month")
+
+
+def _review_reasons(analysis: ReturnAIAnalysis) -> list[str]:
+    reasons = []
+    confidence = float(analysis.confidence_score) if analysis.confidence_score is not None else 0
+    if confidence < DEFAULT_CONFIDENCE_THRESHOLD:
+        reasons.append("LOW_CONFIDENCE")
+    if analysis.predicted_category == "OTHER":
+        reasons.append("OTHER_CATEGORY")
+    return reasons
 
 
 @lru_cache
@@ -88,6 +124,42 @@ app.add_middleware(
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/api/admin/reset-classifications")
+def reset_classifications(db: Session = Depends(get_db)):
+    try:
+        human_reviews_deleted = db.execute(delete(HumanReview)).rowcount or 0
+        analyses_deleted = db.execute(delete(ReturnAIAnalysis)).rowcount or 0
+        sku_insights_deleted = db.execute(delete(SKUReturnInsight)).rowcount or 0
+        category_insights_deleted = db.execute(delete(CategoryReturnInsight)).rowcount or 0
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Classification data could not be reset") from exc
+
+    try:
+        _refresh_all_insights(db)
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Classifications were reset, but insights could not be recalculated") from exc
+    return {
+        "human_reviews_deleted": human_reviews_deleted,
+        "analyses_deleted": analyses_deleted,
+        "sku_insights_deleted": sku_insights_deleted,
+        "category_insights_deleted": category_insights_deleted,
+        "insights_refreshed": True,
+    }
+
+
+@app.post("/api/dashboard/refresh-insights")
+def refresh_dashboard_insights(db: Session = Depends(get_db)):
+    try:
+        sku_rows, category_rows = _refresh_all_insights(db)
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Dashboard insights could not be refreshed") from exc
+    return {"sku_rows": sku_rows, "category_rows": category_rows, "refreshed": True}
 
 
 @app.get("/api/dashboard/summary")
@@ -243,6 +315,7 @@ def pending_reviews(limit: int = Query(default=50, ge=1, le=200), db: Session = 
         "predicted_category": analysis.predicted_category,
         "predicted_subcategory": analysis.predicted_subcategory,
         "confidence_score": analysis.confidence_score,
+        "review_reasons": _review_reasons(analysis),
         "evidence_text": analysis.evidence_text,
     } for analysis, ret in rows]
 
@@ -257,6 +330,11 @@ def classify_return(return_id: str, db: Session = Depends(get_db)):
         .order_by(ReturnAIAnalysis.created_at.desc()).limit(1)
     )
     if existing is not None:
+        try:
+            _refresh_monthly_insights_for_return(db, record)
+        except Exception as exc:
+            db.rollback()
+            raise HTTPException(status_code=503, detail="Classification exists, but its monthly insights could not be refreshed") from exc
         return {
             "analysis_id": str(existing.analysis_id),
             "return_id": return_id,
@@ -276,6 +354,11 @@ def classify_return(return_id: str, db: Session = Depends(get_db)):
     except Exception as exc:
         db.rollback()
         raise HTTPException(status_code=503, detail="Database or model service is unavailable; no result was saved") from exc
+    try:
+        _refresh_monthly_insights_for_return(db, record)
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Classification was saved, but its monthly insights could not be refreshed") from exc
     return {
         "analysis_id": prediction.analysis_id,
         "return_id": return_id,
@@ -297,6 +380,7 @@ def classify_returns_batch(limit: int = Query(default=5, ge=1, le=5), db: Sessio
     ).all()
     counts = {"classified": 0, "pending_review": 0, "not_required": 0, "failed": 0}
     failures = []
+    insight_refresh_failures = []
     if records:
         try:
             service = get_classifier_service()
@@ -315,6 +399,11 @@ def classify_returns_batch(limit: int = Query(default=5, ge=1, le=5), db: Sessio
                 counts["pending_review"] += 1
             else:
                 counts["not_required"] += 1
+            try:
+                _refresh_monthly_insights_for_return(db, record)
+            except Exception as exc:
+                db.rollback()
+                insight_refresh_failures.append({"return_id": record.return_id, "error": type(exc).__name__})
     remaining = db.scalar(select(func.count()).select_from(Return).where(unanalysed)) or 0
     return {
         "requested": limit,
@@ -322,6 +411,8 @@ def classify_returns_batch(limit: int = Query(default=5, ge=1, le=5), db: Sessio
         **counts,
         "remaining_unclassified": remaining,
         "failures": failures,
+        "insights_refreshed": not insight_refresh_failures,
+        "insight_refresh_failures": insight_refresh_failures,
     }
 
 

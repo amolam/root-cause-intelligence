@@ -16,11 +16,7 @@
         <h1>Return intelligence</h1>
         <p class="intro">See what customers mean when they choose “Other” and review uncertain classifications.</p>
       </div>
-      <div class="connection">
-        <label for="api-url">API address</label>
-        <div class="connect-row"><input id="api-url" value="http://localhost:8000" autocomplete="url"><button id="connect">Connect</button></div>
-        <p id="connection-state" class="muted">Not connected</p>
-      </div>
+      <div class="connection"><p class="eyebrow">API CONNECTION</p><p id="connection-state" class="muted">Connecting…</p></div>
     </header>
 
     <div id="notice" class="notice" role="status" hidden></div>
@@ -38,9 +34,18 @@
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
+      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="reset-classifications" class="button-secondary" type="button">Reset classifications</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
       <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
     </section>
+
+    <dialog id="reset-dialog" class="reset-dialog">
+      <form id="reset-form">
+        <p class="eyebrow">ADMIN ACTION</p>
+        <h2>Reset classifications?</h2>
+        <p class="muted">This deletes AI analyses and submitted human reviews, then recalculates insights. Returns and orders are kept.</p>
+        <div class="toolbar-actions"><button id="cancel-reset" class="button-secondary" type="button">Cancel</button><button id="confirm-reset" type="submit">Reset classifications</button></div>
+      </form>
+    </dialog>
 
     <section class="panel">
       <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Category to SKU</h2><p class="muted">Product categories group the matching SKUs. FIT, QUALITY, COLOUR, and OTHER are predicted return-issue labels.</p></div>
@@ -48,12 +53,14 @@
           <label for="insight-start">From<input id="insight-start" type="date"></label>
           <label for="insight-end">To<input id="insight-end" type="date"></label>
           <button type="submit" class="button-secondary">Apply range</button>
+          <button id="refresh-insights" type="button" class="button-secondary">Recalculate insights</button>
         </form>
       </div>
       <div class="table-wrap"><table><thead><tr><th>Product category</th><th>Subcategory</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>FIT issue rate</th><th>QUALITY issue rate</th><th>Related SKUs</th></tr></thead><tbody id="category-rows"><tr><td colspan="8" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
     </section>
     <footer>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</footer>
   </main>
+  <script src="/runtime-config.js"></script>
   <script src="/app.js" defer></script>
 </body>
 </html>
