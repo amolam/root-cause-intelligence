@@ -3,54 +3,160 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f0e8">
+  <meta name="theme-color" content="#008c9b">
+  <meta name="app-version" content="2.0.0">
   <title>Dhaga & Co. Return Intelligence</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/layout.css">
 </head>
 <body>
-  <main class="shell">
+  <div class="masthead-wrapper">
     <header class="masthead">
-      <div>
+      <div class="masthead-brand">
         <p class="eyebrow">DHAGA & CO. · CATEGORY OPERATIONS</p>
-        <h1>Return intelligence</h1>
-        <p class="intro">See what customers mean when they choose “Other” and review uncertain classifications.</p>
+        <h1>Return Intelligence</h1>
       </div>
-      <div class="connection">
-        <label for="api-url">API address</label>
-        <div class="connect-row"><input id="api-url" value="http://localhost:8000" autocomplete="url"><button id="connect">Connect</button></div>
-        <p id="connection-state" class="muted">Not connected</p>
+      <div class="masthead-actions">
+        <div id="status-pill-container">
+          <div id="connection-state" class="status-pill connecting" role="status" aria-live="polite">
+            <span class="status-dot"></span>
+            <span>Connecting...</span>
+          </div>
+        </div>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
       </div>
     </header>
+  </div>
 
-    <div id="notice" class="notice" role="status" hidden></div>
+  <main class="shell">
+
+
+    <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+
     <section class="metrics" aria-label="Return summary">
-      <article class="metric"><span>Total returns</span><strong id="total-returns">—</strong></article>
-      <article class="metric"><span>Marked “Other”</span><strong id="other-share">—</strong><small id="other-count"></small></article>
-      <article class="metric"><span>Analysed</span><strong id="analysed">—</strong></article>
-      <article class="metric"><span>Needs human review</span><strong id="pending-count">—</strong></article>
+      <article class="metric card">
+        <span>Total returns</span>
+        <strong id="total-returns" class="skeleton">—</strong>
+      </article>
+      <article class="metric card">
+        <span>Marked “Other”</span>
+        <strong id="other-share" class="skeleton">—</strong>
+        <small id="other-count" class="text-muted"></small>
+      </article>
+      <article class="metric card">
+        <span>Analysed</span>
+        <strong id="analysed" class="skeleton">—</strong>
+      </article>
+      <article class="metric card">
+        <span>Needs human review</span>
+        <strong id="pending-count" class="skeleton">—</strong>
+      </article>
     </section>
 
-    <section class="panel classify-panel">
-      <div><p class="eyebrow">CLASSIFY A RETURN</p><h2>Check a return comment</h2><p class="muted">The model sees only the selected return reason and comment. Unclear results go to human review.</p></div>
-      <form id="classify-form" class="inline-form"><label for="return-id">Return ID</label><div class="connect-row"><input id="return-id" placeholder="RET-SAMPLE-001" required><button type="submit">Classify</button></div></form>
-      <div id="classification-result" class="result" hidden></div>
+    <section class="panel classify-panel card">
+      <div>
+        <p class="eyebrow">CLASSIFY A RETURN</p>
+        <h2>Check a return comment</h2>
+        <p class="text-muted">The model evaluates the selected return reason and comment. Unclear results go directly to human review.</p>
+      </div>
+      <form id="classify-form" class="classify-form-group">
+        <label for="return-id">Return ID</label>
+        <div class="inline-form">
+          <input id="return-id" placeholder="RET-SAMPLE-001" autocomplete="off" required>
+          <button type="submit">Classify</button>
+        </div>
+        <div id="return-id-error" class="text-error text-xs hidden" role="alert"></div>
+      </form>
+      <div id="classification-result" class="result hidden" role="status" aria-live="polite"></div>
     </section>
 
-    <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><button id="refresh" class="button-secondary">Refresh</button></div>
-      <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
+    <section class="panel card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">HUMAN IN THE LOOP</p>
+          <h2>Review queue</h2>
+        </div>
+        <button id="refresh" class="btn btn-secondary">Refresh</button>
+      </div>
+      <div id="review-queue" class="review-list">
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          <p class="text-muted">Connect to your API to load pending reviews.</p>
+        </div>
+      </div>
     </section>
 
-    <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>SKU return insights</h2></div></div>
-      <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top issue</th></tr></thead><tbody id="sku-rows"><tr><td colspan="6" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+    <section class="panel card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">MERCHANDISING SIGNALS</p>
+          <h2>SKU return insights</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Period</th>
+              <th class="text-right">Orders</th>
+              <th class="text-right">Returns</th>
+              <th class="text-right">Return rate</th>
+              <th>Top issue</th>
+            </tr>
+          </thead>
+          <tbody id="sku-rows">
+            <tr>
+              <td colspan="6" class="text-center text-muted">Connect to your API to load SKU insights.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
-    <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">CATEGORY SIGNALS</p><h2>Category return insights</h2></div></div>
-      <div class="table-wrap"><table><thead><tr><th>Category</th><th>Subcategory</th><th>Period</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>Top fit issue</th></tr></thead><tbody id="category-rows"><tr><td colspan="7" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+
+    <section class="panel card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CATEGORY SIGNALS</p>
+          <h2>Category return insights</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Subcategory</th>
+              <th>Period</th>
+              <th class="text-right">Orders</th>
+              <th class="text-right">Returns</th>
+              <th class="text-right">Return rate</th>
+              <th>Top fit issue</th>
+            </tr>
+          </thead>
+          <tbody id="category-rows">
+            <tr>
+              <td colspan="7" class="text-center text-muted">Connect to your API to load category insights.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
-    <footer>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</footer>
+
+    <footer>
+      <p>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</p>
+      <p class="text-xs text-muted" id="footer-version">Dhaga & Co. Return Intelligence v2.0.0</p>
+    </footer>
   </main>
-  <script src="/app.js" defer></script>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="/app.js"></script>
 </body>
 </html>

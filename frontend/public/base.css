@@ -1,0 +1,162 @@
+/* Reset & Base Styles */
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 100%; }
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+/* Design Tokens - Light Theme */
+:root {
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --line-height: 1.6;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+
+  /* Spacing Scale */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+
+  /* Radius Scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Shadow Scale */
+  --shadow-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.05);
+  --shadow-glass: 0 8px 32px -12px rgba(0, 0, 0, 0.08);
+
+  /* Transition Duration */
+  --duration-fast: 150ms;
+  --duration-medium: 200ms;
+  --duration-slow: 300ms;
+
+  /* Light Theme Colors */
+  --color-bg: 255, 255, 255;
+  --color-bg-elevated: 255, 255, 255;
+  --color-bg-subtle: 245, 247, 250;
+  --color-bg-card: 255, 255, 255;
+  --color-border: 235, 240, 246;
+  --color-text: 33, 33, 33;
+  --color-text-muted: 70, 70, 70;
+  --color-text-subtle: 100, 100, 100;
+  
+  /* Primary Accent (Teal) */
+  --color-primary: 0, 140, 155;
+  --color-primary-hover: 0, 125, 140;
+  
+  /* Semantic Colors */
+  --color-success: 78, 181, 115;
+  --color-success-text: 44, 87, 59;
+  --color-error: 230, 62, 62;
+  --color-error-text: 183, 24, 24;
+  --color-warning: 244, 184, 37;
+  --color-warning-text: 146, 116, 16;
+  
+  /* Glassmorphism Background */
+  --glass-bg: 255, 255, 255;
+  --glass-blur: 12px;
+}
+
+[data-theme="light"] {
+  --color-bg: 255, 255, 255;
+  --color-bg-elevated: 255, 255, 255;
+  --color-bg-subtle: 245, 247, 250;
+  --color-bg-card: 255, 255, 255;
+  --color-border: 235, 240, 246;
+  --color-text: 33, 33, 33;
+  --color-text-muted: 70, 70, 70;
+  --color-text-subtle: 100, 100, 100;
+  --glass-bg: 255, 255, 255;
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: 15, 17, 20;
+    --color-bg-elevated: 22, 24, 28;
+    --color-bg-subtle: 25, 28, 32;
+    --color-bg-card: 28, 32, 38;
+    --color-border: 45, 50, 56;
+    --color-text: 235, 238, 241;
+    --color-text-muted: 170, 170, 170;
+    --color-text-subtle: 140, 140, 140;
+    --glass-bg: 25, 28, 32;
+  }
+}
+
+/* Forced Dark Theme */
+[data-theme="dark"] {
+  --color-bg: 15, 17, 20;
+  --color-bg-elevated: 22, 24, 28;
+  --color-bg-subtle: 25, 28, 32;
+  --color-bg-card: 28, 32, 38;
+  --color-border: 45, 50, 56;
+  --color-text: 235, 238, 241;
+  --color-text-muted: 170, 170, 170;
+  --color-text-subtle: 140, 140, 140;
+  --glass-bg: 25, 28, 32;
+}
+
+/* Typography */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: rgb(var(--color-text));
+  background-color: rgb(var(--color-bg));
+  transition: color var(--duration-fast), background-color var(--duration-fast);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  margin: 0 0 var(--space-8) 0;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: rgb(var(--color-text));
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+p { margin: 0 0 var(--space-12) 0; }
+
+/* Helper Classes */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: rgb(var(--color-text-muted)); }
+.text-primary { color: rgb(var(--color-primary)); }
+.bg-subtle { background-color: rgb(var(--color-bg-subtle)); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Transition Helpers */
+.transition-fast { transition: all var(--duration-fast); }
+.transition-medium { transition: all var(--duration-medium); }
+.transition-slow { transition: all var(--duration-slow); }
+
+/* Tab Utilities */
+[role="status"], [aria-live] {
+  position: relative;
+}
