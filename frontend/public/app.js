@@ -30,6 +30,7 @@ async function refreshDashboard() {
   $("other-count").textContent = `${summary.other_returns} returns`;
   $("analysed").textContent = `${summary.analysed_returns} / ${summary.total_returns}`;
   $("classification-note").textContent = `${summary.unanalysed_returns} not classified`;
+  $("human-reviewed-count").textContent = summary.human_reviewed_returns;
   $("pending-count").textContent = summary.pending_human_reviews;
   renderCategoryInsights(categoryInsights);
   await loadReviews(summary.unanalysed_returns);
@@ -140,17 +141,45 @@ $("reset-form").addEventListener("submit", async (event) => {
   if (shouldRefresh) refreshDashboard().catch((error) => notice(`Reset completed, but dashboard refresh failed: ${error.message}`));
 });
 $("classify-batch").addEventListener("click", async (event) => {
-  const button = event.currentTarget; button.disabled = true; button.textContent = "Classifying…";
-  let shouldRefresh = false;
+  const button = event.currentTarget;
+  const sizeSelect = $("classify-batch-size");
+  const target = Number(sizeSelect.value);
+  const totals = { classified: 0, pending_review: 0, not_required: 0, failed: 0 };
+  const failures = [];
+  const insightRefreshFailures = [];
+  let attempted = 0;
+  let remaining = null;
+  let insightsRefreshed = true;
+  button.disabled = true;
+  sizeSelect.disabled = true;
   try {
-    const result = await request("/api/returns/classify-batch?limit=5", { method: "POST" });
-    const failureNote = result.failures.length ? ` ${result.failures.length} failed: ${result.failures.map((failure) => failure.return_id).join(", ")}.` : "";
-    const insightNote = result.insights_refreshed ? " Monthly insights updated." : ` Insight refresh failed for ${result.insight_refresh_failures.length} item(s); rerun the insight calculation.`;
-    notice(`Batch finished: ${result.classified} classified, ${result.pending_review} sent to review, ${result.not_required} resolved, ${result.failed} failed. ${result.remaining_unclassified} remain unclassified.${failureNote}${insightNote}`, result.failed === 0 && result.insights_refreshed);
-    shouldRefresh = true;
-  } catch (error) { notice(error.message); }
-  finally { button.disabled = false; button.textContent = "Classify next 5"; }
-  if (shouldRefresh) refreshDashboard().catch((error) => notice(`Classification finished, but dashboard refresh failed: ${error.message}`));
+    while (attempted < target) {
+      const limit = Math.min(5, target - attempted);
+      button.textContent = `Classifying ${Math.min(attempted + limit, target)} / ${target}…`;
+      const result = await request(`/api/returns/classify-batch?limit=${limit}`, { method: "POST" });
+      attempted += result.attempted;
+      remaining = result.remaining_unclassified;
+      totals.classified += result.classified;
+      totals.pending_review += result.pending_review;
+      totals.not_required += result.not_required;
+      totals.failed += result.failed;
+      failures.push(...result.failures);
+      insightRefreshFailures.push(...result.insight_refresh_failures);
+      insightsRefreshed = insightsRefreshed && result.insights_refreshed;
+
+      if (result.failed > 0 || result.attempted < limit || result.remaining_unclassified === 0) break;
+    }
+    const failureNote = failures.length ? ` Failed returns: ${failures.map((failure) => failure.return_id).join(", ")}.` : "";
+    const insightNote = insightsRefreshed ? " Monthly insights updated." : ` Insight refresh failed for ${insightRefreshFailures.length} item(s); rerun the insight calculation.`;
+    notice(`Batch finished: ${totals.classified} classified from ${attempted} attempted, ${totals.pending_review} sent to review, ${totals.not_required} resolved, ${totals.failed} failed. ${remaining ?? "Unknown"} remain unclassified.${failureNote}${insightNote}`, totals.failed === 0 && insightsRefreshed);
+  } catch (error) {
+    notice(`Classification stopped after ${attempted} of ${target} attempted: ${error.message}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Classify returns";
+    sizeSelect.disabled = false;
+  }
+  if (attempted > 0) refreshDashboard().catch((error) => notice(`Classification finished, but dashboard refresh failed: ${error.message}`));
 });
 $("classify-form").addEventListener("submit", async (event) => {
   event.preventDefault(); clearNotice();

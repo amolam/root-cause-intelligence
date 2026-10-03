@@ -65,6 +65,18 @@ def test_health_endpoint_is_visible():
     assert response.json() == {"status": "ok"}
 
 
+def test_dashboard_summary_distinguishes_human_reviewed_from_analysed():
+    values = iter([100, 20, 85, 12, 9, 120])
+    session = SimpleNamespace(scalar=lambda statement: next(values))
+
+    summary = api_module.dashboard_summary(db=session)
+
+    assert summary["analysed_returns"] == 85
+    assert summary["unanalysed_returns"] == 15
+    assert summary["pending_human_reviews"] == 12
+    assert summary["human_reviewed_returns"] == 9
+
+
 def test_classification_provider_error_is_visible(monkeypatch):
     record = SimpleNamespace(return_id="R1", return_reason="Other", return_reason_text="unclear")
     client = client_with_session(FakeSession(record))

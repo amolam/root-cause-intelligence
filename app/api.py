@@ -178,6 +178,11 @@ def dashboard_summary(db: Session = Depends(get_db)):
         select(func.count()).select_from(ReturnAIAnalysis)
         .where(ReturnAIAnalysis.human_review_status == "PENDING")
     ) or 0
+    human_reviewed = db.scalar(
+        select(func.count(func.distinct(ReturnAIAnalysis.return_id)))
+        .select_from(HumanReview)
+        .join(ReturnAIAnalysis, HumanReview.analysis_id == ReturnAIAnalysis.analysis_id)
+    ) or 0
     total_orders = db.scalar(select(func.count()).select_from(Order)) or 0
     return {
         "total_orders": total_orders,
@@ -187,6 +192,7 @@ def dashboard_summary(db: Session = Depends(get_db)):
         "analysed_returns": analysed,
         "unanalysed_returns": max(total_returns - analysed, 0),
         "pending_human_reviews": pending_reviews,
+        "human_reviewed_returns": human_reviewed,
     }
 
 

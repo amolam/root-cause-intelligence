@@ -24,6 +24,7 @@
       <article class="metric"><span>Total returns</span><strong id="total-returns">—</strong></article>
       <article class="metric"><span>Marked “Other”</span><strong id="other-share">—</strong><small id="other-count"></small></article>
       <article class="metric"><span>Analysed</span><strong id="analysed">—</strong><small id="classification-note"></small></article>
+      <article class="metric"><span>Human reviewed</span><strong id="human-reviewed-count">—</strong><small>completed by a person</small></article>
       <article class="metric"><span>Needs human review</span><strong id="pending-count">—</strong></article>
     </section>
 
@@ -34,7 +35,7 @@
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><button id="classify-batch" class="button-secondary">Classify next 5</button><button id="reset-classifications" class="button-secondary" type="button">Reset classifications</button><button id="refresh" class="button-secondary">Refresh</button></div></div>
+      <div class="section-heading review-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><label class="batch-size-control" for="classify-batch-size">Classify<select id="classify-batch-size" aria-label="Number of returns to classify"><option value="10" selected>10</option><option value="50">50</option><option value="100">100</option></select></label><button id="classify-batch" class="button-secondary" type="button">Classify returns</button><button id="reset-classifications" class="button-secondary" type="button">Reset classifications</button><button id="refresh" class="button-secondary" type="button">Refresh</button></div></div>
       <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
     </section>
 
