@@ -14,7 +14,7 @@
       <div>
         <p class="eyebrow">DHAGA & CO. · CATEGORY OPERATIONS</p>
         <h1>Return intelligence</h1>
-        <p class="intro">See what customers mean when they choose “Other” and review uncertain classifications.</p>
+        <p class="intro">Understand “Other” returns, spot vendor and SKU patterns, and review uncertain classifications.</p>
       </div>
       <div class="connection"><p class="eyebrow">API CONNECTION</p><p id="connection-state" class="muted">Connecting…</p></div>
     </header>
@@ -25,28 +25,13 @@
       <article class="metric"><span>Marked “Other”</span><strong id="other-share">—</strong><small id="other-count"></small></article>
       <article class="metric"><span>Analysed</span><strong id="analysed">—</strong><small id="classification-note"></small></article>
       <article class="metric"><span>Human reviewed</span><strong id="human-reviewed-count">—</strong><small>completed by a person</small></article>
-      <article class="metric"><span>Needs human review</span><strong id="pending-count">—</strong></article>
+      <article class="metric"><span>Needs human review</span><strong><a id="pending-count" href="#review-queue-heading">—</a></strong></article>
     </section>
 
-    <section class="panel classify-panel">
-      <div><p class="eyebrow">CLASSIFY A RETURN</p><h2>Check a return comment</h2><p class="muted">The model sees only the selected return reason and comment. Unclear results go to human review.</p></div>
-      <form id="classify-form" class="inline-form"><label for="return-id">Return ID</label><div class="connect-row"><input id="return-id" placeholder="RET-SAMPLE-001" required><button type="submit">Classify</button></div></form>
-      <div id="classification-result" class="result" hidden></div>
-    </section>
-
-    <section class="panel">
-      <div class="section-heading review-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2>Review queue</h2></div><div class="toolbar-actions"><label class="batch-size-control" for="classify-batch-size">Classify<select id="classify-batch-size" aria-label="Number of returns to classify"><option value="10" selected>10</option><option value="50">50</option><option value="100">100</option></select></label><button id="classify-batch" class="button-secondary" type="button">Classify returns</button><button id="reset-classifications" class="button-secondary" type="button">Reset classifications</button><button id="refresh" class="button-secondary" type="button">Refresh</button></div></div>
+    <section class="panel review-panel">
+      <div class="section-heading review-heading"><div><p class="eyebrow">HUMAN IN THE LOOP</p><h2 id="review-queue-heading">Review queue</h2></div><div class="toolbar-actions"><label class="batch-size-control" for="classify-batch-size">Classify<select id="classify-batch-size" aria-label="Number of returns to classify"><option value="10" selected>10</option><option value="50">50</option><option value="100">100</option></select></label><button id="classify-batch" class="button-secondary" type="button">Classify returns</button><button id="refresh" class="button-secondary" type="button">Refresh</button></div></div>
       <div id="review-queue" class="review-list"><p class="muted">Connect to your API to load reviews.</p></div>
     </section>
-
-    <dialog id="reset-dialog" class="reset-dialog">
-      <form id="reset-form">
-        <p class="eyebrow">ADMIN ACTION</p>
-        <h2>Reset classifications?</h2>
-        <p class="muted">This deletes AI analyses and submitted human reviews, then recalculates insights. Returns and orders are kept.</p>
-        <div class="toolbar-actions"><button id="cancel-reset" class="button-secondary" type="button">Cancel</button><button id="confirm-reset" type="submit">Reset classifications</button></div>
-      </form>
-    </dialog>
 
     <section class="panel analytics-panel">
       <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Return drivers</h2><p class="muted">Rankings use order-created cohorts; recent cohorts may be incomplete.</p></div>
@@ -63,10 +48,13 @@
       </div>
       <section id="view-other" class="analytics-view" role="tabpanel" aria-labelledby="tab-other">
         <div id="other-summary" class="analytics-summary"></div>
-        <div class="chart-heading"><h3>Predicted reasons within source “Other”</h3><p>Shares use classified source-“Other” returns; coverage is shown above.</p></div>
-        <div id="other-chart" class="analytics-bars" aria-label="Predicted reason breakdown"></div>
+        <div class="chart-heading"><h3>AI diagnoses within source “Other”</h3><p>Human review labels are excluded; shares use returns with an AI category and subcategory.</p></div>
+        <div class="pie-layout"><div id="other-pie" class="pie-chart" role="img" aria-label="AI predicted category mix for source Other returns"></div><div id="other-pie-legend" class="pie-legend"></div></div>
+        <div id="other-chart" class="analytics-bars"></div>
       </section>
       <section id="view-vendors" class="analytics-view" role="tabpanel" aria-labelledby="tab-vendors" hidden>
+        <div class="chart-heading"><h3>Share of returned units by vendor</h3><p>Top vendors by returned units; remaining vendors are grouped together.</p></div>
+        <div class="pie-layout"><div id="vendor-pie" class="pie-chart" role="img" aria-label="Share of returned units by vendor"></div><div id="vendor-pie-legend" class="pie-legend"></div></div>
         <div class="analytics-grid">
           <div class="chart-group"><div class="chart-heading"><h3>Most returned by volume</h3><p>Returned units, with return events and sold-unit rate.</p></div><div id="vendor-volume-chart" class="analytics-bars"></div></div>
           <div class="chart-group"><div class="chart-heading"><h3>Highest return rate</h3><p>Returned units / sold units; vendors need at least 30 sold units to rank.</p></div><div id="vendor-rate-chart" class="analytics-bars"></div></div>
@@ -74,6 +62,8 @@
         <p id="vendor-data-quality" class="analytics-footnote"></p>
       </section>
       <section id="view-skus" class="analytics-view" role="tabpanel" aria-labelledby="tab-skus" hidden>
+        <div class="chart-heading"><h3>AI issue mix</h3><p>Latest AI predictions across classified returns in the selected cohort.</p></div>
+        <div class="pie-layout"><div id="sku-issue-pie" class="pie-chart" role="img" aria-label="AI predicted issue mix for returns"></div><div id="sku-issue-legend" class="pie-legend"></div></div>
         <div class="chart-heading"><h3>SKUs with the most returns</h3><p>Issue mix uses each return’s latest AI prediction; rate is distinct returns / distinct selling orders.</p></div>
         <div id="sku-chart" class="analytics-bars"></div>
       </section>

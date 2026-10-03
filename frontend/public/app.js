@@ -61,19 +61,51 @@ function renderBars(containerId, rows, { label, detail, value, amount, emptyText
   });
   container.append(list);
 }
+const chartColors = ["#34715d", "#c07d3d", "#d45d4f", "#6e8ca0", "#c3a348", "#9b7160", "#779476", "#667184", "#bd7181"];
+function renderPie(chartId, legendId, rows, { label, countLabel, title }) {
+  const chart = $(chartId); const legend = $(legendId);
+  chart.replaceChildren(); legend.replaceChildren();
+  const total = rows.reduce((sum, row) => sum + row.return_count, 0);
+  if (!rows.length || !total) {
+    const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = "No classified returns in this date range.";
+    legend.append(empty); chart.style.background = "#ece7dd"; chart.setAttribute("aria-label", `${title}: no classified returns`); return;
+  }
+  let position = 0;
+  const segments = rows.map((row, index) => {
+    const start = position;
+    position += row.share * 100;
+    return `${chartColors[index % chartColors.length]} ${start}% ${position}%`;
+  });
+  chart.style.background = `conic-gradient(${segments.join(", ")})`;
+  chart.setAttribute("aria-label", `${title}: ${rows.map((row) => `${label(row)} ${pct(row.share)}`).join(", ")}`);
+  const list = document.createElement("ul"); list.className = "pie-legend-list";
+  rows.forEach((row, index) => {
+    const item = document.createElement("li");
+    const swatch = document.createElement("span"); swatch.className = "pie-swatch"; swatch.style.backgroundColor = chartColors[index % chartColors.length];
+    const name = document.createElement("span"); name.className = "pie-legend-name"; name.textContent = label(row);
+    const amount = document.createElement("strong"); amount.textContent = `${countLabel(row)} · ${pct(row.share)}`;
+    item.append(swatch, name, amount); list.append(item);
+  });
+  legend.append(list);
+}
 function renderAnalytics(data) {
   const other = data.source_other;
   const summary = $("other-summary"); summary.replaceChildren();
   [
     ["Source “Other” returns", other.total_returns],
-    ["Classified", other.classified_returns],
-    ["Unclassified", other.unclassified_returns],
-    ["Prediction coverage", pct(other.coverage)],
+    ["AI classified", other.ai_classified_returns],
+    ["AI unclassified", other.ai_unclassified_returns],
+    ["AI prediction coverage", pct(other.ai_prediction_coverage)],
   ].forEach(([label, value]) => {
     const stat = document.createElement("div"); stat.className = "analytics-stat";
     const name = document.createElement("span"); name.textContent = label;
     const metric = document.createElement("strong"); metric.textContent = value;
     stat.append(name, metric); summary.append(stat);
+  });
+  renderPie("other-pie", "other-pie-legend", other.category_mix, {
+    label: (row) => row.category,
+    countLabel: (row) => `${row.return_count} returns`,
+    title: "AI category mix for source Other returns",
   });
   renderBars("other-chart", other.breakdown, {
     label: (row) => `${row.category} / ${row.subcategory}`,
@@ -84,6 +116,11 @@ function renderAnalytics(data) {
   });
 
   const volumeVendors = data.vendors.by_volume;
+  renderPie("vendor-pie", "vendor-pie-legend", data.vendors.return_mix, {
+    label: (row) => row.label,
+    countLabel: (row) => `${row.returned_units} units`,
+    title: "Returned-unit share by vendor",
+  });
   renderBars("vendor-volume-chart", volumeVendors, {
     label: (row) => row.vendor_name,
     detail: (row) => `${row.return_events} events · ${row.returned_units} / ${row.sold_units} units · ${pct(row.unit_return_rate)}${row.small_sample ? " · low volume" : ""}`,
@@ -101,6 +138,11 @@ function renderAnalytics(data) {
   });
   $("vendor-data-quality").textContent = `${data.data_quality.return_order_item_sku_mismatches} returns reference a different SKU than the purchased order item; vendor attribution follows the purchased item.`;
 
+  renderPie("sku-issue-pie", "sku-issue-legend", data.ai_issue_category_mix, {
+    label: (row) => row.category,
+    countLabel: (row) => `${row.return_count} returns`,
+    title: "AI issue category mix across classified returns",
+  });
   renderBars("sku-chart", data.skus, {
     label: (row) => `${row.sku_id} · ${row.product_name}`,
     detail: (row) => {
@@ -155,26 +197,6 @@ async function loadReviews(unanalysedReturns = 0) {
 }
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
 $("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
-$("reset-classifications").addEventListener("click", () => {
-  $("reset-dialog").showModal();
-});
-$("cancel-reset").addEventListener("click", () => $("reset-dialog").close());
-$("reset-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = $("confirm-reset");
-  button.disabled = true; button.textContent = "Resetting…";
-  let shouldRefresh = false;
-  try {
-    const result = await request("/api/admin/reset-classifications", { method: "POST" });
-    notice(`Reset complete: ${result.analyses_deleted} analyses and ${result.human_reviews_deleted} reviews removed; insights refreshed.`, true);
-    shouldRefresh = true;
-  } catch (error) { notice(error.message); }
-  finally {
-    button.disabled = false; button.textContent = "Reset classifications";
-    $("reset-dialog").close();
-  }
-  if (shouldRefresh) refreshDashboard().catch((error) => notice(`Reset completed, but dashboard refresh failed: ${error.message}`));
-});
 $("classify-batch").addEventListener("click", async (event) => {
   const button = event.currentTarget;
   const sizeSelect = $("classify-batch-size");
@@ -215,17 +237,6 @@ $("classify-batch").addEventListener("click", async (event) => {
     sizeSelect.disabled = false;
   }
   if (attempted > 0) refreshDashboard().catch((error) => notice(`Classification finished, but dashboard refresh failed: ${error.message}`));
-});
-$("classify-form").addEventListener("submit", async (event) => {
-  event.preventDefault(); clearNotice();
-  const button = event.submitter; button.disabled = true; button.textContent = "Classifying…";
-  try {
-    const result = await request(`/api/returns/${encodeURIComponent($("return-id").value.trim())}/classify`, { method: "POST" });
-    const box = $("classification-result"); box.hidden = false;
-    box.textContent = `${result.return_id}: ${result.predicted_category}/${result.predicted_subcategory} · ${Math.round(result.confidence_score * 100)}% confidence · ${result.human_review_status === "PENDING" ? "sent to human review" : "no review needed"}${result.already_classified ? " · showing saved result" : ""}`;
-    await refreshDashboard();
-  } catch (error) { notice(error.message); }
-  finally { button.disabled = false; button.textContent = "Classify"; }
 });
 const analyticsTabs = [...document.querySelectorAll(".analytics-tab")];
 function activateAnalyticsTab(selected, focus = false) {

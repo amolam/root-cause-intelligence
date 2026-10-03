@@ -386,6 +386,14 @@ def dashboard_analytics(
         "return_count": int(count),
         "share": count / source_other_classified if source_other_classified else 0,
     } for category, subcategory, count in sorted(source_other_rows, key=lambda row: (-row[2], row[0], row[1]))]
+    source_other_category_counts: dict[str, int] = {}
+    for category, _, count in source_other_rows:
+        source_other_category_counts[category] = source_other_category_counts.get(category, 0) + count
+    source_other_category_mix = [{
+        "category": category,
+        "return_count": count,
+        "share": count / source_other_classified if source_other_classified else 0,
+    } for category, count in sorted(source_other_category_counts.items(), key=lambda row: (-row[1], row[0]))]
 
     vendor_returns = db.execute(
         select(
@@ -439,6 +447,23 @@ def dashboard_analytics(
         (row for row in vendor_metrics if not row["small_sample"]),
         key=lambda row: (-row["unit_return_rate"], -row["return_events"], row["vendor_name"]),
     )[:limit]
+    vendor_mix_source = sorted(vendor_metrics, key=lambda row: (-row["returned_units"], row["vendor_name"]))
+    vendor_return_total = sum(row["returned_units"] for row in vendor_mix_source)
+    vendor_return_mix = [{
+        "label": row["vendor_name"],
+        "return_count": row["return_events"],
+        "returned_units": row["returned_units"],
+        "share": row["returned_units"] / vendor_return_total if vendor_return_total else 0,
+    } for row in vendor_mix_source[:6]]
+    other_vendor_units = sum(row["returned_units"] for row in vendor_mix_source[6:])
+    other_vendor_returns = sum(row["return_events"] for row in vendor_mix_source[6:])
+    if other_vendor_units:
+        vendor_return_mix.append({
+            "label": "Other vendors",
+            "return_count": other_vendor_returns,
+            "returned_units": other_vendor_units,
+            "share": other_vendor_units / vendor_return_total if vendor_return_total else 0,
+        })
 
     sku_return_rows = db.execute(
         select(
@@ -486,6 +511,15 @@ def dashboard_analytics(
             "subcategory": subcategory,
             "return_count": int(count),
         })
+    issue_category_counts: dict[str, int] = {}
+    for _, category, _, count in sku_issue_rows:
+        issue_category_counts[category] = issue_category_counts.get(category, 0) + count
+    ai_classified_returns = sum(issue_category_counts.values())
+    issue_category_mix = [{
+        "category": category,
+        "return_count": count,
+        "share": count / ai_classified_returns if ai_classified_returns else 0,
+    } for category, count in sorted(issue_category_counts.items(), key=lambda row: (-row[1], row[0]))]
 
     sku_metrics = []
     for sku_id, product_name, return_events, returned_units, unclassified_count in sku_return_rows:
@@ -512,16 +546,20 @@ def dashboard_analytics(
         "date_range": {"start": start, "end": end, "basis": "order_created_at"},
         "source_other": {
             "total_returns": int(source_other_total),
-            "classified_returns": int(source_other_classified),
-            "unclassified_returns": int(source_other_total - source_other_classified),
-            "coverage": source_other_classified / source_other_total if source_other_total else 0,
+            "ai_classified_returns": int(source_other_classified),
+            "ai_unclassified_returns": int(source_other_total - source_other_classified),
+            "ai_prediction_coverage": source_other_classified / source_other_total if source_other_total else 0,
+            "category_mix": source_other_category_mix,
             "breakdown": source_other_breakdown,
         },
         "vendors": {
             "by_volume": vendors_by_volume,
             "by_rate": vendors_by_rate,
+            "return_mix": vendor_return_mix,
             "minimum_sold_units_for_rate_rank": 30,
         },
+        "ai_issue_category_mix": issue_category_mix,
+        "ai_classified_returns": int(ai_classified_returns),
         "skus": sku_metrics[:limit],
         "data_quality": {
             "return_order_item_sku_mismatches": sum(row["sku_mismatch_returns"] for row in vendor_metrics),

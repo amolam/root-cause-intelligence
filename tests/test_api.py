@@ -123,9 +123,13 @@ def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers(
 
     assert result["source_other"] == {
         "total_returns": 5,
-        "classified_returns": 3,
-        "unclassified_returns": 2,
-        "coverage": 0.6,
+        "ai_classified_returns": 3,
+        "ai_unclassified_returns": 2,
+        "ai_prediction_coverage": 0.6,
+        "category_mix": [
+            {"category": "FIT", "return_count": 2, "share": 2 / 3},
+            {"category": "QUALITY", "return_count": 1, "share": 1 / 3},
+        ],
         "breakdown": [
             {"category": "FIT", "subcategory": "SIZE_MISMATCH", "return_count": 2, "share": 2 / 3},
             {"category": "QUALITY", "subcategory": "FABRIC_QUALITY", "return_count": 1, "share": 1 / 3},
@@ -137,14 +141,23 @@ def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers(
     assert vendor["sold_units"] == 100
     assert vendor["unit_return_rate"] == 0.04
     assert vendor["sku_mismatch_returns"] == 1
+    assert result["vendors"]["return_mix"] == [
+        {"label": "Vendor A", "return_count": 3, "returned_units": 4, "share": 1.0}
+    ]
     sku = result["skus"][0]
     assert sku["return_events"] == 3
     assert sku["return_rate"] == 3 / 20
     assert sku["unclassified_returns"] == 1
     assert [issue["category"] for issue in sku["issue_breakdown"]] == ["FIT", "QUALITY"]
+    assert result["ai_classified_returns"] == 3
+    assert result["ai_issue_category_mix"] == [
+        {"category": "FIT", "return_count": 2, "share": 2 / 3},
+        {"category": "QUALITY", "return_count": 1, "share": 1 / 3},
+    ]
     ranked_query = str(session.scalar_queries[0]).lower()
     assert "row_number() over" in ranked_query
     assert "analysis_id desc" in ranked_query
+    assert all("human_label" not in str(statement).lower() for statement in session.queries)
 
 
 def test_dashboard_analytics_rejects_reversed_date_range():
