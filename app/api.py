@@ -16,7 +16,7 @@ from app.ai.classifier import (
     TAXONOMY,
     ClassificationError,
     ReturnClassificationService,
-    create_openrouter_classifier,
+    create_classifier,
 )
 from app.db.config import get_settings
 from app.db.models import (
@@ -97,10 +97,10 @@ def _review_reasons(analysis: ReturnAIAnalysis) -> list[str]:
 @lru_cache
 def get_classifier_service() -> ReturnClassificationService:
     settings = get_settings()
-    light = create_openrouter_classifier(
+    light = create_classifier(
         settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url
     )
-    heavy = create_openrouter_classifier(
+    heavy = create_classifier(
         settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url
     )
     return ReturnClassificationService(light, heavy)

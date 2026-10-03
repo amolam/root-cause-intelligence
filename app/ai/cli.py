@@ -4,7 +4,7 @@ import argparse
 
 from sqlalchemy import select
 
-from app.ai.classifier import ReturnClassificationService, create_openrouter_classifier
+from app.ai.classifier import ReturnClassificationService, create_classifier
 from app.db.config import get_settings
 from app.db.models import Return, ReturnAIAnalysis
 from app.db.session import SessionLocal
@@ -16,8 +16,8 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=100, help="maximum returns to classify in one run")
     args = parser.parse_args()
     settings = get_settings()
-    light = create_openrouter_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
-    heavy = create_openrouter_classifier(settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url)
+    light = create_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
+    heavy = create_classifier(settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url)
     service = ReturnClassificationService(light, heavy)
 
     with SessionLocal() as session:
