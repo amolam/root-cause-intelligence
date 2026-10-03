@@ -150,11 +150,34 @@ class ReturnClassificationService:
         )
 
 
+_SYSTEM_PROMPT = (
+    "Classify an apparel return using only the supplied return reason and customer text.\n"
+    "Return a single JSON object that strictly matches the schema below — no extra keys, no markdown fences.\n"
+    "Evidence must be a short exact span from the customer text when available. "
+    "Do not infer facts absent from the text. "
+    "If evidence is ambiguous, choose OTHER / LOW_CONFIDENCE and set confidence_score below 0.75. "
+    "Hinglish and transliterated Hindi are valid input.\n\n"
+    "Schema fields (all required):\n"
+    "  predicted_category   – one of: FIT, QUALITY, COLOUR, MATERIAL, PRODUCT_MISMATCH, DAMAGED, DELIVERY, OTHER\n"
+    "  predicted_subcategory – must be valid for the chosen category per the taxonomy\n"
+    "  confidence_score     – float 0.0–1.0\n"
+    "  extracted_issue      – short exact quote from customer text, or null\n"
+    "  sentiment            – NEGATIVE, NEUTRAL, or POSITIVE\n"
+    "  evidence_text        – one sentence summarising the evidence\n\n"
+    "Taxonomy: {taxonomy}\n\n"
+    "Prior prediction (second-pass only, else 'None'): {prior_result}\n"
+    "On a second pass, independently reassess; keep prior if supported, otherwise correct it. "
+    "Do not treat prior confidence as evidence."
+)
+
+_HUMAN_PROMPT = "Return reason: {reason}\nCustomer text: {text}"
+
+
 def create_openrouter_classifier(
     model_name: str,
     api_key: str | None = None,
     base_url: str = "https://openrouter.ai/api/v1",
-) -> Classifier:
+) -> "Classifier":
     """Build a LangChain classifier against OpenRouter's OpenAI-compatible API."""
     if not api_key:
         raise ClassificationError("OPENROUTER_API_KEY is not configured. Add it to your local .env file.")
@@ -171,23 +194,14 @@ def create_openrouter_classifier(
         )
         structured = llm.with_structured_output(ClassificationResult, method="json_schema")
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """Classify an apparel return using only the supplied return reason and customer text.
-Return exactly one label from the provided structured schema. Evidence must be a short exact span from the customer text when available. Do not infer facts absent from the text. If evidence is ambiguous, choose OTHER / LOW_CONFIDENCE and low confidence. Hinglish and transliterated Hindi are valid input.
-Taxonomy:
-{taxonomy}
-Prior structured prediction (empty for first pass):
-{prior_result}
-On a second pass, independently reassess the first prediction against the supplied text. Keep it if supported; otherwise correct it. Do not treat its confidence as evidence.
-Do not use customer, product, or review information beyond the supplied fields. Never make up evidence."""),
-            ("human", "Return reason: {reason}\nCustomer text: {text}"),
+            ("system", _SYSTEM_PROMPT),
+            ("human", _HUMAN_PROMPT),
         ])
         chain = prompt | structured
 
         class LangChainClassifier:
             def __init__(self):
                 self.model_name = model_name
-                # Persist the configured alias; the provider does not return an
-                # immutable model build ID through this integration.
                 self.model_version = model_name
 
             def classify(
@@ -206,3 +220,101 @@ Do not use customer, product, or review information beyond the supplied fields. 
         raise
     except Exception as exc:
         raise ClassificationError(f"Could not initialize OpenRouter classifier: {exc}") from exc
+
+
+def create_requests_classifier(
+    model_name: str,
+    api_key: str | None = None,
+    base_url: str = "https://openrouter.ai/api/v1",
+) -> "Classifier":
+    """
+    Raw-HTTP classifier for models that LangChain does not support (e.g. typesafe/jev-*).
+    Calls the OpenRouter chat-completions endpoint directly via `requests` and parses
+    the JSON response body into a ClassificationResult.
+    """
+    import json
+    import requests as _requests
+
+    if not api_key:
+        raise ClassificationError("OPENROUTER_API_KEY is not configured. Add it to your local .env file.")
+
+    endpoint = base_url.rstrip("/") + "/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    class RequestsClassifier:
+        def __init__(self):
+            self.model_name = model_name
+            self.model_version = model_name
+
+        def classify(
+            self, *, reason: str, text: str, prior_result: ClassificationResult | None = None
+        ) -> ClassificationResult:
+            system_msg = _SYSTEM_PROMPT.format(
+                taxonomy=str(TAXONOMY),
+                prior_result=prior_result.model_dump_json() if prior_result else "None",
+            )
+            human_msg = _HUMAN_PROMPT.format(
+                reason=reason,
+                text=text or "[no free-text comment]",
+            )
+            payload = {
+                "model": model_name,
+                "temperature": 0,
+                "messages": [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": human_msg},
+                ],
+            }
+            try:
+                response = _requests.post(endpoint, headers=headers, json=payload, timeout=60)
+                response.raise_for_status()
+            except _requests.RequestException as exc:
+                raise ClassificationError(f"HTTP request to OpenRouter failed: {exc}") from exc
+
+            body = response.json()
+            raw_content = body["choices"][0]["message"]["content"]
+
+            # Strip accidental markdown code fences some models include
+            clean = raw_content.strip()
+            if clean.startswith("```"):
+                clean = clean.split("```")[1]
+                if clean.startswith("json"):
+                    clean = clean[4:]
+
+            try:
+                parsed = json.loads(clean)
+            except json.JSONDecodeError as exc:
+                raise ClassificationError(
+                    f"Model returned non-JSON content: {raw_content[:200]}"
+                ) from exc
+
+            try:
+                return ClassificationResult.model_validate(parsed)
+            except Exception as exc:
+                raise ClassificationError(
+                    f"Model JSON does not match ClassificationResult schema: {exc}"
+                ) from exc
+
+    return RequestsClassifier()
+
+
+# Models whose OpenRouter integration is incompatible with LangChain's structured-output path.
+_REQUESTS_ONLY_PREFIXES = ("typesafe/jev",)
+
+
+def create_classifier(
+    model_name: str,
+    api_key: str | None = None,
+    base_url: str = "https://openrouter.ai/api/v1",
+) -> "Classifier":
+    """
+    Dispatcher: routes Jev (and other LangChain-incompatible models) to the
+    raw-requests path and everything else to the LangChain path.
+    """
+    if any(model_name.startswith(p) for p in _REQUESTS_ONLY_PREFIXES):
+        return create_requests_classifier(model_name, api_key, base_url)
+    return create_openrouter_classifier(model_name, api_key, base_url)
+

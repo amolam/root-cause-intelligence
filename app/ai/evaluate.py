@@ -5,7 +5,7 @@ import argparse
 import csv
 from pathlib import Path
 
-from app.ai.classifier import create_openrouter_classifier, route_prediction
+from app.ai.classifier import create_classifier, route_prediction
 from app.db.config import get_settings
 
 REQUIRED_COLUMNS = {"test_id", "return_reason", "return_text", "expected_category", "expected_subcategory"}
@@ -68,8 +68,8 @@ def main() -> None:
     parser.add_argument("csv_path", nargs="?", type=Path, default=Path("sample_data/return_text_test_cases.csv"))
     args = parser.parse_args()
     settings = get_settings()
-    light = create_openrouter_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
-    heavy = create_openrouter_classifier(settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url)
+    light = create_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
+    heavy = create_classifier(settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url)
     evaluate(args.csv_path, light, heavy)
 
 
