@@ -58,7 +58,8 @@ class AnalyticsSession:
         self.scalar_queries = []
         self.queries = []
         self.results = iter([
-            [("FIT", "SIZE_MISMATCH", 2), ("QUALITY", "FABRIC_QUALITY", 1)],
+            [("NOT_REQUIRED", 2), ("PENDING", 1), ("REVIEWED", 1), (None, 1)],
+            [("FIT", "SIZE_MISMATCH", 1), ("QUALITY", "FABRIC_QUALITY", 1)],
             [("V1", "Vendor A", 3, 4, 1)],
             [("V1", 20, 100)],
             [("SKU1", "Everyday Kurti", 3, 4, 1)],
@@ -118,32 +119,30 @@ def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers(
     session = AnalyticsSession()
 
     result = api_module.dashboard_analytics(
-        start=date(2025, 1, 1), end=date(2025, 12, 31), db=session
+        start=date(2025, 1, 1), end=date(2025, 12, 31), limit=10, db=session
     )
 
     assert result["source_other"] == {
         "total_returns": 5,
-        "ai_classified_returns": 3,
-        "ai_unclassified_returns": 2,
-        "ai_prediction_coverage": 0.6,
+        "ai_classified_returns": 2,
+        "sent_for_human_review": 2,
+        "ai_unclassified_returns": 1,
+        "ai_prediction_coverage": 2 / 3,
         "category_mix": [
-            {"category": "FIT", "return_count": 2, "share": 2 / 3},
-            {"category": "QUALITY", "return_count": 1, "share": 1 / 3},
+            {"category": "FIT", "return_count": 1, "share": 0.5},
+            {"category": "QUALITY", "return_count": 1, "share": 0.5},
         ],
         "breakdown": [
-            {"category": "FIT", "subcategory": "SIZE_MISMATCH", "return_count": 2, "share": 2 / 3},
-            {"category": "QUALITY", "subcategory": "FABRIC_QUALITY", "return_count": 1, "share": 1 / 3},
+            {"category": "FIT", "subcategory": "SIZE_MISMATCH", "return_count": 1, "share": 0.5},
+            {"category": "QUALITY", "subcategory": "FABRIC_QUALITY", "return_count": 1, "share": 0.5},
         ],
     }
-    vendor = result["vendors"]["by_volume"][0]
+    vendor = result["vendors"]["by_rate"][0]
     assert vendor["return_events"] == 3
     assert vendor["returned_units"] == 4
     assert vendor["sold_units"] == 100
     assert vendor["unit_return_rate"] == 0.04
     assert vendor["sku_mismatch_returns"] == 1
-    assert result["vendors"]["return_mix"] == [
-        {"label": "Vendor A", "return_count": 3, "returned_units": 4, "share": 1.0}
-    ]
     sku = result["skus"][0]
     assert sku["return_events"] == 3
     assert sku["return_rate"] == 3 / 20
@@ -154,7 +153,7 @@ def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers(
         {"category": "FIT", "return_count": 2, "share": 2 / 3},
         {"category": "QUALITY", "return_count": 1, "share": 1 / 3},
     ]
-    ranked_query = str(session.scalar_queries[0]).lower()
+    ranked_query = str(session.queries[0]).lower()
     assert "row_number() over" in ranked_query
     assert "analysis_id desc" in ranked_query
     assert all("human_label" not in str(statement).lower() for statement in session.queries)

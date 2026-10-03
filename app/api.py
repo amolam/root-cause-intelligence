@@ -346,6 +346,7 @@ def dashboard_analytics(
         ReturnAIAnalysis.return_id.label("return_id"),
         ReturnAIAnalysis.predicted_category.label("predicted_category"),
         ReturnAIAnalysis.predicted_subcategory.label("predicted_subcategory"),
+        ReturnAIAnalysis.human_review_status.label("human_review_status"),
         func.row_number().over(
             partition_by=ReturnAIAnalysis.return_id,
             order_by=(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc()),
@@ -359,15 +360,22 @@ def dashboard_analytics(
         Return.return_reason.label("return_reason"),
         ranked_analysis.c.predicted_category.label("predicted_category"),
         ranked_analysis.c.predicted_subcategory.label("predicted_subcategory"),
+        ranked_analysis.c.human_review_status.label("human_review_status"),
     ).join(Order, Order.order_id == Return.order_id).outerjoin(
         ranked_analysis,
         and_(ranked_analysis.c.return_id == Return.return_id, ranked_analysis.c.row_num == 1),
     ).where(*order_filters).subquery()
 
     source_other = func.lower(return_facts.c.return_reason) == "other"
-    source_other_total = db.scalar(
-        select(func.count()).select_from(return_facts).where(source_other)
-    ) or 0
+    source_other_status_rows = db.execute(
+        select(
+            return_facts.c.human_review_status,
+            func.count(func.distinct(return_facts.c.return_id)),
+        ).where(source_other).group_by(return_facts.c.human_review_status)
+    ).all()
+    source_other_status_counts = {status: count for status, count in source_other_status_rows}
+    source_other_total = sum(source_other_status_counts.values())
+    source_other_reviewed = source_other_status_counts.get("PENDING", 0) + source_other_status_counts.get("REVIEWED", 0)
     source_other_rows = db.execute(
         select(
             return_facts.c.predicted_category,
@@ -375,6 +383,7 @@ def dashboard_analytics(
             func.count(func.distinct(return_facts.c.return_id)),
         ).where(
             source_other,
+            return_facts.c.human_review_status == "NOT_REQUIRED",
             return_facts.c.predicted_category.is_not(None),
             return_facts.c.predicted_subcategory.is_not(None),
         ).group_by(return_facts.c.predicted_category, return_facts.c.predicted_subcategory)
@@ -439,32 +448,10 @@ def dashboard_analytics(
             "small_sample": sold_units < 30,
             "sku_mismatch_returns": int(mismatch_count),
         })
-    vendors_by_volume = sorted(
-        vendor_metrics,
-        key=lambda row: (-row["returned_units"], -row["return_events"], row["vendor_name"]),
-    )[:limit]
     vendors_by_rate = sorted(
         (row for row in vendor_metrics if not row["small_sample"]),
         key=lambda row: (-row["unit_return_rate"], -row["return_events"], row["vendor_name"]),
     )[:limit]
-    vendor_mix_source = sorted(vendor_metrics, key=lambda row: (-row["returned_units"], row["vendor_name"]))
-    vendor_return_total = sum(row["returned_units"] for row in vendor_mix_source)
-    vendor_return_mix = [{
-        "label": row["vendor_name"],
-        "return_count": row["return_events"],
-        "returned_units": row["returned_units"],
-        "share": row["returned_units"] / vendor_return_total if vendor_return_total else 0,
-    } for row in vendor_mix_source[:6]]
-    other_vendor_units = sum(row["returned_units"] for row in vendor_mix_source[6:])
-    other_vendor_returns = sum(row["return_events"] for row in vendor_mix_source[6:])
-    if other_vendor_units:
-        vendor_return_mix.append({
-            "label": "Other vendors",
-            "return_count": other_vendor_returns,
-            "returned_units": other_vendor_units,
-            "share": other_vendor_units / vendor_return_total if vendor_return_total else 0,
-        })
-
     sku_return_rows = db.execute(
         select(
             return_facts.c.sku_id,
@@ -547,15 +534,15 @@ def dashboard_analytics(
         "source_other": {
             "total_returns": int(source_other_total),
             "ai_classified_returns": int(source_other_classified),
-            "ai_unclassified_returns": int(source_other_total - source_other_classified),
-            "ai_prediction_coverage": source_other_classified / source_other_total if source_other_total else 0,
+            "sent_for_human_review": int(source_other_reviewed),
+            "ai_unclassified_returns": int(source_other_total - source_other_classified - source_other_reviewed),
+            "ai_prediction_coverage": source_other_classified / (source_other_total - source_other_reviewed)
+            if source_other_total > source_other_reviewed else 0,
             "category_mix": source_other_category_mix,
             "breakdown": source_other_breakdown,
         },
         "vendors": {
-            "by_volume": vendors_by_volume,
             "by_rate": vendors_by_rate,
-            "return_mix": vendor_return_mix,
             "minimum_sold_units_for_rate_rank": 30,
         },
         "ai_issue_category_mix": issue_category_mix,

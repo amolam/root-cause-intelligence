@@ -20,12 +20,8 @@ async function request(path, options = {}) {
 function pct(ratio) { return `${(Number(ratio || 0) * 100).toFixed(1)}%`; }
 async function refreshDashboard() {
   clearNotice();
-  const params = new URLSearchParams();
-  if ($("insight-start").value) params.set("start", $("insight-start").value);
-  if ($("insight-end").value) params.set("end", $("insight-end").value);
-  params.set("limit", "10");
   const [summary, analytics] = await Promise.all([
-    request("/api/dashboard/summary"), request(`/api/dashboard/analytics?${params}`),
+    request("/api/dashboard/summary"), request("/api/dashboard/analytics?limit=10"),
   ]);
   $("total-returns").textContent = summary.total_returns;
   $("other-share").textContent = pct(summary.other_return_share);
@@ -62,12 +58,12 @@ function renderBars(containerId, rows, { label, detail, value, amount, emptyText
   container.append(list);
 }
 const chartColors = ["#34715d", "#c07d3d", "#d45d4f", "#6e8ca0", "#c3a348", "#9b7160", "#779476", "#667184", "#bd7181"];
-function renderPie(chartId, legendId, rows, { label, countLabel, title }) {
+function renderPie(chartId, legendId, rows, { label, countLabel, title, emptyText = "No classified returns for this cohort." }) {
   const chart = $(chartId); const legend = $(legendId);
   chart.replaceChildren(); legend.replaceChildren();
   const total = rows.reduce((sum, row) => sum + row.return_count, 0);
   if (!rows.length || !total) {
-    const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = "No classified returns in this date range.";
+    const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = emptyText;
     legend.append(empty); chart.style.background = "#ece7dd"; chart.setAttribute("aria-label", `${title}: no classified returns`); return;
   }
   let position = 0;
@@ -93,9 +89,10 @@ function renderAnalytics(data) {
   const summary = $("other-summary"); summary.replaceChildren();
   [
     ["Source “Other” returns", other.total_returns],
-    ["AI classified", other.ai_classified_returns],
-    ["AI unclassified", other.ai_unclassified_returns],
-    ["AI prediction coverage", pct(other.ai_prediction_coverage)],
+  ["AI-resolved", other.ai_classified_returns],
+  ["Sent for human review", other.sent_for_human_review],
+  ["AI unclassified", other.ai_unclassified_returns],
+  ["AI coverage, not sent to review", pct(other.ai_prediction_coverage)],
   ].forEach(([label, value]) => {
     const stat = document.createElement("div"); stat.className = "analytics-stat";
     const name = document.createElement("span"); name.textContent = label;
@@ -109,31 +106,36 @@ function renderAnalytics(data) {
   });
   renderBars("other-chart", other.breakdown, {
     label: (row) => `${row.category} / ${row.subcategory}`,
-    detail: (row) => `${row.return_count} returns · ${pct(row.share)} of classified “Other”`,
+    detail: (row) => `${row.return_count} AI-resolved returns · ${pct(row.share)} of AI-classified source “Other”`,
     value: (row) => pct(row.share),
     amount: (row) => row.share,
-    emptyText: other.total_returns ? "No source-“Other” returns have a complete prediction in this date range." : "No source-“Other” returns in this date range.",
+    emptyText: "No source-“Other” returns were AI-categorized without human review in this cohort.",
   });
 
-  const volumeVendors = data.vendors.by_volume;
-  renderPie("vendor-pie", "vendor-pie-legend", data.vendors.return_mix, {
+  const vendorRates = data.vendors.by_rate;
+  const topVendor = vendorRates[0];
+  const vendorPieCaption = $("vendor-rate-pie-caption");
+  if (topVendor) {
+    vendorPieCaption.textContent = `${topVendor.vendor_name} · ${pct(topVendor.unit_return_rate)} (${topVendor.returned_units} returned / ${topVendor.sold_units} sold units)`;
+  } else {
+    vendorPieCaption.textContent = "No vendors meet the 30 sold-unit minimum in this cohort.";
+  }
+  const validVendorPie = topVendor && topVendor.unit_return_rate >= 0 && topVendor.unit_return_rate <= 1;
+  renderPie("vendor-rate-pie", "vendor-rate-legend", validVendorPie ? [
+    { label: "Returned", return_count: topVendor.returned_units, share: topVendor.unit_return_rate },
+    { label: "Not returned", return_count: topVendor.sold_units - topVendor.returned_units, share: 1 - topVendor.unit_return_rate },
+  ] : [], {
     label: (row) => row.label,
-    countLabel: (row) => `${row.returned_units} units`,
-    title: "Returned-unit share by vendor",
+    countLabel: (row) => `${row.return_count} units`,
+    title: "Returned and not-returned units for the highest-rate vendor",
+    emptyText: topVendor ? "Returned units exceed sold units; this rate cannot be shown as a pie." : "No vendor rates to show.",
   });
-  renderBars("vendor-volume-chart", volumeVendors, {
-    label: (row) => row.vendor_name,
-    detail: (row) => `${row.return_events} events · ${row.returned_units} / ${row.sold_units} units · ${pct(row.unit_return_rate)}${row.small_sample ? " · low volume" : ""}`,
-    value: (row) => `${row.returned_units} units`,
-    amount: (row) => row.returned_units,
-    emptyText: "No vendor returns in this date range.",
-  });
-  renderBars("vendor-rate-chart", data.vendors.by_rate, {
+  renderBars("vendor-rate-chart", vendorRates, {
     label: (row) => row.vendor_name,
     detail: (row) => `${row.returned_units} returned / ${row.sold_units} sold units · ${row.return_events} return events`,
     value: (row) => pct(row.unit_return_rate),
     amount: (row) => row.unit_return_rate,
-    emptyText: "No vendors meet the 30 sold-unit minimum in this date range.",
+    emptyText: "No vendors meet the 30 sold-unit minimum in this cohort.",
     rate: true,
   });
   $("vendor-data-quality").textContent = `${data.data_quality.return_order_item_sku_mismatches} returns reference a different SKU than the purchased order item; vendor attribution follows the purchased item.`;
@@ -152,7 +154,7 @@ function renderAnalytics(data) {
     },
     value: (row) => `${row.return_events} returns`,
     amount: (row) => row.return_events,
-    emptyText: "No SKU returns in this date range.",
+    emptyText: "No SKU returns for this cohort.",
   });
 }
 async function loadReviews(unanalysedReturns = 0) {
@@ -196,7 +198,18 @@ async function loadReviews(unanalysedReturns = 0) {
   }
 }
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
-$("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
+$("pending-count").addEventListener("click", (event) => {
+  event.preventDefault();
+  const panel = $("review-queue-panel");
+  panel.hidden = false;
+  $("review-queue-heading").focus();
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("close-review-queue").addEventListener("click", () => {
+  $("review-queue-panel").hidden = true;
+  $("analytics-heading").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("analytics-heading").focus();
+});
 $("classify-batch").addEventListener("click", async (event) => {
   const button = event.currentTarget;
   const sizeSelect = $("classify-batch-size");
