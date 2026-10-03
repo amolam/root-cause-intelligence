@@ -50,6 +50,7 @@ Root `index.py` exports `app.api:app` for Vercel. `app/api.py` defines FastAPI r
 | --- | --- | --- |
 | `GET` | `/health` | Lightweight liveness response; does not prove database or model connectivity. |
 | `GET` | `/api/dashboard/summary` | Counts orders, returns, literal `Other` returns, analyzed returns, and pending reviews. |
+| `GET` | `/api/dashboard/analytics?start=&end=&limit=` | Groups source-`Other` predictions, vendor returned/sold units and rates, and SKU issue drivers for the selected order-created cohort. |
 | `GET` | `/api/dashboard/sku-insights?limit=` | Reads stored SKU insight rows, ordered by newest period and return rate. |
 | `GET` | `/api/dashboard/category-insights?limit=` | Reads stored category/subcategory insights. |
 | `GET` | `/api/reviews/pending?limit=` | Reads pending AI analyses joined to source return text. |

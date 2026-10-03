@@ -48,16 +48,35 @@
       </form>
     </dialog>
 
-    <section class="panel">
-      <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Category to SKU</h2><p class="muted">Product categories group the matching SKUs. FIT, QUALITY, COLOUR, and OTHER are predicted return-issue labels.</p></div>
+    <section class="panel analytics-panel">
+      <div class="section-heading insight-heading"><div><p class="eyebrow">MERCHANDISING SIGNALS</p><h2>Return drivers</h2><p class="muted">Rankings use order-created cohorts; recent cohorts may be incomplete.</p></div>
         <form id="insight-range-form" class="range-controls">
           <label for="insight-start">From<input id="insight-start" type="date"></label>
           <label for="insight-end">To<input id="insight-end" type="date"></label>
           <button type="submit" class="button-secondary">Apply range</button>
-          <button id="refresh-insights" type="button" class="button-secondary">Recalculate insights</button>
         </form>
       </div>
-      <div class="table-wrap"><table><thead><tr><th>Product category</th><th>Subcategory</th><th>Orders</th><th>Returns</th><th>Return rate</th><th>FIT issue rate</th><th>QUALITY issue rate</th><th>Related SKUs</th></tr></thead><tbody id="category-rows"><tr><td colspan="8" class="muted">Connect to your API to load insights.</td></tr></tbody></table></div>
+      <div class="analytics-tabs" role="tablist" aria-label="Return analytics views">
+        <button id="tab-other" class="analytics-tab" type="button" role="tab" aria-selected="true" aria-controls="view-other">“Other” diagnosis</button>
+        <button id="tab-vendors" class="analytics-tab" type="button" role="tab" aria-selected="false" aria-controls="view-vendors" tabindex="-1">Vendors</button>
+        <button id="tab-skus" class="analytics-tab" type="button" role="tab" aria-selected="false" aria-controls="view-skus" tabindex="-1">SKU drivers</button>
+      </div>
+      <section id="view-other" class="analytics-view" role="tabpanel" aria-labelledby="tab-other">
+        <div id="other-summary" class="analytics-summary"></div>
+        <div class="chart-heading"><h3>Predicted reasons within source “Other”</h3><p>Shares use classified source-“Other” returns; coverage is shown above.</p></div>
+        <div id="other-chart" class="analytics-bars" aria-label="Predicted reason breakdown"></div>
+      </section>
+      <section id="view-vendors" class="analytics-view" role="tabpanel" aria-labelledby="tab-vendors" hidden>
+        <div class="analytics-grid">
+          <div class="chart-group"><div class="chart-heading"><h3>Most returned by volume</h3><p>Returned units, with return events and sold-unit rate.</p></div><div id="vendor-volume-chart" class="analytics-bars"></div></div>
+          <div class="chart-group"><div class="chart-heading"><h3>Highest return rate</h3><p>Returned units / sold units; vendors need at least 30 sold units to rank.</p></div><div id="vendor-rate-chart" class="analytics-bars"></div></div>
+        </div>
+        <p id="vendor-data-quality" class="analytics-footnote"></p>
+      </section>
+      <section id="view-skus" class="analytics-view" role="tabpanel" aria-labelledby="tab-skus" hidden>
+        <div class="chart-heading"><h3>SKUs with the most returns</h3><p>Issue mix uses each return’s latest AI prediction; rate is distinct returns / distinct selling orders.</p></div>
+        <div id="sku-chart" class="analytics-bars"></div>
+      </section>
     </section>
     <footer>Prototype for synthetic/sample data · Classification confidence is not a calibrated probability.</footer>
   </main>

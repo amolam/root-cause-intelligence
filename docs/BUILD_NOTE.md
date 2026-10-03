@@ -2,7 +2,7 @@
 
 ## What the MVP does
 
-The browser dashboard connects to a build-configured FastAPI origin, displays “Other” share and pending reviews, classifies returns, and presents category-to-SKU insights. The review queue distinguishes unclassified returns from classified results awaiting human review. The repository contains a Vercel-ready static frontend and FastAPI entry point. No Dhaga production systems are connected. `sample_data/return_text_test_cases.csv` carries the 14 project-schema text cases, including Hinglish; these are test examples, not production records. The brief's proposed 15,000-return MVP volume is not supplied as a dataset.
+The browser dashboard connects to a build-configured FastAPI origin, displays “Other” share and pending reviews, classifies returns, and presents source-“Other” diagnoses, vendor performance, and SKU issue drivers. The review queue distinguishes unclassified returns from classified results awaiting human review. The repository contains a Vercel-ready static frontend and FastAPI entry point. No Dhaga production systems are connected. `sample_data/return_text_test_cases.csv` carries the 14 project-schema text cases, including Hinglish; these are test examples, not production records. The brief's proposed 15,000-return MVP volume is not supplied as a dataset.
 
 ## Code and model decisions
 

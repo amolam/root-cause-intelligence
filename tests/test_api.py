@@ -53,6 +53,28 @@ class ResetSession(FakeSession):
         self.commits += 1
 
 
+class AnalyticsSession:
+    def __init__(self):
+        self.scalar_queries = []
+        self.queries = []
+        self.results = iter([
+            [("FIT", "SIZE_MISMATCH", 2), ("QUALITY", "FABRIC_QUALITY", 1)],
+            [("V1", "Vendor A", 3, 4, 1)],
+            [("V1", 20, 100)],
+            [("SKU1", "Everyday Kurti", 3, 4, 1)],
+            [("SKU1", 20, 100)],
+            [("SKU1", "FIT", "SIZE_MISMATCH", 2), ("SKU1", "QUALITY", "FABRIC_QUALITY", 1)],
+        ])
+
+    def scalar(self, statement):
+        self.scalar_queries.append(statement)
+        return 5
+
+    def execute(self, statement):
+        self.queries.append(statement)
+        return SimpleNamespace(all=lambda: next(self.results))
+
+
 def client_with_session(session):
     api_module.app.dependency_overrides[api_module.get_db] = lambda: session
     return TestClient(api_module.app)
@@ -90,6 +112,48 @@ def test_pending_review_queue_filters_to_latest_analysis():
     query = str(statements[0]).lower()
     assert "row_number() over" in query
     assert "row_num = :row_num_1" in query
+
+
+def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers():
+    session = AnalyticsSession()
+
+    result = api_module.dashboard_analytics(
+        start=date(2025, 1, 1), end=date(2025, 12, 31), db=session
+    )
+
+    assert result["source_other"] == {
+        "total_returns": 5,
+        "classified_returns": 3,
+        "unclassified_returns": 2,
+        "coverage": 0.6,
+        "breakdown": [
+            {"category": "FIT", "subcategory": "SIZE_MISMATCH", "return_count": 2, "share": 2 / 3},
+            {"category": "QUALITY", "subcategory": "FABRIC_QUALITY", "return_count": 1, "share": 1 / 3},
+        ],
+    }
+    vendor = result["vendors"]["by_volume"][0]
+    assert vendor["return_events"] == 3
+    assert vendor["returned_units"] == 4
+    assert vendor["sold_units"] == 100
+    assert vendor["unit_return_rate"] == 0.04
+    assert vendor["sku_mismatch_returns"] == 1
+    sku = result["skus"][0]
+    assert sku["return_events"] == 3
+    assert sku["return_rate"] == 3 / 20
+    assert sku["unclassified_returns"] == 1
+    assert [issue["category"] for issue in sku["issue_breakdown"]] == ["FIT", "QUALITY"]
+    ranked_query = str(session.scalar_queries[0]).lower()
+    assert "row_number() over" in ranked_query
+    assert "analysis_id desc" in ranked_query
+
+
+def test_dashboard_analytics_rejects_reversed_date_range():
+    client = client_with_session(FakeSession())
+
+    response = client.get("/api/dashboard/analytics?start=2025-12-31&end=2025-01-01")
+
+    assert response.status_code == 422
+    api_module.app.dependency_overrides.clear()
 
 
 def test_classification_provider_error_is_visible(monkeypatch):

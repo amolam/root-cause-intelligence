@@ -23,8 +23,9 @@ async function refreshDashboard() {
   const params = new URLSearchParams();
   if ($("insight-start").value) params.set("start", $("insight-start").value);
   if ($("insight-end").value) params.set("end", $("insight-end").value);
-  const [summary, categoryInsights] = await Promise.all([
-    request("/api/dashboard/summary"), request(`/api/dashboard/category-insights?${params}`),
+  params.set("limit", "10");
+  const [summary, analytics] = await Promise.all([
+    request("/api/dashboard/summary"), request(`/api/dashboard/analytics?${params}`),
   ]);
   $("total-returns").textContent = summary.total_returns;
   $("other-share").textContent = pct(summary.other_return_share);
@@ -33,41 +34,83 @@ async function refreshDashboard() {
   $("classification-note").textContent = `${summary.unanalysed_returns} not classified`;
   $("human-reviewed-count").textContent = summary.human_reviewed_returns;
   $("pending-count").textContent = summary.pending_human_reviews;
-  renderCategoryInsights(categoryInsights);
+  renderAnalytics(analytics);
   await loadReviews(summary.unanalysed_returns);
   $("connection-state").textContent = `Connected · ${new URL(base()).host}`;
 }
-function renderCategoryInsights(rows) {
-  const body = $("category-rows"); body.replaceChildren();
-  if (!rows.length) { body.innerHTML = '<tr><td colspan="8" class="muted">No insight rows match this date range. Run the insight calculation for the selected period.</td></tr>'; return; }
-  rows.forEach((row, index) => {
-    const summary = document.createElement("tr");
-    [row.category, row.subcategory, row.total_orders, row.total_returns, pct(row.return_rate), pct(row.fit_return_rate), pct(row.quality_return_rate)].forEach((value) => {
-      const cell = document.createElement("td"); cell.textContent = value ?? "—"; summary.append(cell);
-    });
-    if (row.small_sample) { const note = document.createElement("small"); note.className = "sample-warning"; note.textContent = "Small sample"; summary.children[2].append(note); }
-    const related = document.createElement("td");
-    const toggle = document.createElement("button"); toggle.className = "button-secondary"; toggle.textContent = `${row.skus.length} SKUs`; toggle.setAttribute("aria-expanded", "false");
-    related.append(toggle); summary.append(related); body.append(summary);
+function renderBars(containerId, rows, { label, detail, value, amount, emptyText, rate = false }) {
+  const container = $(containerId); container.replaceChildren();
+  if (!rows.length) {
+    const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = emptyText;
+    container.append(empty); return;
+  }
+  const max = Math.max(...rows.map(amount), 0.0001);
+  const list = document.createElement("ol"); list.className = `analytics-bar-list${rate ? " rate-bars" : ""}`;
+  rows.forEach((row) => {
+    const item = document.createElement("li"); item.className = "analytics-bar-row";
+    const header = document.createElement("div"); header.className = "analytics-bar-heading";
+    const title = document.createElement("strong"); title.textContent = label(row);
+    const metric = document.createElement("span"); metric.textContent = value(row);
+    header.append(title, metric);
+    const caption = document.createElement("p"); caption.className = "analytics-bar-detail"; caption.textContent = detail(row);
+    const track = document.createElement("div"); track.className = "analytics-bar-track";
+    track.setAttribute("role", "img"); track.setAttribute("aria-label", `${label(row)}: ${value(row)}`);
+    const fill = document.createElement("div"); fill.className = "analytics-bar-fill";
+    fill.style.width = `${Math.max(1, Math.min(100, (amount(row) / max) * 100))}%`;
+    track.append(fill); item.append(header, caption, track); list.append(item);
+  });
+  container.append(list);
+}
+function renderAnalytics(data) {
+  const other = data.source_other;
+  const summary = $("other-summary"); summary.replaceChildren();
+  [
+    ["Source “Other” returns", other.total_returns],
+    ["Classified", other.classified_returns],
+    ["Unclassified", other.unclassified_returns],
+    ["Prediction coverage", pct(other.coverage)],
+  ].forEach(([label, value]) => {
+    const stat = document.createElement("div"); stat.className = "analytics-stat";
+    const name = document.createElement("span"); name.textContent = label;
+    const metric = document.createElement("strong"); metric.textContent = value;
+    stat.append(name, metric); summary.append(stat);
+  });
+  renderBars("other-chart", other.breakdown, {
+    label: (row) => `${row.category} / ${row.subcategory}`,
+    detail: (row) => `${row.return_count} returns · ${pct(row.share)} of classified “Other”`,
+    value: (row) => pct(row.share),
+    amount: (row) => row.share,
+    emptyText: other.total_returns ? "No source-“Other” returns have a complete prediction in this date range." : "No source-“Other” returns in this date range.",
+  });
 
-    const detail = document.createElement("tr"); detail.hidden = true;
-    const detailCell = document.createElement("td"); detailCell.colSpan = 8;
-    if (!row.skus.length) { detailCell.textContent = "No returns for these SKUs in the selected range."; }
-    else {
-      const table = document.createElement("table"); table.className = "sku-detail-table";
-      const head = document.createElement("thead"); const headRow = document.createElement("tr");
-      ["SKU", "Product", "Orders", "Returns", "Return rate", "FIT", "QUALITY", "COLOUR", "OTHER", "Sample"].forEach((label) => { const th = document.createElement("th"); th.textContent = label; headRow.append(th); });
-      head.append(headRow); table.append(head);
-      const skuBody = document.createElement("tbody");
-      row.skus.forEach((sku) => {
-        const line = document.createElement("tr");
-        [sku.sku_id, sku.product_name, sku.total_orders, sku.total_returns, pct(sku.return_rate), sku.fit_returns, sku.quality_count, sku.colour_count, sku.other_count, sku.small_sample ? "Low denominator" : "—"].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value ?? "—"; line.append(cell); });
-        skuBody.append(line);
-      });
-      table.append(skuBody); detailCell.append(table);
-    }
-    detail.append(detailCell); body.append(detail);
-    toggle.addEventListener("click", () => { detail.hidden = !detail.hidden; toggle.setAttribute("aria-expanded", String(!detail.hidden)); toggle.textContent = detail.hidden ? `${row.skus.length} SKUs` : "Hide SKUs"; });
+  const volumeVendors = data.vendors.by_volume;
+  renderBars("vendor-volume-chart", volumeVendors, {
+    label: (row) => row.vendor_name,
+    detail: (row) => `${row.return_events} events · ${row.returned_units} / ${row.sold_units} units · ${pct(row.unit_return_rate)}${row.small_sample ? " · low volume" : ""}`,
+    value: (row) => `${row.returned_units} units`,
+    amount: (row) => row.returned_units,
+    emptyText: "No vendor returns in this date range.",
+  });
+  renderBars("vendor-rate-chart", data.vendors.by_rate, {
+    label: (row) => row.vendor_name,
+    detail: (row) => `${row.returned_units} returned / ${row.sold_units} sold units · ${row.return_events} return events`,
+    value: (row) => pct(row.unit_return_rate),
+    amount: (row) => row.unit_return_rate,
+    emptyText: "No vendors meet the 30 sold-unit minimum in this date range.",
+    rate: true,
+  });
+  $("vendor-data-quality").textContent = `${data.data_quality.return_order_item_sku_mismatches} returns reference a different SKU than the purchased order item; vendor attribution follows the purchased item.`;
+
+  renderBars("sku-chart", data.skus, {
+    label: (row) => `${row.sku_id} · ${row.product_name}`,
+    detail: (row) => {
+      const issues = row.issue_breakdown.slice(0, 3).map((issue) => `${issue.category}/${issue.subcategory} ${issue.return_count}`).join(" · ");
+      const quality = row.unclassified_returns ? ` · ${row.unclassified_returns} unclassified` : "";
+      return `${issues || "No classified issue labels"} · ${pct(row.return_rate)} of ${row.sold_orders} selling orders${row.small_sample ? " · low volume" : ""}${quality}`;
+    },
+    value: (row) => `${row.return_events} returns`,
+    amount: (row) => row.return_events,
+    emptyText: "No SKU returns in this date range.",
   });
 }
 async function loadReviews(unanalysedReturns = 0) {
@@ -112,15 +155,6 @@ async function loadReviews(unanalysedReturns = 0) {
 }
 $("refresh").addEventListener("click", async () => { try { await refreshDashboard(); } catch (error) { notice(error.message); } });
 $("insight-range-form").addEventListener("submit", async (event) => { event.preventDefault(); try { await refreshDashboard(); } catch (error) { notice(error.message); } });
-$("refresh-insights").addEventListener("click", async (event) => {
-  const button = event.currentTarget; button.disabled = true; button.textContent = "Recalculating…";
-  try {
-    const result = await request("/api/dashboard/refresh-insights", { method: "POST" });
-    await refreshDashboard();
-    notice(`Insights recalculated: ${result.sku_rows} SKU rows and ${result.category_rows} category rows. Classifications were unchanged.`, true);
-  } catch (error) { notice(error.message); }
-  finally { button.disabled = false; button.textContent = "Recalculate insights"; }
-});
 $("reset-classifications").addEventListener("click", () => {
   $("reset-dialog").showModal();
 });
@@ -192,6 +226,25 @@ $("classify-form").addEventListener("submit", async (event) => {
     await refreshDashboard();
   } catch (error) { notice(error.message); }
   finally { button.disabled = false; button.textContent = "Classify"; }
+});
+const analyticsTabs = [...document.querySelectorAll(".analytics-tab")];
+function activateAnalyticsTab(selected, focus = false) {
+  analyticsTabs.forEach((tab) => {
+    const active = tab === selected;
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
+    $(tab.getAttribute("aria-controls")).hidden = !active;
+  });
+  if (focus) selected.focus();
+}
+analyticsTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => activateAnalyticsTab(tab));
+  tab.addEventListener("keydown", (event) => {
+    const nextIndex = event.key === "ArrowRight" ? (index + 1) % analyticsTabs.length
+      : event.key === "ArrowLeft" ? (index - 1 + analyticsTabs.length) % analyticsTabs.length
+        : event.key === "Home" ? 0 : event.key === "End" ? analyticsTabs.length - 1 : -1;
+    if (nextIndex >= 0) { event.preventDefault(); activateAnalyticsTab(analyticsTabs[nextIndex], true); }
+  });
 });
 if (base()) {
   refreshDashboard().catch((error) => { $("connection-state").textContent = "Connection failed"; notice(error.message); });
