@@ -543,6 +543,7 @@ def dashboard_analytics(
         },
         "vendors": {
             "by_rate": vendors_by_rate,
+            "total_returned_units": sum(row["returned_units"] for row in vendor_metrics),
             "minimum_sold_units_for_rate_rank": 30,
         },
         "ai_issue_category_mix": issue_category_mix,

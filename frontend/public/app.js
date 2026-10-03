@@ -113,22 +113,31 @@ function renderAnalytics(data) {
   });
 
   const vendorRates = data.vendors.by_rate;
-  const topVendor = vendorRates[0];
+  const totalVendorReturnedUnits = data.vendors.total_returned_units;
   const vendorPieCaption = $("vendor-rate-pie-caption");
-  if (topVendor) {
-    vendorPieCaption.textContent = `${topVendor.vendor_name} · ${pct(topVendor.unit_return_rate)} (${topVendor.returned_units} returned / ${topVendor.sold_units} sold units)`;
-  } else {
-    vendorPieCaption.textContent = "No vendors meet the 30 sold-unit minimum in this cohort.";
+  const listedVendorReturnedUnits = vendorRates.reduce((sum, vendor) => sum + vendor.returned_units, 0);
+  const otherVendorReturnedUnits = totalVendorReturnedUnits - listedVendorReturnedUnits;
+  const validVendorPie = totalVendorReturnedUnits > 0 && otherVendorReturnedUnits >= 0;
+  const vendorPieRows = validVendorPie ? vendorRates.map((vendor) => ({
+    label: vendor.vendor_name,
+    return_count: vendor.returned_units,
+    share: vendor.returned_units / totalVendorReturnedUnits,
+  })) : [];
+  if (validVendorPie && (otherVendorReturnedUnits > 0 || !vendorPieRows.length)) {
+    vendorPieRows.push({
+      label: "Others",
+      return_count: otherVendorReturnedUnits,
+      share: otherVendorReturnedUnits / totalVendorReturnedUnits,
+    });
   }
-  const validVendorPie = topVendor && topVendor.unit_return_rate >= 0 && topVendor.unit_return_rate <= 1;
-  renderPie("vendor-rate-pie", "vendor-rate-legend", validVendorPie ? [
-    { label: "Returned", return_count: topVendor.returned_units, share: topVendor.unit_return_rate },
-    { label: "Not returned", return_count: topVendor.sold_units - topVendor.returned_units, share: 1 - topVendor.unit_return_rate },
-  ] : [], {
+  vendorPieCaption.textContent = totalVendorReturnedUnits > 0
+    ? `${totalVendorReturnedUnits} returned units across all vendors; vendors outside the rate-comparison list are grouped as Others.`
+    : "No returned units across vendors in this cohort.";
+  renderPie("vendor-rate-pie", "vendor-rate-legend", vendorPieRows, {
     label: (row) => row.label,
-    countLabel: (row) => `${row.return_count} units`,
-    title: "Returned and not-returned units for the highest-rate vendor",
-    emptyText: topVendor ? "Returned units exceed sold units; this rate cannot be shown as a pie." : "No vendor rates to show.",
+    countLabel: (row) => `${row.return_count} returned ${row.return_count === 1 ? "unit" : "units"}`,
+    title: "Returned-unit share across all vendors",
+    emptyText: otherVendorReturnedUnits < 0 ? "The rate-comparison vendors exceed the all-vendor return total." : "No returned units across vendors in this cohort.",
   });
   renderBars("vendor-rate-chart", vendorRates, {
     label: (row) => row.vendor_name,

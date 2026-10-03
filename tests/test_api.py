@@ -60,8 +60,8 @@ class AnalyticsSession:
         self.results = iter([
             [("NOT_REQUIRED", 2), ("PENDING", 1), ("REVIEWED", 1), (None, 1)],
             [("FIT", "SIZE_MISMATCH", 1), ("QUALITY", "FABRIC_QUALITY", 1)],
-            [("V1", "Vendor A", 3, 4, 1)],
-            [("V1", 20, 100)],
+            [("V1", "Vendor A", 3, 4, 1), ("V2", "Vendor B", 1, 1, 0)],
+            [("V1", 20, 100), ("V2", 20, 100)],
             [("SKU1", "Everyday Kurti", 3, 4, 1)],
             [("SKU1", 20, 100)],
             [("SKU1", "FIT", "SIZE_MISMATCH", 2), ("SKU1", "QUALITY", "FABRIC_QUALITY", 1)],
@@ -138,6 +138,7 @@ def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers(
         ],
     }
     vendor = result["vendors"]["by_rate"][0]
+    assert result["vendors"]["total_returned_units"] == 5
     assert vendor["return_events"] == 3
     assert vendor["returned_units"] == 4
     assert vendor["sold_units"] == 100
