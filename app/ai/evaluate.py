@@ -5,7 +5,11 @@ import argparse
 import csv
 from pathlib import Path
 
-from app.ai.classifier import create_openrouter_classifier, create_second_stage_classifier, route_prediction
+from app.ai.classifier import (
+    create_classifier_service,
+    requires_human_review,
+    route_prediction,
+)
 from app.db.config import get_settings
 
 REQUIRED_COLUMNS = {"test_id", "return_reason", "return_text", "expected_category", "expected_subcategory"}
@@ -39,7 +43,7 @@ def evaluate(path: Path, light, heavy, confidence_threshold: float = 0.75) -> di
         exact += int(exact_match and has_expected_subcategory)
         labelled_subcategories += int(has_expected_subcategory)
         escalated += int(prediction.escalated)
-        needs_review = prediction.result.confidence_score < confidence_threshold or prediction.result.predicted_category == "OTHER"
+        needs_review = requires_human_review(prediction.result)
         review += int(needs_review)
         print(
         f"{row['test_id']}: expected {row['expected_category']}/{row['expected_subcategory'] or '(category only)'}; "
@@ -68,15 +72,16 @@ def main() -> None:
     parser.add_argument("csv_path", nargs="?", type=Path, default=Path("sample_data/return_text_test_cases.csv"))
     args = parser.parse_args()
     settings = get_settings()
-    light = create_openrouter_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
-    heavy = create_second_stage_classifier(
-        backend=settings.second_stage_backend,
-        openrouter_model=settings.openrouter_heavy_model,
+    service = create_classifier_service(
+        mode=settings.classification_mode,
+        light_model=settings.openrouter_light_model,
+        heavy_model=settings.openrouter_heavy_model,
+        second_stage_backend=settings.second_stage_backend,
         jev_model=settings.jev_openrouter_model,
         api_key=settings.openrouter_api_key,
         base_url=settings.openrouter_base_url,
     )
-    evaluate(args.csv_path, light, heavy)
+    evaluate(args.csv_path, service.light, service.heavy)
 
 
 if __name__ == "__main__":

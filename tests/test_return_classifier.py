@@ -3,7 +3,7 @@ from types import SimpleNamespace
 import pytest
 
 import app.ai.classifier as classifier_module
-from app.ai.classifier import ClassificationResult, ReturnClassificationService
+from app.ai.classifier import ClassificationResult, ReturnClassificationService, requires_human_review
 
 
 def result(category="FIT", subcategory="TOO_SMALL", confidence=0.91):
@@ -83,6 +83,30 @@ def test_confident_escalated_result_does_not_require_review():
     assert session.rows[0].human_review_status == "NOT_REQUIRED"
 
 
+def test_low_confidence_specific_final_result_does_not_require_review():
+    light = FakeClassifier("light", result(confidence=0.4))
+    heavy = FakeClassifier("heavy", result(confidence=0.4))
+    session = FakeSession()
+    record = SimpleNamespace(return_id="R5", sku_id="S5", return_reason="Quality", return_reason_text="Fabric is rough")
+
+    outcome = ReturnClassificationService(light, heavy).classify(session, record)
+
+    assert outcome.result.confidence_score == 0.4
+    assert outcome.human_review_status == "NOT_REQUIRED"
+    assert session.rows[0].human_review_status == "NOT_REQUIRED"
+    assert not requires_human_review(outcome.result)
+
+
+def test_single_classifier_mode_does_not_escalate_or_call_a_second_model():
+    jev = FakeClassifier("jev", result(confidence=0.2))
+
+    prediction = classifier_module.route_prediction(jev, None, reason="Other", text="I changed my mind")
+
+    assert jev.calls == 1
+    assert prediction.model_name == "jev"
+    assert prediction.escalated is False
+
+
 def test_high_confidence_other_still_requires_human_review():
     other = result(category="OTHER", subcategory="OTHER", confidence=0.95)
     light = FakeClassifier("light", other)
@@ -95,11 +119,48 @@ def test_high_confidence_other_still_requires_human_review():
     assert outcome.result.confidence_score == 0.95
     assert outcome.human_review_status == "PENDING"
     assert session.rows[0].human_review_status == "PENDING"
+    assert requires_human_review(outcome.result)
+
+
+def test_changed_mind_taxonomy_is_valid_and_not_other():
+    changed_mind = result(category="CUSTOMER_PREFERENCE", subcategory="CHANGED_MIND")
+
+    assert changed_mind.predicted_category == "CUSTOMER_PREFERENCE"
+    assert changed_mind.predicted_subcategory == "CHANGED_MIND"
+    assert not requires_human_review(changed_mind)
 
 
 def test_invalid_category_subcategory_pair_is_rejected():
     with pytest.raises(ValueError, match="not valid"):
         result(category="FIT", subcategory="STITCHING")
+
+
+def test_openrouter_schema_accepts_only_known_taxonomy_pairs():
+    output = classifier_module.OpenRouterClassificationOutput(
+        predicted_label="QUALITY__ZIPPER",
+        confidence_score=0.9,
+        sentiment="negative",
+        evidence_text="zip broke",
+    )
+
+    mapped = classifier_module._map_openrouter_output(output)
+
+    assert mapped.predicted_category == "QUALITY"
+    assert mapped.predicted_subcategory == "ZIPPER"
+    changed_mind = classifier_module.OpenRouterClassificationOutput(
+        predicted_label="CUSTOMER_PREFERENCE__CHANGED_MIND",
+        confidence_score=0.9,
+        sentiment="neutral",
+        evidence_text="changed my mind",
+    )
+    assert classifier_module._map_openrouter_output(changed_mind).predicted_category == "CUSTOMER_PREFERENCE"
+    with pytest.raises(ValueError):
+        classifier_module.OpenRouterClassificationOutput(
+            predicted_label="FIT__STITCHING",
+            confidence_score=0.9,
+            sentiment="negative",
+            evidence_text="zip broke",
+        )
 
 
 def test_jev_classifier_maps_choice_and_confidence(monkeypatch):

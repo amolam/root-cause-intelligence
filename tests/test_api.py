@@ -67,7 +67,8 @@ def test_health_endpoint_is_visible():
 
 def test_dashboard_summary_distinguishes_human_reviewed_from_analysed():
     values = iter([100, 20, 85, 12, 9, 120])
-    session = SimpleNamespace(scalar=lambda statement: next(values))
+    statements = []
+    session = SimpleNamespace(scalar=lambda statement: (statements.append(statement), next(values))[1])
 
     summary = api_module.dashboard_summary(db=session)
 
@@ -75,6 +76,20 @@ def test_dashboard_summary_distinguishes_human_reviewed_from_analysed():
     assert summary["unanalysed_returns"] == 15
     assert summary["pending_human_reviews"] == 12
     assert summary["human_reviewed_returns"] == 9
+    assert sum("row_number() over" in str(statement).lower() for statement in statements) == 2
+
+
+def test_pending_review_queue_filters_to_latest_analysis():
+    statements = []
+    session = SimpleNamespace(
+        execute=lambda statement: (statements.append(statement), SimpleNamespace(all=lambda: []))[1]
+    )
+
+    assert api_module.pending_reviews(limit=50, db=session) == []
+
+    query = str(statements[0]).lower()
+    assert "row_number() over" in query
+    assert "row_num = :row_num_1" in query
 
 
 def test_classification_provider_error_is_visible(monkeypatch):
@@ -187,7 +202,7 @@ def test_pending_other_review_explains_high_confidence_reason():
     record = SimpleNamespace(return_reason="Other", return_reason_text="unclear")
     session = SimpleNamespace(execute=lambda statement: SimpleNamespace(all=lambda: [(analysis, record)]))
 
-    response = api_module.pending_reviews(db=session)
+    response = api_module.pending_reviews(limit=50, db=session)
 
     assert response[0]["review_reasons"] == ["OTHER_CATEGORY"]
     assert response[0]["confidence_score"] == 0.95

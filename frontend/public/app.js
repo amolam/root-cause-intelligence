@@ -5,7 +5,8 @@ const categories = {
   COLOUR: ["COLOUR_MISMATCH", "FADED", "DIFFERENT_FROM_IMAGE"],
   MATERIAL: ["FABRIC_DIFFERENT", "FABRIC_UNCOMFORTABLE", "FABRIC_THICKNESS"],
   PRODUCT_MISMATCH: ["WRONG_PRODUCT", "DIFFERENT_PRODUCT"],
-  DAMAGED: ["PRODUCT_DAMAGED"], DELIVERY: ["DELIVERY_RELATED"], OTHER: ["OTHER", "LOW_CONFIDENCE"],
+  DAMAGED: ["PRODUCT_DAMAGED"], DELIVERY: ["DELIVERY_RELATED"],
+  CUSTOMER_PREFERENCE: ["CHANGED_MIND"], OTHER: ["OTHER", "LOW_CONFIDENCE"],
 };
 const base = () => (window.DHAGA_CONFIG?.apiBaseUrl || "").replace(/\/$/, "");
 function notice(message, good = false) { const n = $("notice"); n.textContent = message; n.className = `notice${good ? " success" : ""}`; n.hidden = false; }

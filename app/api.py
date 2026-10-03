@@ -16,8 +16,7 @@ from app.ai.classifier import (
     TAXONOMY,
     ClassificationError,
     ReturnClassificationService,
-    create_openrouter_classifier,
-    create_second_stage_classifier,
+    create_classifier_service,
 )
 from app.db.config import get_settings
 from app.db.models import (
@@ -32,7 +31,10 @@ from app.db.models import (
 from app.db.session import SessionLocal
 from app.insights.aggregator import calculate_and_save_insights
 
-Category = Literal["FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY", "OTHER"]
+Category = Literal[
+    "FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY",
+    "CUSTOMER_PREFERENCE", "OTHER",
+]
 
 
 class ReviewInput(BaseModel):
@@ -63,6 +65,16 @@ def get_db():
 
 def _next_month_start(value: date) -> date:
     return date(value.year + 1, 1, 1) if value.month == 12 else date(value.year, value.month + 1, 1)
+
+
+def _latest_analysis_subquery():
+    return select(
+        ReturnAIAnalysis.analysis_id.label("analysis_id"),
+        func.row_number().over(
+            partition_by=ReturnAIAnalysis.return_id,
+            order_by=(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc()),
+        ).label("row_num"),
+    ).subquery()
 
 
 def _refresh_monthly_insights_for_return(db: Session, record: Return) -> None:
@@ -98,17 +110,15 @@ def _review_reasons(analysis: ReturnAIAnalysis) -> list[str]:
 @lru_cache
 def get_classifier_service() -> ReturnClassificationService:
     settings = get_settings()
-    light = create_openrouter_classifier(
-        settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url
-    )
-    heavy = create_second_stage_classifier(
-        backend=settings.second_stage_backend,
-        openrouter_model=settings.openrouter_heavy_model,
+    return create_classifier_service(
+        mode=settings.classification_mode,
+        light_model=settings.openrouter_light_model,
+        heavy_model=settings.openrouter_heavy_model,
+        second_stage_backend=settings.second_stage_backend,
         jev_model=settings.jev_openrouter_model,
         api_key=settings.openrouter_api_key,
         base_url=settings.openrouter_base_url,
     )
-    return ReturnClassificationService(light, heavy)
 
 
 app = FastAPI(
@@ -174,14 +184,18 @@ def dashboard_summary(db: Session = Depends(get_db)):
         select(func.count()).select_from(Return).where(func.lower(Return.return_reason) == "other")
     ) or 0
     analysed = db.scalar(select(func.count(func.distinct(ReturnAIAnalysis.return_id)))) or 0
+    latest_analysis = _latest_analysis_subquery()
     pending_reviews = db.scalar(
         select(func.count()).select_from(ReturnAIAnalysis)
-        .where(ReturnAIAnalysis.human_review_status == "PENDING")
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "PENDING")
     ) or 0
     human_reviewed = db.scalar(
         select(func.count(func.distinct(ReturnAIAnalysis.return_id)))
         .select_from(HumanReview)
         .join(ReturnAIAnalysis, HumanReview.analysis_id == ReturnAIAnalysis.analysis_id)
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "REVIEWED")
     ) or 0
     total_orders = db.scalar(select(func.count()).select_from(Order)) or 0
     return {
@@ -310,11 +324,13 @@ def category_insights(
 
 @app.get("/api/reviews/pending")
 def pending_reviews(limit: int = Query(default=50, ge=1, le=200), db: Session = Depends(get_db)):
+    latest_analysis = _latest_analysis_subquery()
     rows = db.execute(
         select(ReturnAIAnalysis, Return)
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
         .join(Return, Return.return_id == ReturnAIAnalysis.return_id)
-        .where(ReturnAIAnalysis.human_review_status == "PENDING")
-        .order_by(ReturnAIAnalysis.created_at.desc())
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "PENDING")
+        .order_by(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc())
         .limit(limit)
     ).all()
     return [{

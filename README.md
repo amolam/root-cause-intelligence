@@ -88,7 +88,7 @@ The operation upserts matching identifiers and commits one dataset at a time in 
 
 ## Classify return reasons
 
-The first-stage AI uses LangChain's OpenAI-compatible chat integration through OpenRouter, with structured output validated against the proposed schema taxonomy. Configure `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL`, `OPENROUTER_LIGHT_MODEL`, and `OPENROUTER_HEAVY_MODEL` in `.env`. `SECOND_STAGE_BACKEND` selects `openrouter` (default) or `jev`; `JEV_OPENROUTER_MODEL` defaults to `typesafe/jev-1.13`. Both second-stage choices use the same `OPENROUTER_API_KEY`. The default models are `openai/gpt-4.1-mini` for ordinary cases and `openai/gpt-4.1` for escalations; change model slugs if your OpenRouter account cannot access them. The current second-stage model remains available when Jev is selected by changing `SECOND_STAGE_BACKEND` back to `openrouter`.
+Classification uses Jev directly through OpenRouter by default (`CLASSIFICATION_MODE=jev_only`, `JEV_OPENROUTER_MODEL=typesafe/jev-1.13`). Configure `OPENROUTER_API_KEY` in `.env`. Jev returns a taxonomy-constrained category/subcategory choice plus sentiment; `extracted_issue` and exact `evidence_text` are empty because this endpoint does not return free-form spans. To opt into the older two-stage flow, set `CLASSIFICATION_MODE=two_stage`; it uses `OPENROUTER_LIGHT_MODEL` (`openai/gpt-4.1-mini` by default) and escalates low-confidence/`OTHER` results to `SECOND_STAGE_BACKEND` (`openrouter` by default, or `jev`). The OpenRouter second-stage model defaults to `OPENROUTER_HEAVY_MODEL=openai/gpt-4.1`. All model choices use the same API key. `CUSTOMER_PREFERENCE/CHANGED_MIND` is available for explicit changed-mind returns.
 
 Classify the seeded sample return:
 
@@ -102,7 +102,15 @@ Or process up to 100 returns with no existing AI analysis:
 python -m app.ai.cli --limit 100
 ```
 
-The light model handles normal cases. A result below the configured 0.75 confidence threshold or in `OTHER` is sent to the selected second-stage model. The existing OpenRouter model receives the source text and first structured prediction; Jev receives those fields as structured state and returns a taxonomy-constrained category/subcategory choice plus sentiment. Jev does not generate `extracted_issue` or exact `evidence_text`, so these fields are stored as `NULL`/empty for Jev-escalated results rather than copied from a prediction it may have corrected. If the final result is still below the threshold or `OTHER`, `human_review_status` is set to `PENDING`; otherwise it is `NOT_REQUIRED`. These status strings and the threshold are MVP choices requiring calibration against human-labelled Dhaga examples. Model input contains only the return reason, free-text comment, and first-stage prediction; expected/human labels are not used for inference. Model/API failures are printed as failed rows and do not create AI analysis rows. The recorded model version is the configured identifier because the provider does not return an immutable build ID.
+To reclassify returns whose latest analysis is pending human review, preserving prior AI and human-review history:
+
+```powershell
+python -m app.ai.cli --reclassify-pending --limit 3000
+```
+
+The classifier adds a new analysis row for each return. The newest row becomes the active prediction and its review status is calculated from its result; do not delete old analyses or manually change their status to trigger reclassification.
+
+In Jev-only mode, Jev classifies each return directly without a GPT first pass or confidence-based second call. In two-stage mode, confidence below 0.75 or `OTHER` triggers escalation. In either mode, after the final result only `OTHER` is marked `PENDING`; specific taxonomy labels are `NOT_REQUIRED`, even at low confidence. Confidence remains stored for reporting, so review reduction should be monitored against human-labelled accuracy. Model input contains only the return reason and free-text comment, plus the first structured prediction in two-stage mode; expected/human labels are never used for inference. Model/API failures are printed as failed rows and do not create AI analysis rows. The recorded model version is the configured identifier because the provider does not return an immutable build ID.
 
 Evaluate against the 14 labelled text cases from the schema document, including Hinglish:
 
