@@ -53,6 +53,29 @@ class ResetSession(FakeSession):
         self.commits += 1
 
 
+class AnalyticsSession:
+    def __init__(self):
+        self.scalar_queries = []
+        self.queries = []
+        self.results = iter([
+            [("NOT_REQUIRED", 2), ("PENDING", 1), ("REVIEWED", 1), (None, 1)],
+            [("FIT", "SIZE_MISMATCH", 1), ("QUALITY", "FABRIC_QUALITY", 1)],
+            [("V1", "Vendor A", 3, 4, 1), ("V2", "Vendor B", 1, 1, 0)],
+            [("V1", 20, 100), ("V2", 20, 100)],
+            [("SKU1", "Everyday Kurti", 3, 4, 1)],
+            [("SKU1", 20, 100)],
+            [("SKU1", "FIT", "SIZE_MISMATCH", 2), ("SKU1", "QUALITY", "FABRIC_QUALITY", 1)],
+        ])
+
+    def scalar(self, statement):
+        self.scalar_queries.append(statement)
+        return 5
+
+    def execute(self, statement):
+        self.queries.append(statement)
+        return SimpleNamespace(all=lambda: next(self.results))
+
+
 def client_with_session(session):
     api_module.app.dependency_overrides[api_module.get_db] = lambda: session
     return TestClient(api_module.app)
@@ -63,6 +86,87 @@ def test_health_endpoint_is_visible():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_dashboard_summary_distinguishes_human_reviewed_from_analysed():
+    values = iter([100, 20, 85, 12, 9, 120])
+    statements = []
+    session = SimpleNamespace(scalar=lambda statement: (statements.append(statement), next(values))[1])
+
+    summary = api_module.dashboard_summary(db=session)
+
+    assert summary["analysed_returns"] == 85
+    assert summary["unanalysed_returns"] == 15
+    assert summary["pending_human_reviews"] == 12
+    assert summary["human_reviewed_returns"] == 9
+    assert sum("row_number() over" in str(statement).lower() for statement in statements) == 2
+
+
+def test_pending_review_queue_filters_to_latest_analysis():
+    statements = []
+    session = SimpleNamespace(
+        execute=lambda statement: (statements.append(statement), SimpleNamespace(all=lambda: []))[1]
+    )
+
+    assert api_module.pending_reviews(limit=50, db=session) == []
+
+    query = str(statements[0]).lower()
+    assert "row_number() over" in query
+    assert "row_num = :row_num_1" in query
+
+
+def test_dashboard_analytics_reports_other_coverage_vendor_rate_and_sku_drivers():
+    session = AnalyticsSession()
+
+    result = api_module.dashboard_analytics(
+        start=date(2025, 1, 1), end=date(2025, 12, 31), limit=10, db=session
+    )
+
+    assert result["source_other"] == {
+        "total_returns": 5,
+        "ai_classified_returns": 2,
+        "sent_for_human_review": 2,
+        "ai_unclassified_returns": 1,
+        "ai_prediction_coverage": 2 / 3,
+        "category_mix": [
+            {"category": "FIT", "return_count": 1, "share": 0.5},
+            {"category": "QUALITY", "return_count": 1, "share": 0.5},
+        ],
+        "breakdown": [
+            {"category": "FIT", "subcategory": "SIZE_MISMATCH", "return_count": 1, "share": 0.5},
+            {"category": "QUALITY", "subcategory": "FABRIC_QUALITY", "return_count": 1, "share": 0.5},
+        ],
+    }
+    vendor = result["vendors"]["by_rate"][0]
+    assert result["vendors"]["total_returned_units"] == 5
+    assert vendor["return_events"] == 3
+    assert vendor["returned_units"] == 4
+    assert vendor["sold_units"] == 100
+    assert vendor["unit_return_rate"] == 0.04
+    assert vendor["sku_mismatch_returns"] == 1
+    sku = result["skus"][0]
+    assert sku["return_events"] == 3
+    assert sku["return_rate"] == 3 / 20
+    assert sku["unclassified_returns"] == 1
+    assert [issue["category"] for issue in sku["issue_breakdown"]] == ["FIT", "QUALITY"]
+    assert result["ai_classified_returns"] == 3
+    assert result["ai_issue_category_mix"] == [
+        {"category": "FIT", "return_count": 2, "share": 2 / 3},
+        {"category": "QUALITY", "return_count": 1, "share": 1 / 3},
+    ]
+    ranked_query = str(session.queries[0]).lower()
+    assert "row_number() over" in ranked_query
+    assert "analysis_id desc" in ranked_query
+    assert all("human_label" not in str(statement).lower() for statement in session.queries)
+
+
+def test_dashboard_analytics_rejects_reversed_date_range():
+    client = client_with_session(FakeSession())
+
+    response = client.get("/api/dashboard/analytics?start=2025-12-31&end=2025-01-01")
+
+    assert response.status_code == 422
+    api_module.app.dependency_overrides.clear()
 
 
 def test_classification_provider_error_is_visible(monkeypatch):
@@ -175,7 +279,7 @@ def test_pending_other_review_explains_high_confidence_reason():
     record = SimpleNamespace(return_reason="Other", return_reason_text="unclear")
     session = SimpleNamespace(execute=lambda statement: SimpleNamespace(all=lambda: [(analysis, record)]))
 
-    response = api_module.pending_reviews(db=session)
+    response = api_module.pending_reviews(limit=50, db=session)
 
     assert response[0]["review_reasons"] == ["OTHER_CATEGORY"]
     assert response[0]["confidence_score"] == 0.95

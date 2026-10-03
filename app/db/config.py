@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,6 +12,9 @@ class Settings(BaseSettings):
     openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", validation_alias="OPENROUTER_BASE_URL")
     openrouter_light_model: str = Field(default="openai/gpt-4.1-mini", validation_alias="OPENROUTER_LIGHT_MODEL")
     openrouter_heavy_model: str = Field(default="openai/gpt-4.1", validation_alias="OPENROUTER_HEAVY_MODEL")
+    second_stage_backend: Literal["openrouter", "jev"] = Field(default="openrouter", validation_alias="SECOND_STAGE_BACKEND")
+    jev_openrouter_model: str = Field(default="typesafe/jev-1.13", validation_alias="JEV_OPENROUTER_MODEL")
+    classification_mode: Literal["two_stage", "jev_only"] = Field(default="jev_only", validation_alias="CLASSIFICATION_MODE")
     cors_origins: str = Field(default="http://localhost:5173,http://127.0.0.1:5173", validation_alias="CORS_ORIGINS")
 
     @property

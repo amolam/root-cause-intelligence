@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, time, timedelta, timezone
 from functools import lru_cache
 from typing import Literal
 from uuid import UUID, uuid4
@@ -8,7 +8,7 @@ from uuid import UUID, uuid4
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator, model_validator
-from sqlalchemy import delete, func, select
+from sqlalchemy import and_, case, delete, func, select
 from sqlalchemy.orm import Session
 
 from app.ai.classifier import (
@@ -16,22 +16,27 @@ from app.ai.classifier import (
     TAXONOMY,
     ClassificationError,
     ReturnClassificationService,
-    create_openrouter_classifier,
+    create_classifier_service,
 )
 from app.db.config import get_settings
 from app.db.models import (
     CategoryReturnInsight,
     HumanReview,
     Order,
+    OrderItem,
     Product,
     Return,
     ReturnAIAnalysis,
     SKUReturnInsight,
+    Vendor,
 )
 from app.db.session import SessionLocal
 from app.insights.aggregator import calculate_and_save_insights
 
-Category = Literal["FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY", "OTHER"]
+Category = Literal[
+    "FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY",
+    "CUSTOMER_PREFERENCE", "OTHER",
+]
 
 
 class ReviewInput(BaseModel):
@@ -62,6 +67,16 @@ def get_db():
 
 def _next_month_start(value: date) -> date:
     return date(value.year + 1, 1, 1) if value.month == 12 else date(value.year, value.month + 1, 1)
+
+
+def _latest_analysis_subquery():
+    return select(
+        ReturnAIAnalysis.analysis_id.label("analysis_id"),
+        func.row_number().over(
+            partition_by=ReturnAIAnalysis.return_id,
+            order_by=(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc()),
+        ).label("row_num"),
+    ).subquery()
 
 
 def _refresh_monthly_insights_for_return(db: Session, record: Return) -> None:
@@ -97,13 +112,15 @@ def _review_reasons(analysis: ReturnAIAnalysis) -> list[str]:
 @lru_cache
 def get_classifier_service() -> ReturnClassificationService:
     settings = get_settings()
-    light = create_openrouter_classifier(
-        settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url
+    return create_classifier_service(
+        mode=settings.classification_mode,
+        light_model=settings.openrouter_light_model,
+        heavy_model=settings.openrouter_heavy_model,
+        second_stage_backend=settings.second_stage_backend,
+        jev_model=settings.jev_openrouter_model,
+        api_key=settings.openrouter_api_key,
+        base_url=settings.openrouter_base_url,
     )
-    heavy = create_openrouter_classifier(
-        settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url
-    )
-    return ReturnClassificationService(light, heavy)
 
 
 app = FastAPI(
@@ -169,9 +186,18 @@ def dashboard_summary(db: Session = Depends(get_db)):
         select(func.count()).select_from(Return).where(func.lower(Return.return_reason) == "other")
     ) or 0
     analysed = db.scalar(select(func.count(func.distinct(ReturnAIAnalysis.return_id)))) or 0
+    latest_analysis = _latest_analysis_subquery()
     pending_reviews = db.scalar(
         select(func.count()).select_from(ReturnAIAnalysis)
-        .where(ReturnAIAnalysis.human_review_status == "PENDING")
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "PENDING")
+    ) or 0
+    human_reviewed = db.scalar(
+        select(func.count(func.distinct(ReturnAIAnalysis.return_id)))
+        .select_from(HumanReview)
+        .join(ReturnAIAnalysis, HumanReview.analysis_id == ReturnAIAnalysis.analysis_id)
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "REVIEWED")
     ) or 0
     total_orders = db.scalar(select(func.count()).select_from(Order)) or 0
     return {
@@ -182,6 +208,7 @@ def dashboard_summary(db: Session = Depends(get_db)):
         "analysed_returns": analysed,
         "unanalysed_returns": max(total_returns - analysed, 0),
         "pending_human_reviews": pending_reviews,
+        "human_reviewed_returns": human_reviewed,
     }
 
 
@@ -297,13 +324,246 @@ def category_insights(
     return results[:limit]
 
 
+@app.get("/api/dashboard/analytics")
+def dashboard_analytics(
+    start: date | None = None,
+    end: date | None = None,
+    limit: int = Query(default=10, ge=1, le=50),
+    db: Session = Depends(get_db),
+):
+    if start and end and end < start:
+        raise HTTPException(status_code=422, detail="end must be on or after start")
+
+    order_filters = []
+    if start:
+        order_filters.append(Order.order_created_at >= datetime.combine(start, time.min, tzinfo=timezone.utc))
+    if end:
+        order_filters.append(
+            Order.order_created_at < datetime.combine(end + timedelta(days=1), time.min, tzinfo=timezone.utc)
+        )
+
+    ranked_analysis = select(
+        ReturnAIAnalysis.return_id.label("return_id"),
+        ReturnAIAnalysis.predicted_category.label("predicted_category"),
+        ReturnAIAnalysis.predicted_subcategory.label("predicted_subcategory"),
+        ReturnAIAnalysis.human_review_status.label("human_review_status"),
+        func.row_number().over(
+            partition_by=ReturnAIAnalysis.return_id,
+            order_by=(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc()),
+        ).label("row_num"),
+    ).subquery()
+    return_facts = select(
+        Return.return_id.label("return_id"),
+        Return.order_id.label("order_id"),
+        Return.sku_id.label("sku_id"),
+        Return.return_quantity.label("return_quantity"),
+        Return.return_reason.label("return_reason"),
+        ranked_analysis.c.predicted_category.label("predicted_category"),
+        ranked_analysis.c.predicted_subcategory.label("predicted_subcategory"),
+        ranked_analysis.c.human_review_status.label("human_review_status"),
+    ).join(Order, Order.order_id == Return.order_id).outerjoin(
+        ranked_analysis,
+        and_(ranked_analysis.c.return_id == Return.return_id, ranked_analysis.c.row_num == 1),
+    ).where(*order_filters).subquery()
+
+    source_other = func.lower(return_facts.c.return_reason) == "other"
+    source_other_status_rows = db.execute(
+        select(
+            return_facts.c.human_review_status,
+            func.count(func.distinct(return_facts.c.return_id)),
+        ).where(source_other).group_by(return_facts.c.human_review_status)
+    ).all()
+    source_other_status_counts = {status: count for status, count in source_other_status_rows}
+    source_other_total = sum(source_other_status_counts.values())
+    source_other_reviewed = source_other_status_counts.get("PENDING", 0) + source_other_status_counts.get("REVIEWED", 0)
+    source_other_rows = db.execute(
+        select(
+            return_facts.c.predicted_category,
+            return_facts.c.predicted_subcategory,
+            func.count(func.distinct(return_facts.c.return_id)),
+        ).where(
+            source_other,
+            return_facts.c.human_review_status == "NOT_REQUIRED",
+            return_facts.c.predicted_category.is_not(None),
+            return_facts.c.predicted_subcategory.is_not(None),
+        ).group_by(return_facts.c.predicted_category, return_facts.c.predicted_subcategory)
+    ).all()
+    source_other_classified = sum(count for _, _, count in source_other_rows)
+    source_other_breakdown = [{
+        "category": category,
+        "subcategory": subcategory,
+        "return_count": int(count),
+        "share": count / source_other_classified if source_other_classified else 0,
+    } for category, subcategory, count in sorted(source_other_rows, key=lambda row: (-row[2], row[0], row[1]))]
+    source_other_category_counts: dict[str, int] = {}
+    for category, _, count in source_other_rows:
+        source_other_category_counts[category] = source_other_category_counts.get(category, 0) + count
+    source_other_category_mix = [{
+        "category": category,
+        "return_count": count,
+        "share": count / source_other_classified if source_other_classified else 0,
+    } for category, count in sorted(source_other_category_counts.items(), key=lambda row: (-row[1], row[0]))]
+
+    vendor_returns = db.execute(
+        select(
+            Vendor.vendor_id,
+            Vendor.vendor_name,
+            func.count(func.distinct(Return.return_id)),
+            func.coalesce(func.sum(Return.return_quantity), 0),
+            func.coalesce(func.sum(case((OrderItem.sku_id != Return.sku_id, 1), else_=0)), 0),
+        ).select_from(Return)
+        .join(Order, Order.order_id == Return.order_id)
+        .join(OrderItem, and_(OrderItem.order_item_id == Return.order_item_id, OrderItem.order_id == Return.order_id))
+        .join(Product, Product.sku_id == OrderItem.sku_id)
+        .join(Vendor, Vendor.vendor_id == Product.vendor_id)
+        .where(*order_filters)
+        .group_by(Vendor.vendor_id, Vendor.vendor_name)
+    ).all()
+    vendor_sales = db.execute(
+        select(
+            Vendor.vendor_id,
+            func.count(func.distinct(Order.order_id)),
+            func.coalesce(func.sum(OrderItem.quantity), 0),
+        ).select_from(OrderItem)
+        .join(Order, Order.order_id == OrderItem.order_id)
+        .join(Product, Product.sku_id == OrderItem.sku_id)
+        .join(Vendor, Vendor.vendor_id == Product.vendor_id)
+        .where(*order_filters)
+        .group_by(Vendor.vendor_id)
+    ).all()
+    sales_by_vendor = {vendor_id: (sold_orders, sold_units) for vendor_id, sold_orders, sold_units in vendor_sales}
+    vendor_metrics = []
+    for vendor_id, vendor_name, return_events, returned_units, mismatch_count in vendor_returns:
+        sold_orders, sold_units = sales_by_vendor.get(vendor_id, (0, 0))
+        sold_units = int(sold_units)
+        returned_units = int(returned_units)
+        vendor_metrics.append({
+            "vendor_id": vendor_id,
+            "vendor_name": vendor_name,
+            "return_events": int(return_events),
+            "returned_units": returned_units,
+            "sold_orders": int(sold_orders),
+            "sold_units": sold_units,
+            "unit_return_rate": returned_units / sold_units if sold_units else 0,
+            "small_sample": sold_units < 30,
+            "sku_mismatch_returns": int(mismatch_count),
+        })
+    vendors_by_rate = sorted(
+        (row for row in vendor_metrics if not row["small_sample"]),
+        key=lambda row: (-row["unit_return_rate"], -row["return_events"], row["vendor_name"]),
+    )[:limit]
+    sku_return_rows = db.execute(
+        select(
+            return_facts.c.sku_id,
+            Product.product_name,
+            func.count(func.distinct(return_facts.c.return_id)),
+            func.coalesce(func.sum(return_facts.c.return_quantity), 0),
+            func.sum(case((and_(
+                return_facts.c.predicted_category.is_not(None),
+                return_facts.c.predicted_subcategory.is_not(None),
+            ), 0), else_=1)),
+        ).join(Product, Product.sku_id == return_facts.c.sku_id)
+        .group_by(return_facts.c.sku_id, Product.product_name)
+    ).all()
+    sku_sales_rows = db.execute(
+        select(
+            OrderItem.sku_id,
+            func.count(func.distinct(Order.order_id)),
+            func.coalesce(func.sum(OrderItem.quantity), 0),
+        ).select_from(OrderItem)
+        .join(Order, Order.order_id == OrderItem.order_id)
+        .where(*order_filters)
+        .group_by(OrderItem.sku_id)
+    ).all()
+    sales_by_sku = {sku_id: (sold_orders, sold_units) for sku_id, sold_orders, sold_units in sku_sales_rows}
+    sku_issue_rows = db.execute(
+        select(
+            return_facts.c.sku_id,
+            return_facts.c.predicted_category,
+            return_facts.c.predicted_subcategory,
+            func.count(func.distinct(return_facts.c.return_id)),
+        ).where(
+            return_facts.c.predicted_category.is_not(None),
+            return_facts.c.predicted_subcategory.is_not(None),
+        ).group_by(
+            return_facts.c.sku_id,
+            return_facts.c.predicted_category,
+            return_facts.c.predicted_subcategory,
+        )
+    ).all()
+    issues_by_sku: dict[str, list[dict]] = {}
+    for sku_id, category, subcategory, count in sku_issue_rows:
+        issues_by_sku.setdefault(sku_id, []).append({
+            "category": category,
+            "subcategory": subcategory,
+            "return_count": int(count),
+        })
+    issue_category_counts: dict[str, int] = {}
+    for _, category, _, count in sku_issue_rows:
+        issue_category_counts[category] = issue_category_counts.get(category, 0) + count
+    ai_classified_returns = sum(issue_category_counts.values())
+    issue_category_mix = [{
+        "category": category,
+        "return_count": count,
+        "share": count / ai_classified_returns if ai_classified_returns else 0,
+    } for category, count in sorted(issue_category_counts.items(), key=lambda row: (-row[1], row[0]))]
+
+    sku_metrics = []
+    for sku_id, product_name, return_events, returned_units, unclassified_count in sku_return_rows:
+        sold_orders, sold_units = sales_by_sku.get(sku_id, (0, 0))
+        issue_breakdown = sorted(
+            issues_by_sku.get(sku_id, []),
+            key=lambda row: (-row["return_count"], row["category"], row["subcategory"]),
+        )
+        sku_metrics.append({
+            "sku_id": sku_id,
+            "product_name": product_name,
+            "return_events": int(return_events),
+            "returned_units": int(returned_units),
+            "sold_orders": int(sold_orders),
+            "sold_units": int(sold_units),
+            "return_rate": return_events / sold_orders if sold_orders else 0,
+            "small_sample": sold_orders < 30,
+            "unclassified_returns": int(unclassified_count or 0),
+            "issue_breakdown": issue_breakdown,
+        })
+    sku_metrics.sort(key=lambda row: (-row["return_events"], -row["returned_units"], row["sku_id"]))
+
+    return {
+        "date_range": {"start": start, "end": end, "basis": "order_created_at"},
+        "source_other": {
+            "total_returns": int(source_other_total),
+            "ai_classified_returns": int(source_other_classified),
+            "sent_for_human_review": int(source_other_reviewed),
+            "ai_unclassified_returns": int(source_other_total - source_other_classified - source_other_reviewed),
+            "ai_prediction_coverage": source_other_classified / (source_other_total - source_other_reviewed)
+            if source_other_total > source_other_reviewed else 0,
+            "category_mix": source_other_category_mix,
+            "breakdown": source_other_breakdown,
+        },
+        "vendors": {
+            "by_rate": vendors_by_rate,
+            "total_returned_units": sum(row["returned_units"] for row in vendor_metrics),
+            "minimum_sold_units_for_rate_rank": 30,
+        },
+        "ai_issue_category_mix": issue_category_mix,
+        "ai_classified_returns": int(ai_classified_returns),
+        "skus": sku_metrics[:limit],
+        "data_quality": {
+            "return_order_item_sku_mismatches": sum(row["sku_mismatch_returns"] for row in vendor_metrics),
+        },
+    }
+
+
 @app.get("/api/reviews/pending")
 def pending_reviews(limit: int = Query(default=50, ge=1, le=200), db: Session = Depends(get_db)):
+    latest_analysis = _latest_analysis_subquery()
     rows = db.execute(
         select(ReturnAIAnalysis, Return)
+        .join(latest_analysis, latest_analysis.c.analysis_id == ReturnAIAnalysis.analysis_id)
         .join(Return, Return.return_id == ReturnAIAnalysis.return_id)
-        .where(ReturnAIAnalysis.human_review_status == "PENDING")
-        .order_by(ReturnAIAnalysis.created_at.desc())
+        .where(latest_analysis.c.row_num == 1, ReturnAIAnalysis.human_review_status == "PENDING")
+        .order_by(ReturnAIAnalysis.created_at.desc(), ReturnAIAnalysis.analysis_id.desc())
         .limit(limit)
     ).all()
     return [{

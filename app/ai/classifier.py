@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from enum import Enum
 from typing import Literal, Protocol
 from uuid import uuid4
 
+import requests
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
@@ -18,10 +20,29 @@ TAXONOMY: dict[str, set[str]] = {
     "PRODUCT_MISMATCH": {"WRONG_PRODUCT", "DIFFERENT_PRODUCT"},
     "DAMAGED": {"PRODUCT_DAMAGED"},
     "DELIVERY": {"DELIVERY_RELATED"},
+    "CUSTOMER_PREFERENCE": {"CHANGED_MIND"},
     "OTHER": {"OTHER", "LOW_CONFIDENCE"},
 }
-Category = Literal["FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY", "OTHER"]
+Category = Literal[
+    "FIT", "QUALITY", "COLOUR", "MATERIAL", "PRODUCT_MISMATCH", "DAMAGED", "DELIVERY",
+    "CUSTOMER_PREFERENCE", "OTHER",
+]
 DEFAULT_CONFIDENCE_THRESHOLD = 0.75
+TAXONOMY_OPTION_DESCRIPTIONS = {
+    "CUSTOMER_PREFERENCE__CHANGED_MIND": (
+        "The customer no longer wants the item or changed their mind; they do not describe a fit, quality, "
+        "damage, delivery, or product-mismatch problem."
+    ),
+}
+TaxonomyOption = Enum(
+    "TaxonomyOption",
+    {
+        f"{category}__{subcategory}": f"{category}__{subcategory}"
+        for category, subcategories in TAXONOMY.items()
+        for subcategory in sorted(subcategories)
+    },
+    type=str,
+)
 
 
 class ClassificationResult(BaseModel):
@@ -41,6 +62,35 @@ class ClassificationResult(BaseModel):
         if self.predicted_subcategory not in TAXONOMY[self.predicted_category]:
             raise ValueError("predicted_subcategory is not valid for predicted_category")
         return self
+
+
+def requires_human_review(result: ClassificationResult) -> bool:
+    """Keep only unresolved OTHER labels in the human queue."""
+    return result.predicted_category == "OTHER"
+
+
+class OpenRouterClassificationOutput(BaseModel):
+    """Provider schema with category and subcategory represented as one valid option."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    predicted_label: TaxonomyOption
+    confidence_score: float = Field(ge=0, le=1)
+    extracted_issue: str | None = None
+    sentiment: str
+    evidence_text: str
+
+
+def _map_openrouter_output(value: OpenRouterClassificationOutput) -> ClassificationResult:
+    category, subcategory = value.predicted_label.value.split("__", maxsplit=1)
+    return ClassificationResult(
+        predicted_category=category,
+        predicted_subcategory=subcategory,
+        confidence_score=value.confidence_score,
+        extracted_issue=value.extracted_issue,
+        sentiment=value.sentiment,
+        evidence_text=value.evidence_text,
+    )
 
 
 class ModelPrediction(BaseModel):
@@ -73,14 +123,21 @@ class ClassificationError(RuntimeError):
 
 def route_prediction(
     light: Classifier,
-    heavy: Classifier,
+    heavy: Classifier | None,
     *,
     reason: str,
     text: str,
     confidence_threshold: float = DEFAULT_CONFIDENCE_THRESHOLD,
 ) -> RoutedPrediction:
-    """Apply the same two-model routing/chaining policy for API and evaluation."""
+    """Run one classifier directly or route ambiguous first-pass results to a second model."""
     result = light.classify(reason=reason, text=text)
+    if heavy is None:
+        return RoutedPrediction(
+            result=result,
+            model_name=light.model_name,
+            model_version=light.model_version,
+            escalated=False,
+        )
     model = light
     escalated = result.confidence_score < confidence_threshold or result.predicted_category == "OTHER"
     if escalated:
@@ -98,7 +155,7 @@ class ReturnClassificationService:
     """Route ordinary text to a light model; escalate ambiguity to a heavier model."""
 
     def __init__(
-        self, light: Classifier, heavy: Classifier,
+        self, light: Classifier, heavy: Classifier | None,
         confidence_threshold: float = DEFAULT_CONFIDENCE_THRESHOLD,
     ):
         if not 0 <= confidence_threshold <= 1:
@@ -122,7 +179,7 @@ class ReturnClassificationService:
         result = routed.result
         model_name, model_version = routed.model_name, routed.model_version
 
-        needs_review = result.confidence_score < self.confidence_threshold or result.predicted_category == "OTHER"
+        needs_review = requires_human_review(result)
         analysis = ReturnAIAnalysis(
             analysis_id=uuid4(),
             return_id=return_record.return_id,
@@ -169,12 +226,12 @@ def create_openrouter_classifier(
             base_url=base_url,
             extra_body={"provider": {"require_parameters": True}},
         )
-        structured = llm.with_structured_output(ClassificationResult, method="json_schema")
+        structured = llm.with_structured_output(OpenRouterClassificationOutput, method="json_schema")
         prompt = ChatPromptTemplate.from_messages([
             ("system", """Classify an apparel return using only the supplied return reason and customer text.
-Return exactly one label from the provided structured schema. Evidence must be a short exact span from the customer text when available. Do not infer facts absent from the text. If evidence is ambiguous, choose OTHER / LOW_CONFIDENCE and low confidence. Hinglish and transliterated Hindi are valid input.
-Taxonomy:
-{taxonomy}
+Choose exactly one `predicted_label` from the provided taxonomy options. Each option encodes a valid category/subcategory pair; do not construct the two labels separately. If the customer clearly changed their mind or no longer wants the item, choose CUSTOMER_PREFERENCE__CHANGED_MIND, not OTHER. Evidence must be a short exact span from the customer text when available. Do not infer facts absent from the text. If evidence is ambiguous, choose OTHER__LOW_CONFIDENCE and low confidence. Hinglish and transliterated Hindi are valid input.
+    Taxonomy options:
+    {taxonomy_options}
 Prior structured prediction (empty for first pass):
 {prior_result}
 On a second pass, independently reassess the first prediction against the supplied text. Keep it if supported; otherwise correct it. Do not treat its confidence as evidence.
@@ -196,13 +253,137 @@ Do not use customer, product, or review information beyond the supplied fields. 
                 value = chain.invoke({
                     "reason": reason,
                     "text": text or "[no free-text comment]",
-                    "taxonomy": str(TAXONOMY),
+                    "taxonomy_options": "; ".join(
+                        f"{option.value}: {TAXONOMY_OPTION_DESCRIPTIONS.get(option.value, option.value.replace('__', '/'))}"
+                        for option in TaxonomyOption
+                    ),
                     "prior_result": prior_result.model_dump_json() if prior_result else "None",
                 })
-                return value if isinstance(value, ClassificationResult) else ClassificationResult.model_validate(value)
+                output = value if isinstance(value, OpenRouterClassificationOutput) else OpenRouterClassificationOutput.model_validate(value)
+                return _map_openrouter_output(output)
 
         return LangChainClassifier()
     except ClassificationError:
         raise
     except Exception as exc:
         raise ClassificationError(f"Could not initialize OpenRouter classifier: {exc}") from exc
+
+
+def create_jev_classifier(model_name: str, api_key: str | None) -> Classifier:
+    """Build a Jev classifier using OpenRouter's typed decisions endpoint."""
+    if not api_key:
+        raise ClassificationError("OPENROUTER_API_KEY is not configured. Add it to your local .env file.")
+
+    classification_criteria = {
+        f"{category}__{subcategory}": TAXONOMY_OPTION_DESCRIPTIONS.get(
+            f"{category}__{subcategory}", f"Category {category}; subcategory {subcategory}."
+        )
+        for category, subcategories in TAXONOMY.items()
+        for subcategory in sorted(subcategories)
+    }
+    sentiment_criteria = {
+        "positive": "The customer expresses satisfaction or a favorable view.",
+        "neutral": "The customer states the issue without a clear positive or negative tone.",
+        "negative": "The customer expresses dissatisfaction, frustration, or an unfavorable view.",
+    }
+
+    class OpenRouterJevClassifier:
+        def __init__(self):
+            self.model_name = model_name
+            self.model_version = model_name
+
+        def classify(
+            self, *, reason: str, text: str, prior_result: ClassificationResult | None = None
+        ) -> ClassificationResult:
+            state = {
+                "return_reason": reason,
+                "customer_text": text or "[no free-text comment]",
+                "first_pass_prediction": prior_result.model_dump(mode="json") if prior_result else None,
+            }
+            questions = {
+                "return_classification": {
+                    "type": "choice",
+                    "instructions": (
+                        "Choose the single best category and subcategory for the return using the source reason and customer text. "
+                        "If the customer clearly changed their mind or no longer wants the item, choose CUSTOMER_PREFERENCE__CHANGED_MIND, not OTHER. "
+                        "Treat first_pass_prediction only as a hypothesis: independently verify it against the source text and correct it if needed."
+                    ),
+                    "criteria": classification_criteria,
+                },
+                "sentiment": {
+                    "type": "choice",
+                    "instructions": "What sentiment does the customer express in the source text?",
+                    "criteria": sentiment_criteria,
+                },
+            }
+            try:
+                response = requests.post(
+                    "https://openrouter.ai/api/alpha/decisions",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={"model": model_name, "state": state, "questions": questions},
+                    timeout=60,
+                )
+                response.raise_for_status()
+                answers = response.json()["answers"]
+                classification = answers["return_classification"]
+                sentiment = answers["sentiment"]["choice"]
+                selected = classification["choice"]
+                if selected not in classification_criteria or sentiment not in sentiment_criteria:
+                    raise ClassificationError("Jev returned a choice outside the configured options")
+                category, subcategory = selected.split("__", maxsplit=1)
+                return ClassificationResult(
+                    predicted_category=category,
+                    predicted_subcategory=subcategory,
+                    confidence_score=classification["confidence"],
+                    extracted_issue=None,
+                    sentiment=sentiment,
+                    evidence_text="",
+                )
+            except ClassificationError:
+                raise
+            except Exception as exc:
+                raise ClassificationError(f"Jev classification request failed: {exc}") from exc
+
+    return OpenRouterJevClassifier()
+
+
+def create_second_stage_classifier(
+    *,
+    backend: str,
+    openrouter_model: str,
+    jev_model: str,
+    api_key: str | None,
+    base_url: str,
+) -> Classifier:
+    """Select the configured escalation model without changing first-stage routing."""
+    if backend == "jev":
+        return create_jev_classifier(jev_model, api_key)
+    if backend == "openrouter":
+        return create_openrouter_classifier(openrouter_model, api_key, base_url)
+    raise ClassificationError(f"Unsupported second-stage backend: {backend}")
+
+
+def create_classifier_service(
+    *,
+    mode: Literal["two_stage", "jev_only"],
+    light_model: str,
+    heavy_model: str,
+    jev_model: str,
+    second_stage_backend: Literal["openrouter", "jev"],
+    api_key: str | None,
+    base_url: str,
+) -> ReturnClassificationService:
+    if mode == "jev_only":
+        return ReturnClassificationService(create_jev_classifier(jev_model, api_key), None)
+    light = create_openrouter_classifier(light_model, api_key, base_url)
+    heavy = create_second_stage_classifier(
+        backend=second_stage_backend,
+        openrouter_model=heavy_model,
+        jev_model=jev_model,
+        api_key=api_key,
+        base_url=base_url,
+    )
+    return ReturnClassificationService(light, heavy)

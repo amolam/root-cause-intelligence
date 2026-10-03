@@ -12,12 +12,12 @@ The repository is connected to GitHub and Vercel. The backend uses root `index.p
 - Current frontend branch alias: `https://root-cause-intelligence-w-git-e12a3c-amolmithari-5991s-projects.vercel.app`.
 - Latest known API Preview fix: commit `4b24674`, “Limit database connections in Vercel functions”. Verify latest branch deployment status in Vercel before relying on this snapshot.
 
-The API Preview uses branch-scoped `DATABASE_URL`, `OPENROUTER_API_KEY`, and `CORS_ORIGINS` values for `audit-updates`. The database URL is the staging DB. Production values remain separate. Do not move, reveal, or commit secrets; do not use the Production database for synthetic-data loads.
+The API Preview uses branch-scoped `DATABASE_URL`, `OPENROUTER_API_KEY`, and `CORS_ORIGINS` values for `audit-updates`. `CLASSIFICATION_MODE` defaults to `jev_only`; set `two_stage` to use the previous GPT-first routing flow. `JEV_OPENROUTER_MODEL` defaults to `typesafe/jev-1.13`. In two-stage mode, `SECOND_STAGE_BACKEND` selects `openrouter` (default) or `jev`. Keep model settings Preview-scoped while evaluating Jev. The database URL is the staging DB. Production values remain separate. Do not move, reveal, or commit secrets; do not use the Production database for synthetic-data loads.
 
 ## Backend project
 
 1. Keep the project root as the API root. Vercel detects the FastAPI app from `index.py`.
-2. Set `DATABASE_URL` and `OPENROUTER_API_KEY` for the Preview branch `audit-updates`; keep Production credentials scoped to Production.
+2. Set `DATABASE_URL` and `OPENROUTER_API_KEY` for the Preview branch `audit-updates`; `CLASSIFICATION_MODE=jev_only` selects direct Jev classification. Keep Production values and deployments unchanged.
 3. Set Preview `CORS_ORIGINS` to the exact frontend Preview origin with no trailing path.
 4. Check the API Preview `/health` endpoint, connect the frontend, and validate counts/classification/insight paths.
 5. When environment variables change, redeploy the API Preview from Vercel's Deployments page; environment updates apply to new deployments.

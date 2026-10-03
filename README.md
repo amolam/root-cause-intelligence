@@ -88,7 +88,7 @@ The operation upserts matching identifiers and commits one dataset at a time in 
 
 ## Classify return reasons
 
-The AI layer uses LangChain's OpenAI-compatible chat integration through OpenRouter, with structured output validated against the proposed schema taxonomy. Configure `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL`, `OPENROUTER_LIGHT_MODEL`, and `OPENROUTER_HEAVY_MODEL` in `.env`. Defaults route `openai/gpt-4.1-mini` ordinary cases and `openai/gpt-4.1` escalations through OpenRouter; change either model slug if your OpenRouter account cannot access it. Structured-output routing is required so requests fail visibly rather than falling back to an endpoint that ignores the schema. The key is only needed when calling the classifier.
+Classification uses Jev directly through OpenRouter by default (`CLASSIFICATION_MODE=jev_only`, `JEV_OPENROUTER_MODEL=typesafe/jev-1.13`). Configure `OPENROUTER_API_KEY` in `.env`. Jev returns a taxonomy-constrained category/subcategory choice plus sentiment; `extracted_issue` and exact `evidence_text` are empty because this endpoint does not return free-form spans. To opt into the older two-stage flow, set `CLASSIFICATION_MODE=two_stage`; it uses `OPENROUTER_LIGHT_MODEL` (`openai/gpt-4.1-mini` by default) and escalates low-confidence/`OTHER` results to `SECOND_STAGE_BACKEND` (`openrouter` by default, or `jev`). The OpenRouter second-stage model defaults to `OPENROUTER_HEAVY_MODEL=openai/gpt-4.1`. All model choices use the same API key. `CUSTOMER_PREFERENCE/CHANGED_MIND` is available for explicit changed-mind returns.
 
 Classify the seeded sample return:
 
@@ -102,7 +102,15 @@ Or process up to 100 returns with no existing AI analysis:
 python -m app.ai.cli --limit 100
 ```
 
-The light model handles normal cases. A result below the configured 0.75 confidence threshold or in `OTHER` is sent to the heavier model. The second prompt receives the source text and first structured prediction, then reassesses it. This provides two patterns: routing and prompt chaining. If the final result is still below the threshold or `OTHER`, `human_review_status` is set to `PENDING`; otherwise it is `NOT_REQUIRED`. These status strings and the threshold are MVP choices requiring calibration against human-labelled Dhaga examples. Model input contains only the return reason and free-text comment; expected/human labels are not used for inference. Model/API failures are printed as failed rows and do not create AI analysis rows. The recorded model version is the configured identifier because the provider does not return an immutable build ID.
+To reclassify returns whose latest analysis is pending human review, preserving prior AI and human-review history:
+
+```powershell
+python -m app.ai.cli --reclassify-pending --limit 3000
+```
+
+The classifier adds a new analysis row for each return. The newest row becomes the active prediction and its review status is calculated from its result; do not delete old analyses or manually change their status to trigger reclassification.
+
+In Jev-only mode, Jev classifies each return directly without a GPT first pass or confidence-based second call. In two-stage mode, confidence below 0.75 or `OTHER` triggers escalation. In either mode, after the final result only `OTHER` is marked `PENDING`; specific taxonomy labels are `NOT_REQUIRED`, even at low confidence. Confidence remains stored for reporting, so review reduction should be monitored against human-labelled accuracy. Model input contains only the return reason and free-text comment, plus the first structured prediction in two-stage mode; expected/human labels are never used for inference. Model/API failures are printed as failed rows and do not create AI analysis rows. The recorded model version is the configured identifier because the provider does not return an immutable build ID.
 
 Evaluate against the 14 labelled text cases from the schema document, including Hinglish:
 
@@ -144,7 +152,9 @@ The local `frontend/public/runtime-config.js` points to `http://localhost:8000`.
 
 The API returns an existing classification for repeated requests to avoid accidental additional model calls. To deliberately re-run classification, use `python -m app.ai.cli --return-id <ID>`.
 
-The review queue's **Reset classifications** action calls `POST /api/admin/reset-classifications`. This demo endpoint deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. The endpoint is intentionally unauthenticated for this demo. The **Recalculate insights** button in Category to SKU recomputes the aggregates from current classifications without changing them. Page load, **Refresh**, and date-range changes only reload the displayed data.
+The demo API still exposes `POST /api/admin/reset-classifications`, but the dashboard no longer provides a reset control. The endpoint deletes AI analyses and human review records, then recalculates SKU/category insights; returns, orders, customers, and products are retained. It is intentionally unauthenticated for this demo. The analytics views query current latest AI predictions directly, so classification changes appear without refreshing persisted insight tables. Page load, **Refresh**, and date-range changes only reload displayed data.
+
+`GET /api/dashboard/analytics` powers the “Other” diagnosis, vendor performance, and SKU driver views. It filters by the order-created date range and uses latest AI category/subcategory predictions only; human review labels and AI results sent for human review are excluded from the source-“Other” diagnosis and its eligible-case coverage. Vendors are ranked by returned-units/sold-units rate; a pie shows returned versus not-returned units for the highest-rate vendor. Vendors with fewer than 30 sold units are excluded from rate ranking. SKUs are ranked by return-event count with latest-prediction issue mix; SKU return rate retains the existing distinct returns / distinct selling orders definition.
 
 ## Build and deployment status
 
