@@ -4,20 +4,26 @@ import argparse
 
 from sqlalchemy import select
 
-from app.ai.classifier import ReturnClassificationService, create_openrouter_classifier
+from app.ai.classifier import ReturnClassificationService, create_openrouter_classifier, create_second_stage_classifier
 from app.db.config import get_settings
 from app.db.models import Return, ReturnAIAnalysis
 from app.db.session import SessionLocal
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Classify unanalysed returns with the configured OpenRouter models")
+    parser = argparse.ArgumentParser(description="Classify unanalysed returns with the configured models")
     parser.add_argument("--return-id", help="classify one return ID; defaults to all returns without an AI analysis")
     parser.add_argument("--limit", type=int, default=100, help="maximum returns to classify in one run")
     args = parser.parse_args()
     settings = get_settings()
     light = create_openrouter_classifier(settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url)
-    heavy = create_openrouter_classifier(settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url)
+    heavy = create_second_stage_classifier(
+        backend=settings.second_stage_backend,
+        openrouter_model=settings.openrouter_heavy_model,
+        jev_model=settings.jev_openrouter_model,
+        api_key=settings.openrouter_api_key,
+        base_url=settings.openrouter_base_url,
+    )
     service = ReturnClassificationService(light, heavy)
 
     with SessionLocal() as session:

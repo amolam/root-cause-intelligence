@@ -10,14 +10,14 @@ The browser dashboard connects to a build-configured FastAPI origin, displays â€
 |---|---|---|
 | CSV checks and cleaning | Python | Headers, required fields, types, whitespace and referential constraints are deterministic. Unknown fields and bad values fail visibly. |
 | Return classification | LangChain structured output via OpenRouter | Free-text/Hinglish mapping into the proposed taxonomy needs language judgment; JSON schema output is validated again with Pydantic. Temperature is 0.0 for repeatable classification. |
-| Routing and prompt chain | `openai/gpt-4.1-mini` first; `openai/gpt-4.1` on low confidence or `OTHER` | Reduces routine latency/cost. The second prompt receives the original text and the first structured prediction, then reassesses it. It is not given the human label. |
+| Routing and prompt chain | `openai/gpt-4.1-mini` first; selected second-stage model on low confidence or `OTHER` | Reduces routine latency/cost. `SECOND_STAGE_BACKEND` defaults to `openrouter` (`OPENROUTER_HEAVY_MODEL`) and can select Jev (`JEV_OPENROUTER_MODEL`) through OpenRouter's typed decisions endpoint, using the same API key. |
 | Review decision | Python threshold + category rule | A final result below 0.75 confidence or in `OTHER` is queued for a human. A high-confidence `OTHER` remains pending because confidence in that label does not mean it is a supported root cause. The threshold is not calibrated. |
 | Bulk classification | Explicit dashboard request, maximum five unanalysed returns per call | No model calls on dashboard load; each result is saved separately and failures do not discard other results in the batch. |
 | Rates and aggregates | SQLAlchemy/Python | Counts and ratios are arithmetic and grouping, not model work. API classification refreshes the affected monthly cohort; CLI classification still needs an explicit aggregation run. The dashboard sums stored periods over the selected inclusive date range. |
 | Classification reset | Demo FastAPI endpoint | The review queue reset deletes AI analyses and human reviews, then recalculates insights. Returns and orders are retained. This endpoint is intentionally unauthenticated for the demo. |
 | Dashboard and review UI | HTML/CSS/JavaScript | Category/subcategory rows expand to related SKU counts, rates, issue mix, and small-sample flags. The explicit Recalculate insights action recomputes aggregates; page load, Review Queue Refresh, and date-range changes only reload displayed data. `API_BASE_URL` is embedded at static build time. |
 
-These are two deliberate patterns: **routing** (light to heavy by ambiguity) and **prompt chaining** (the second-stage prompt receives the first structured output). No parallelization or evaluator-optimizer is used. The app has no customer-facing generated answer, extraction call, or separate evaluator; classification alone runs at temperature 0.0. Human review, rather than a third model call, resolves uncertain labels.
+These are two deliberate patterns: **routing** (light to second-stage by ambiguity) and **prompt chaining** (the second stage receives the first structured output). With Jev, category/subcategory is a Choice over the existing taxonomy and sentiment is a separate Choice; Jev-escalated records intentionally have empty evidence text and no extracted issue because Jev does not return free-form spans. No parallelization or evaluator-optimizer is used. The app has no customer-facing generated answer or separate evaluator; the first-stage classifier runs at temperature 0.0. Human review, rather than an automatic third model call, resolves uncertain labels.
 
 ## Cost line
 
@@ -29,6 +29,8 @@ Estimate only; actual token use varies with comment length and structured respon
 - If every case escalated, the estimate is `$24.40/week`. This is an upper scenario at the assumed token counts, not a forecast.
 
 Rates: [GPT-4.1 Mini on OpenRouter](https://openrouter.ai/openai/gpt-4.1-mini) and [GPT-4.1 on OpenRouter](https://openrouter.ai/openai/gpt-4.1/pricing). Recalculate from actual usage and selected provider before presenting as a budget. The 10% escalation assumption is for arithmetic only, not a measured result.
+
+The project owner verified Jev's OpenRouter rate on 2026-10-03 as `$0.042` per million input tokens and `$0` per million output tokens. A 300-input-token request at that rate would cost `$0.0000126`, but Jev's taxonomy/options contribute to input usage; use OpenRouter's returned token usage and observed escalation volume for a realistic estimate. This rate should be rechecked before budgeting.
 
 ## Failure behavior and remaining limits
 

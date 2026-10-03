@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Literal, Protocol
 from uuid import uuid4
 
+import requests
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session
 
@@ -206,3 +207,97 @@ Do not use customer, product, or review information beyond the supplied fields. 
         raise
     except Exception as exc:
         raise ClassificationError(f"Could not initialize OpenRouter classifier: {exc}") from exc
+
+
+def create_jev_classifier(model_name: str, api_key: str | None) -> Classifier:
+    """Build a Jev classifier using OpenRouter's typed decisions endpoint."""
+    if not api_key:
+        raise ClassificationError("OPENROUTER_API_KEY is not configured. Add it to your local .env file.")
+
+    classification_criteria = {
+        f"{category}__{subcategory}": f"Category {category}; subcategory {subcategory}."
+        for category, subcategories in TAXONOMY.items()
+        for subcategory in sorted(subcategories)
+    }
+    sentiment_criteria = {
+        "positive": "The customer expresses satisfaction or a favorable view.",
+        "neutral": "The customer states the issue without a clear positive or negative tone.",
+        "negative": "The customer expresses dissatisfaction, frustration, or an unfavorable view.",
+    }
+
+    class OpenRouterJevClassifier:
+        def __init__(self):
+            self.model_name = model_name
+            self.model_version = model_name
+
+        def classify(
+            self, *, reason: str, text: str, prior_result: ClassificationResult | None = None
+        ) -> ClassificationResult:
+            state = {
+                "return_reason": reason,
+                "customer_text": text or "[no free-text comment]",
+                "first_pass_prediction": prior_result.model_dump(mode="json") if prior_result else None,
+            }
+            questions = {
+                "return_classification": {
+                    "type": "choice",
+                    "instructions": (
+                        "Choose the single best category and subcategory for the return using the source reason and customer text. "
+                        "Treat first_pass_prediction only as a hypothesis: independently verify it against the source text and correct it if needed."
+                    ),
+                    "criteria": classification_criteria,
+                },
+                "sentiment": {
+                    "type": "choice",
+                    "instructions": "What sentiment does the customer express in the source text?",
+                    "criteria": sentiment_criteria,
+                },
+            }
+            try:
+                response = requests.post(
+                    "https://openrouter.ai/api/alpha/decisions",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={"model": model_name, "state": state, "questions": questions},
+                    timeout=60,
+                )
+                response.raise_for_status()
+                answers = response.json()["answers"]
+                classification = answers["return_classification"]
+                sentiment = answers["sentiment"]["choice"]
+                selected = classification["choice"]
+                if selected not in classification_criteria or sentiment not in sentiment_criteria:
+                    raise ClassificationError("Jev returned a choice outside the configured options")
+                category, subcategory = selected.split("__", maxsplit=1)
+                return ClassificationResult(
+                    predicted_category=category,
+                    predicted_subcategory=subcategory,
+                    confidence_score=classification["confidence"],
+                    extracted_issue=None,
+                    sentiment=sentiment,
+                    evidence_text="",
+                )
+            except ClassificationError:
+                raise
+            except Exception as exc:
+                raise ClassificationError(f"Jev classification request failed: {exc}") from exc
+
+    return OpenRouterJevClassifier()
+
+
+def create_second_stage_classifier(
+    *,
+    backend: str,
+    openrouter_model: str,
+    jev_model: str,
+    api_key: str | None,
+    base_url: str,
+) -> Classifier:
+    """Select the configured escalation model without changing first-stage routing."""
+    if backend == "jev":
+        return create_jev_classifier(jev_model, api_key)
+    if backend == "openrouter":
+        return create_openrouter_classifier(openrouter_model, api_key, base_url)
+    raise ClassificationError(f"Unsupported second-stage backend: {backend}")

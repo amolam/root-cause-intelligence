@@ -17,6 +17,7 @@ from app.ai.classifier import (
     ClassificationError,
     ReturnClassificationService,
     create_openrouter_classifier,
+    create_second_stage_classifier,
 )
 from app.db.config import get_settings
 from app.db.models import (
@@ -100,8 +101,12 @@ def get_classifier_service() -> ReturnClassificationService:
     light = create_openrouter_classifier(
         settings.openrouter_light_model, settings.openrouter_api_key, settings.openrouter_base_url
     )
-    heavy = create_openrouter_classifier(
-        settings.openrouter_heavy_model, settings.openrouter_api_key, settings.openrouter_base_url
+    heavy = create_second_stage_classifier(
+        backend=settings.second_stage_backend,
+        openrouter_model=settings.openrouter_heavy_model,
+        jev_model=settings.jev_openrouter_model,
+        api_key=settings.openrouter_api_key,
+        base_url=settings.openrouter_base_url,
     )
     return ReturnClassificationService(light, heavy)
 
